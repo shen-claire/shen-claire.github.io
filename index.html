@@ -3,91 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claire Shen — Interactive Portfolio</title>
-    <!-- Tailwind CSS -->
+    <title>Name — Interactive Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-     <!-- Extracted External Stylesheet -->
-    <link rel="stylesheet" href="css/styles.css">
+     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="h-full relative overflow-hidden text-[#1c1d1f] transition-colors duration-700">
 
-    <!-- Ambient Sky & Hand mockup backdrop (Inspired by photo) -->
     <div id="backdrop-container" class="absolute inset-0 bg-cover bg-center transition-all duration-1000 z-0 flex items-center justify-center pointer-events-none" 
          style="background: radial-gradient(circle at 50% 40%, #b3cddb 0%, #7b9eb3 100%);">
          
-         <!-- Realistic procedural blur rings representing hand holding crystal glass -->
          <div class="absolute inset-0 z-10 flex items-center justify-center opacity-80 mix-blend-screen">
-             <!-- Golden ring refractions -->
-             <div class="w-[85%] h-[85%] rounded-full border-[22px] border-amber-400/25 blur-sm animate-[spin_120s_linear_infinite]"></div>
-             <div class="absolute w-[83%] h-[83%] rounded-full border-[4px] border-amber-300/40 blur-xs"></div>
-             <div class="absolute w-[87%] h-[87%] rounded-full border-[8px] border-white/25 blur-md"></div>
+              <div class="w-[85%] h-[85%] rounded-full border-[22px] border-amber-400/25 blur-sm animate-[spin_120s_linear_infinite]"></div>
+              <div class="absolute w-[83%] h-[83%] rounded-full border-[4px] border-amber-300/40 blur-xs"></div>
+              <div class="absolute w-[87%] h-[87%] rounded-full border-[8px] border-white/25 blur-md"></div>
          </div>
 
-         <!-- Hand Silhouette placeholder overlay to match the depth and mood of the photograph -->
          <div class="absolute bottom-[-10%] left-[-10%] w-[120%] h-[80%] opacity-45 mix-blend-multiply pointer-events-none blur-xl bg-gradient-to-tr from-amber-950/40 via-transparent to-transparent"></div>
     </div>
 
-    <!-- Background Grain Overlay -->
     <div class="absolute inset-0 grain pointer-events-none z-40 opacity-70"></div>
 
-    <!-- Main Outer Wrapper: Toggles between Mockup Frame Mode and Fullscreen Mode -->
     <div id="wrapper" class="absolute inset-0 flex items-center justify-center p-4 md:p-12 z-10">
         
-        <!-- Web Page Frame -->
         <div id="web-frame" class="mockup-frame w-full h-full bg-[#f6f5f3] rounded-[32px] shadow-2xl border border-white/30 flex flex-col justify-between overflow-hidden relative pointer-events-auto max-w-7xl max-h-[850px]">
             
-            <!-- Interior subtle background glow inside the canvas -->
             <div class="absolute inset-0 bg-gradient-to-tr from-[#f4f3f0] via-[#f7f6f4] to-[#efeee9] pointer-events-none z-0"></div>
             <div class="absolute top-[20%] left-[10%] w-[80%] h-[40%] bg-gradient-to-r from-sky-100/30 via-amber-50/20 to-pink-50/20 blur-3xl rounded-full pointer-events-none z-0"></div>
 
-            <!-- Header -->
             <header class="w-full px-6 md:px-10 py-6 flex justify-between items-center border-b border-black/[0.04] relative z-20 backdrop-blur-xs bg-[#f6f5f3]/30">
                 <div class="flex items-center gap-3">
                     <div class="w-2.5 h-2.5 rounded-full bg-[#3b4252] animate-pulse"></div>
-                    <span class="text-[11px] md:text-xs font-semibold tracking-[0.2em] text-[#333333] uppercase">Claire Shen</span>
+                    <span class="text-[11px] md:text-xs font-semibold tracking-[0.2em] text-[#333333] uppercase">Name</span>
                 </div>
                 
                 <nav class="hidden md:flex items-center gap-12">
-                    <button onclick="openTab('works')" class="nav-link text-xs tracking-[0.15em] text-[#333333] hover:text-black font-medium transition-all relative py-1 border-b border-black">PROJECTS</button>
-                    <button onclick="openTab('about')" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">ABOUT</button>
-                    <button onclick="openTab('lab')" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">LAB</button>
-                    <button onclick="openTab('contact')" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">INQUIRE</button>
+                    <button onclick="openTab('works', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333] hover:text-black font-medium transition-all relative py-1 border-b border-black">PROJECTS</button>
+                    <button onclick="openTab('about', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">ABOUT</button>
+                    <button onclick="openTab('lab', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">LAB</button>
+                    <button onclick="openTab('contact', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">INQUIRE</button>
                 </nav>
 
                 <div class="flex items-center gap-4">
-                    <!-- Audio/Interaction Synth Indicator -->
                     <button id="audio-toggle" onclick="toggleAudio()" class="p-2 rounded-full hover:bg-black/[0.04] transition-all group" title="Toggle UI Sound Synthesizer">
                         <i data-lucide="volume-2" class="w-4 h-4 text-[#333333] group-hover:scale-110 transition-transform"></i>
                     </button>
 
-                    <!-- View Switcher (Frame / Fullscreen) -->
                     <button onclick="toggleMockupFrame()" class="p-2 rounded-full hover:bg-black/[0.04] transition-all group" title="Toggle Frame Mode">
                         <i id="frame-icon" data-lucide="minimize" class="w-4 h-4 text-[#333333] group-hover:scale-110 transition-transform"></i>
                     </button>
                 </div>
             </header>
 
-            <!-- Main Interactive Screen Content -->
             <main class="flex-1 w-full relative flex flex-col justify-center items-center overflow-hidden z-10 py-4">
                 
-                <!-- Central Text Hint / State -->
                 <div class="absolute top-6 text-center pointer-events-none z-10 transition-all duration-500">
                     <p class="text-[10px] uppercase tracking-[0.3em] text-neutral-400 font-medium mb-1 animate-pulse">DRAG OR SWIPE SPIN RING</p>
                     <h2 id="carousel-title-hint" class="serif-font text-2xl md:text-3xl text-neutral-800 italic opacity-85 transition-opacity duration-300">Objects of Intention</h2>
                 </div>
 
-                <!-- 3D Scene viewport container -->
                 <div class="scene w-full h-[380px] md:h-[460px] flex items-center justify-center cursor-grab active:cursor-grabbing relative">
-                    <!-- Drag/Swipe interaction overlay -->
                     <div id="drag-surface" class="absolute inset-0 z-20"></div>
 
-                    <!-- Left/Right Floating Navigation Arrows for Touch/Accessibility -->
                     <button onclick="rotateStep(-1)" class="absolute left-4 p-3 rounded-full bg-white/70 hover:bg-white border border-black/[0.05] shadow-sm z-30 group transition-all transform hover:scale-105 active:scale-95 hidden md:block">
                         <i data-lucide="arrow-left" class="w-4 h-4 text-neutral-600 group-hover:text-black"></i>
                     </button>
@@ -95,13 +75,10 @@
                         <i data-lucide="arrow-right" class="w-4 h-4 text-neutral-600 group-hover:text-black"></i>
                     </button>
 
-                    <!-- The 3D spinning carousel ring -->
                     <div id="carousel-ring" class="carousel-ring w-48 h-48 flex items-center justify-center relative">
-                        <!-- Dynamic objects generated here by Javascript -->
-                    </div>
+                        </div>
                 </div>
 
-                <!-- Bottom Status Indicator -->
                 <div class="absolute bottom-6 flex items-center gap-2 pointer-events-none z-10">
                     <span id="active-item-index" class="text-xs font-medium font-mono text-neutral-400">01</span>
                     <div class="w-8 h-[1px] bg-neutral-300"></div>
@@ -110,7 +87,6 @@
 
             </main>
 
-            <!-- Footer -->
             <footer class="w-full px-6 md:px-10 py-5 flex flex-col md:flex-row justify-between items-center border-t border-black/[0.04] gap-4 md:gap-0 bg-[#f6f5f3]/30 backdrop-blur-xs relative z-20">
                 <div class="flex items-center gap-10">
                     <div>
@@ -128,14 +104,12 @@
                     </div>
                     <div class="text-right hidden md:block">
                         <span class="text-[9px] text-neutral-400 block tracking-widest uppercase mb-0.5">DIRECT INQUIRY</span>
-                        <a href="mailto:hello@claireshen.design" class="text-xs text-neutral-600 font-medium hover:text-black transition-colors">hello@claireshen.design</a>
+                        <a href="mailto:hello@name.design" class="text-xs text-neutral-600 font-medium hover:text-black transition-colors">hello@name.design</a>
                     </div>
                 </div>
             </footer>
 
-            <!-- SLIDE-OUT PANEL (Case Study Detail Drawer) -->
             <div id="detail-drawer" class="absolute top-0 right-0 bottom-0 w-full sm:w-[480px] bg-white border-l border-black/[0.05] shadow-2xl transform translate-x-full transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50 flex flex-col">
-                <!-- Header of drawer -->
                 <div class="px-6 py-5 border-b border-black/[0.05] flex justify-between items-center bg-[#fcfbfa]">
                     <div>
                         <span id="drawer-category" class="text-[9px] font-semibold tracking-widest text-neutral-400 uppercase">CATEGORY</span>
@@ -146,18 +120,13 @@
                     </button>
                 </div>
 
-                <!-- Scrollable Body -->
                 <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-8 space-y-8 bg-[#faf9f6]">
-                    <!-- Interactive Visual Display of the Object inside the drawer -->
                     <div class="w-full aspect-square rounded-2xl border border-black/[0.03] bg-[#f2f1ed] flex items-center justify-center relative overflow-hidden group">
                         <div class="absolute inset-0 bg-radial-gradient from-white/40 to-transparent pointer-events-none"></div>
-                        <!-- Centered floating SVG visualization of clicked object -->
                         <div id="drawer-visual-container" class="w-[60%] h-[60%] flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-                            <!-- Injected dynamically -->
-                        </div>
+                            </div>
                     </div>
 
-                    <!-- Meta specifications -->
                     <div class="grid grid-cols-2 gap-4 pt-2">
                         <div class="border-b border-black/[0.04] pb-2">
                             <span class="text-[9px] tracking-widest text-neutral-400 block uppercase">ROLE / SERVICE</span>
@@ -177,7 +146,6 @@
                         </div>
                     </div>
 
-                    <!-- Editorial Description paragraph -->
                     <div class="space-y-4">
                         <h4 class="text-xs font-semibold tracking-wider text-neutral-800 uppercase">CONCEPT &amp; VISION</h4>
                         <p id="drawer-description" class="text-xs md:text-sm text-neutral-600 leading-relaxed font-light">
@@ -185,7 +153,6 @@
                         </p>
                     </div>
 
-                    <!-- Interactive Synthesizer / Custom controls for selected work -->
                     <div class="p-4 rounded-xl border border-dashed border-amber-300/40 bg-amber-50/20 space-y-3">
                         <div class="flex items-center gap-2">
                             <div class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></div>
@@ -200,7 +167,6 @@
                     </div>
                 </div>
 
-                <!-- Footer CTA of Drawer -->
                 <div class="p-5 border-t border-black/[0.05] bg-white flex gap-3">
                     <button onclick="viewFullCase()" class="flex-1 py-3 bg-neutral-900 hover:bg-black text-white rounded-xl text-xs font-semibold tracking-widest text-center transition-all shadow-sm">
                         VIEW FULL CASE STUDY
@@ -211,14 +177,12 @@
                 </div>
             </div>
 
-            <!-- OTHER NAV TABS (Overlay screens loaded dynamically) -->
-            <!-- ABOUT TAB OVERLAY -->
             <div id="tab-about" class="absolute inset-0 bg-[#f6f5f3] z-40 transform translate-y-full transition-transform duration-700 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col">
                 <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-16 space-y-12">
                     <div class="flex justify-between items-start border-b border-black/[0.05] pb-6">
                         <div>
                             <span class="text-[10px] font-semibold tracking-widest text-neutral-400 uppercase">PORTFOLIO INDEX</span>
-                            <h2 class="serif-font text-3xl md:text-5xl text-neutral-800 italic mt-1">Claire Shen</h2>
+                            <h2 class="serif-font text-3xl md:text-5xl text-neutral-800 italic mt-1">Name</h2>
                         </div>
                         <button onclick="closeActiveTab()" class="p-2 rounded-full hover:bg-neutral-100 transition-colors">
                             <i data-lucide="arrow-down" class="w-6 h-6 text-neutral-500"></i>
@@ -227,7 +191,6 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
                         <div class="md:col-span-5 space-y-6">
-                            <!-- Visual portrait placeholder utilizing structured CSS/SVG art -->
                             <div class="w-full aspect-square bg-[#eae8e4] rounded-2xl border border-black/[0.02] flex items-center justify-center p-8 relative overflow-hidden">
                                 <div class="absolute inset-0 bg-gradient-to-tr from-sky-100/30 to-rose-100/30"></div>
                                 <svg class="w-4/5 h-4/5 text-neutral-400 opacity-80" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -243,7 +206,7 @@
                         <div class="md:col-span-7 space-y-8">
                             <h3 class="serif-font text-2xl text-neutral-800">Blending spatial architecture with digital poetry.</h3>
                             <p class="text-xs md:text-sm text-neutral-600 leading-relaxed space-y-4">
-                                Claire Shen is a French-American interactive designer focusing on bespoke e-commerce experiences, luxury tangible objects, and browser-based spatial engineering. Working closely with modern design studios, luxury houses, and technological visionaries, she designs interfaces that are felt, not just seen.
+                                Name is a French-American interactive designer focusing on bespoke e-commerce experiences, luxury tangible objects, and browser-based spatial engineering. Working closely with modern design studios, luxury houses, and technological visionaries, she designs interfaces that are felt, not just seen.
                             </p>
                             
                             <div class="grid grid-cols-2 gap-6 pt-4">
@@ -271,7 +234,6 @@
                 </div>
             </div>
 
-            <!-- LAB TAB OVERLAY -->
             <div id="tab-lab" class="absolute inset-0 bg-[#f6f5f3] z-40 transform translate-y-full transition-transform duration-700 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col">
                 <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-16 space-y-12">
                     <div class="flex justify-between items-start border-b border-black/[0.05] pb-6">
@@ -285,7 +247,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Lab Item 1: Audio Synth -->
                         <div class="bg-[#faf9f6] border border-black/[0.03] p-6 rounded-2xl hover:shadow-lg transition-all space-y-4">
                             <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600">
                                 <i data-lucide="audio-lines"></i>
@@ -297,7 +258,6 @@
                             </button>
                         </div>
 
-                        <!-- Lab Item 2: Responsive Grids -->
                         <div class="bg-[#faf9f6] border border-black/[0.03] p-6 rounded-2xl hover:shadow-lg transition-all space-y-4">
                             <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
                                 <i data-lucide="grid-3x3"></i>
@@ -307,7 +267,6 @@
                             <div class="text-xs font-semibold text-neutral-400">MATH MODEL ACTIVE</div>
                         </div>
 
-                        <!-- Lab Item 3: Colorway Engine -->
                         <div class="bg-[#faf9f6] border border-black/[0.03] p-6 rounded-2xl hover:shadow-lg transition-all space-y-4">
                             <div class="w-12 h-12 rounded-xl bg-pink-100 flex items-center justify-center text-pink-600">
                                 <i data-lucide="palette"></i>
@@ -322,7 +281,6 @@
                 </div>
             </div>
 
-            <!-- CONTACT/INQUIRE TAB OVERLAY -->
             <div id="tab-contact" class="absolute inset-0 bg-[#f6f5f3] z-40 transform translate-y-full transition-transform duration-700 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col">
                 <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-16 space-y-12">
                     <div class="flex justify-between items-start border-b border-black/[0.05] pb-6">
@@ -351,7 +309,6 @@
                             </div>
                         </div>
 
-                        <!-- Inquiry form inside the client-side system -->
                         <div class="md:col-span-7 bg-[#faf9f6] border border-black/[0.03] p-6 md:p-8 rounded-2xl">
                             <form onsubmit="handleInquirySubmit(event)" class="space-y-4">
                                 <div class="grid grid-cols-2 gap-4">
@@ -377,7 +334,6 @@
                 </div>
             </div>
 
-            <!-- Custom Notification alert overlay (prevents default browser alerts) -->
             <div id="custom-notification" class="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-neutral-900 text-white text-xs px-6 py-3 rounded-full shadow-xl opacity-0 translate-y-4 pointer-events-none transition-all duration-300 z-55 flex items-center gap-2">
                 <i data-lucide="info" class="w-4 h-4 text-sky-300"></i>
                 <span id="notification-text">Message sent successfully</span>
@@ -391,4 +347,3 @@
 
 </body>
 </html>
-    
