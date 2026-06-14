@@ -1,235 +1,137 @@
-// Project/Object Mock Database with highly creative descriptive text and custom vector representations
 const PORTFOLIO_OBJECTS = [
     {
         id: 1,
-        name: "The Curve Bag",
-        category: "Fashion & Identity",
-        role: "Product & Digital Sculptor",
+        name: "Project One Title",
+        category: "Category Here",
+        role: "Your Role",
         timeline: "Q1 2026",
-        client: "Sarah Sarazen Inc.",
-        tools: "SubD Modeling, WebGL Engine",
-        description: "A gorgeous, powder-blue high fashion shoulder bag displaying elegant sweeping contours. Created with sustainability at its center using vegan apple leather composites and ultra-light architectural frame stabilizers. Represented in our spatial ring to capture organic ergonomic movement under warm procedural light sources.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full text-sky-200 fill-current drop-shadow-md">
-                <path d="M 30 50 C 30 10, 70 10, 70 50" fill="none" stroke="#2a3040" stroke-width="4.5" stroke-linecap="round"/>
-                <path d="M 30 50 C 27 55, 25 75, 28 80" fill="none" stroke="#2a3040" stroke-width="1.8"/>
-                <path d="M 70 50 C 73 55, 75 75, 72 80" fill="none" stroke="#2a3040" stroke-width="1.8"/>
-                <path d="M 28 50 C 26 48, 74 48, 72 50 C 70 72, 60 82, 50 82 C 40 82, 30 72, 28 50 Z" fill="#b0cddb"/>
-                <path d="M 32 54 C 35 70, 65 70, 68 54" fill="none" stroke="white" stroke-width="1" stroke-opacity="0.4"/>
-            </svg>
-        `
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your first project goes here. It will display inside the side panel when clicked.",
+        visual: `<img src="img/Through_the_Looking_Glass.jpeg" alt="Project 1" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 2,
-        name: "Editorial Graphic Design",
-        category: "Brand & Typography",
-        role: "Lead Typographer",
-        timeline: "Q4 2025",
-        client: "Arcane Press",
-        tools: "InDesign, Glyphs, OpenType",
-        description: "Elegant serif typography representing modern editorial layout directions. This asset demonstrates high-fidelity visual density and experimental typographic systems, optimized for tactile luxury publications and digital high-end displays alike.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full flex items-center justify-center">
-                <rect x="15" y="15" width="70" height="70" rx="4" fill="white" stroke="#ece9e2" stroke-width="1"/>
-                <text x="50%" y="42%" text-anchor="middle" font-family="'Playfair Display', serif" font-weight="600" font-size="9" fill="#2d2d2d">Graphic</text>
-                <text x="50%" y="54%" text-anchor="middle" font-family="'Playfair Display', serif" font-weight="400" font-size="9" fill="#2d2d2d" font-style="italic">Design</text>
-                <line x1="25" y1="65" x2="75" y2="65" stroke="#333" stroke-width="0.5" stroke-opacity="0.5"/>
-                <circle cx="50" cy="74" r="1.5" fill="#333"/>
-            </svg>
-        `
+        name: "Project Two Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "Q2 2026",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your second project goes here.",
+        visual: `<img src="img/IMG_9129.jpeg" alt="Project 2" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 3,
-        name: "Abstract Canvas No. 4",
-        category: "Modern Painting",
-        role: "Spatial Artist",
-        timeline: "Q2 2025",
-        client: "Sonder Gallery",
-        tools: "Generative Art, Acrylics",
-        description: "A colorful abstract fluid canvas mapping vibrant generative gradients. Embodying organic digital painting styles, this piece explores chromatic fields and soft liquid dynamics, interacting with spatial light fields on our user interface.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full">
-                <rect x="20" y="20" width="60" height="60" rx="6" fill="#fcfcfc" stroke="#eae5d9" stroke-width="1" />
-                <defs>
-                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#fed7aa;stop-opacity:1" />
-                        <stop offset="50%" style="stop-color:#f472b6;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <rect x="24" y="24" width="52" height="52" rx="4" fill="url(#grad3)"/>
-                <circle cx="45" cy="45" r="12" fill="white" fill-opacity="0.15" filter="blur(2px)"/>
-            </svg>
-        `
+        name: "Project Three Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "Q3 2026",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your third project goes here.",
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 3" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 4,
-        name: "Echo Vinyl",
-        category: "Media Packaging",
-        role: "Visual Designer",
-        timeline: "Q3 2025",
-        client: "Soundscape Label",
-        tools: "Vector Art, Poly-Rendering",
-        description: "An iridescent, emerald green vinyl record mapping translucent refraction and high groove detail. An aesthetic tribute to physical audio culture and tactile modern music distribution systems.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
-                <circle cx="50" cy="50" r="38" fill="#10b981" fill-opacity="0.8"/>
-                <circle cx="50" cy="50" r="38" fill="none" stroke="#047857" stroke-width="0.5"/>
-                <circle cx="50" cy="50" r="30" fill="none" stroke="white" stroke-opacity="0.15" stroke-width="0.3"/>
-                <circle cx="50" cy="50" r="24" fill="none" stroke="white" stroke-opacity="0.15" stroke-width="0.3"/>
-                <circle cx="50" cy="50" r="18" fill="none" stroke="white" stroke-opacity="0.2" stroke-width="0.3"/>
-                <circle cx="50" cy="50" r="12" fill="white" stroke="#065f46" stroke-width="0.5"/>
-                <circle cx="50" cy="50" r="4" fill="#047857"/>
-            </svg>
-        `
+        name: "Project Four Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "Q4 2026",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your fourth project goes here.",
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 4" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 5,
-        name: "Avant-Garde Chair",
-        category: "Industrial Furniture",
-        role: "3D Spatial Artist",
-        timeline: "Q1 2025",
-        client: "Atelier Chrome",
-        tools: "Rhino, V-Ray, Splines",
-        description: "A sleek tubular futuristic design armchair. Crafted using continuous highly polished stainless steel chrome pipelines and premium leather supports, representing a balanced combination of Bauhaus precision and digital organic style.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full text-[#4a5568]">
-                <path d="M35 70 L35 45 C35 38, 65 38, 65 45 L65 70" fill="none" stroke="#cbd5e0" stroke-width="4.5" stroke-linecap="round"/>
-                <path d="M35 70 L35 45 C35 38, 65 38, 65 45 L65 70" fill="none" stroke="#4a5568" stroke-width="1.5" stroke-linecap="round"/>
-                <rect x="30" y="52" width="40" height="6" rx="3" fill="#1a202c"/>
-                <rect x="38" y="42" width="24" height="10" rx="2" fill="#2d3748"/>
-            </svg>
-        `
+        name: "Project Five Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "2026",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your fifth project goes here.",
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 5" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 6,
-        name: "Branding Typography",
-        category: "Visual Identity",
-        role: "Design Director",
-        timeline: "Q3 2025",
-        client: "Studio Sarah",
-        tools: "Vector Typography",
-        description: "An elegant typographic artwork displaying high design contrast. Created to push the limits of interactive online branding, making sure layout density feels beautifully calculated.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full">
-                <rect x="15" y="15" width="70" height="70" rx="4" fill="#111111" />
-                <text x="50%" y="54%" text-anchor="middle" font-family="'Playfair Display', serif" font-weight="400" font-size="12" fill="#fff" font-style="italic">Thorne</text>
-            </svg>
-        `
+        name: "Project Six Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "2026",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your sixth project goes here.",
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 6" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 7,
-        name: "Luxury Fragrance Box",
-        category: "Tactile Packaging",
-        role: "Structural Designer",
-        timeline: "Q2 2025",
-        client: "Maison d'Aura",
-        tools: "ArtiosCAD, Keyshot",
-        description: "A minimalist fragrance outer box featuring fine linen textures and blind-embossed brand details. A pristine study of luxury physical packaging and spatial sensory branding.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full">
-                <rect x="30" y="20" width="40" height="60" rx="3" fill="#ecd5c5" stroke="#dbbca6" stroke-width="1"/>
-                <line x1="30" y1="28" x2="70" y2="28" stroke="#fff" stroke-width="1" stroke-opacity="0.4"/>
-                <rect x="38" y="38" width="24" height="24" fill="white" rx="1"/>
-                <rect x="42" y="42" width="16" height="16" fill="none" stroke="#111" stroke-width="0.5"/>
-            </svg>
-        `
+        name: "Project Seven Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "2026",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your seventh project goes here.",
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 7" class="w-full h-full object-cover
     },
     {
         id: 8,
-        name: "Monolith Cap",
-        category: "Apparel Accessory",
-        role: "Product Designer",
-        timeline: "Q1 2026",
-        client: "Noire Concept Store",
-        tools: "Embroidery CAD, Marvelous Designer",
-        description: "A minimalist six-panel unstructured baseball cap made of heavy double-woven washed canvas. Featuring custom tone-on-tone sculptural typography embroidery that represents dark streetwear visual paradigms.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full text-neutral-800 fill-current">
-                <path d="M 25 60 C 25 30, 75 30, 75 60 Z"/>
-                <path d="M 22 59 C 10 58, 12 70, 32 70 C 45 70, 75 68, 77 59 Z" fill="#2d3748"/>
-                <circle cx="50" cy="30" r="3" fill="#1a202c"/>
-            </svg>
-        `
+        name: "Project Eight Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "2025",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your eighth project goes here.",
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 8" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 9,
-        name: "Retro Sunglasses",
-        category: "Eyewear Design",
-        role: "Lead Designer",
-        timeline: "Q2 2025",
-        client: "Elysium Frames",
-        tools: "3D Surfaces, Rhino",
-        description: "Retro-inspired statement sunglasses featuring bold tortoiseshell rims and amber-tinted polarized lenses. Crafted using bio-acetate compounds for absolute environmental compatibility.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full text-amber-900 fill-current">
-                <rect x="45" y="44" width="10" height="3" rx="1" fill="#e28743"/>
-                <rect x="22" y="38" width="24" height="18" rx="8" fill="#e28743" stroke="#763e1a" stroke-width="1.5"/>
-                <rect x="26" y="42" width="16" height="10" rx="5" fill="#f97316" fill-opacity="0.8"/>
-                <rect x="54" y="38" width="24" height="18" rx="8" fill="#e28743" stroke="#763e1a" stroke-width="1.5"/>
-                <rect x="58" y="42" width="16" height="10" rx="5" fill="#f97316" fill-opacity="0.8"/>
-            </svg>
-        `
+        name: "Project Nine Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "2025",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your ninth project goes here.",
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 9" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 10,
-        name: "The Sculptural Vase",
-        category: "Ceramic Design",
-        role: "Tactile Sculptor",
-        timeline: "Q4 2025",
-        client: "Atelier Clay",
-        tools: "Clay Sculpting, Blender 3D",
-        description: "A contemporary stoneware vase with a raw tactile clay exterior and double organic handles. Merging primitive geometric craft principles with clean, high-end visual systems.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full text-[#eed9c4]">
-                <path d="M36 40 C24 40, 24 60, 36 60" fill="none" stroke="#eed9c4" stroke-width="3" stroke-linecap="round"/>
-                <path d="M64 40 C76 40, 76 60, 64 60" fill="none" stroke="#eed9c4" stroke-width="3" stroke-linecap="round"/>
-                <path d="M 38 28 C 36 28, 64 28, 62 28 C 66 50, 70 74, 58 78 C 50 80, 42 78, 38 74 C 30 74, 34 50, 38 28 Z" fill="#dfc0a5"/>
-                <ellipse cx="50" cy="28" rx="12" ry="3" fill="#eed9c4"/>
-            </svg>
-        `
+        name: "Project Ten Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "2025",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your tenth project goes here.",
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 10" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 11,
-        name: "Studio Fragrance No. 9",
-        category: "Scent Identity",
-        role: "Concept Designer",
-        timeline: "Q3 2025",
-        client: "Ochre Labs",
-        tools: "Glass Refraction Renderer",
-        description: "An elegant, heavyweight amber glass bottle containing high-end custom oil formulations. Explores structural glass weight, tactile ergonomics, and minimal label structures.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full text-amber-700 fill-current">
-                <rect x="42" y="20" width="16" height="12" rx="2" fill="#111"/>
-                <rect x="47" y="31" width="6" height="3" fill="#666"/>
-                <rect x="32" y="34" width="36" height="46" rx="5" fill="#ca8a04" fill-opacity="0.9"/>
-                <rect x="38" y="44" width="24" height="24" fill="white" rx="1"/>
-                <rect x="42" y="48" width="16" height="16" fill="none" stroke="#111" stroke-width="0.3"/>
-                <text x="50" y="58" text-anchor="middle" font-size="3" font-family="monospace" fill="#111">N°9</text>
-            </svg>
-        `
+        name: "Project Eleven Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "2025",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your eleventh project goes here.",
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 11" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 12,
-        name: "The Monograph Book",
-        category: "Tactile Publishing",
-        role: "Editorial Designer",
-        timeline: "Q4 2025",
-        client: "Phaidon Press Ltd.",
-        tools: "Editorial Layout systems",
-        description: "A luxury hardcover monograph detailing spatial layouts and digital typography compositions. Features an unstructured fabric spine with high-density printing details, perfect for physical coffee table appreciation.",
-        visual: `
-            <svg viewBox="0 0 100 100" class="w-full h-full text-neutral-200 fill-current">
-                <rect x="25" y="15" width="50" height="70" rx="3" fill="#fdfbf7" stroke="#eae6dd" stroke-width="1.5"/>
-                <rect x="25" y="15" width="5" height="70" fill="#db2777" rx="0.5"/>
-                <circle cx="52" cy="45" r="10" fill="none" stroke="#111" stroke-width="0.5" stroke-dasharray="2 2"/>
-                <line x1="38" y1="62" x2="66" y2="62" stroke="#111" stroke-width="1"/>
-                <text x="52" y="70" text-anchor="middle" font-size="3" font-family="monospace" fill="#111">MONOGRAPH</text>
-            </svg>
-        `
+        name: "Project Twelve Title",
+        category: "Category Here",
+        role: "Your Role",
+        timeline: "2025",
+        client: "Client Name",
+        tools: "Tools Used",
+        description: "A short, simple description of your twelfth project goes here.",
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 12" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     }
 ];
-
 // System state
 let isMockupFrame = true;
 let activeTabIndex = null; // 'works', 'about', 'lab', 'contact'
