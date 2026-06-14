@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Custom Extracted Stylesheet -->
+    <!-- Extracted External Stylesheet -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="h-full relative overflow-hidden text-[#1c1d1f] transition-colors duration-700">
@@ -148,12 +148,12 @@
 
                 <!-- Scrollable Body -->
                 <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-8 space-y-8 bg-[#faf9f6]">
-                    <!-- Interactive Visual Display of the Object inside the drawer -->
+                    <!-- Visual Display Workspace of Selected Artwork -->
                     <div class="w-full aspect-square rounded-2xl border border-black/[0.03] bg-[#f2f1ed] flex items-center justify-center relative overflow-hidden group">
                         <div class="absolute inset-0 bg-radial-gradient from-white/40 to-transparent pointer-events-none"></div>
-                        <!-- Picture Showcase of selected work -->
-                        <div id="drawer-visual-container" class="w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-                            <!-- Injected dynamically as <img> tag -->
+                        <!-- Picture Showcase Container -->
+                        <div id="drawer-visual-container" class="w-[85%] h-[85%] flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+                            <!-- Injected dynamically -->
                         </div>
                     </div>
 
@@ -194,7 +194,7 @@
                         <p class="text-[11px] text-amber-900/70 leading-relaxed">
                             Click 'Experiment' to trigger a synthesized chime matching the aesthetic frequency of this object.
                         </p>
-                        <button onclick="triggerObjectChime()" class="px-3 py-1.5 bg-amber-700/10 hover:bg-black hover:text-white border border-black/[0.1] rounded-lg text-[10px] font-semibold tracking-wider text-neutral-700 flex items-center gap-1.5 transition-all">
+                        <button onclick="triggerObjectChime()" class="px-3 py-1.5 bg-amber-750 hover:bg-black hover:text-white border border-black/[0.1] rounded-lg text-[10px] font-semibold tracking-wider text-neutral-700 flex items-center gap-1.5 transition-all">
                             <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Experiment Soundwave
                         </button>
                     </div>
@@ -226,9 +226,9 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
                         <div class="md:col-span-5 space-y-6">
-                            <!-- Premium Render Visual Portrait Placeholder -->
+                            <!-- Premium portrait graphic -->
                             <div class="w-full aspect-square rounded-2xl border border-black/[0.02] flex items-center justify-center relative overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop" alt="Portrait" class="w-full h-full object-cover grayscale opacity-90 transition-transform duration-700 hover:scale-105">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop" alt="Portrait" class="w-full h-full object-cover grayscale opacity-90 transition-transform duration-700 hover:scale-105">
                                 <div class="absolute inset-0 bg-gradient-to-tr from-sky-100/30 to-rose-100/30 mix-blend-multiply"></div>
                             </div>
                             <p class="text-xs text-neutral-500 tracking-wide text-center italic">Independent Digital Sculptor &amp; Creative Technologist</p>
@@ -381,7 +381,7 @@
 
     </div>
 
-    <!-- Core UI Interaction Logic -->
+    <!-- Interactive Script Library -->
     <script src="js/portfolio.js"></script>
 </body>
 </html>
