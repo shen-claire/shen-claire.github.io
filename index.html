@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aria Thorne — Interactive Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom External Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="h-full select-none text-neutral-200">
+
+    <!-- Ambient Grid & Glow Effects -->
+    <div class="fixed inset-0 bg-radial-glow pointer-events-none z-0"></div>
+    <div class="fixed inset-0 bg-grid-pattern opacity-10 pointer-events-none z-0"></div>
+
+    <!-- Main Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-6 md:px-12 backdrop-blur-sm bg-black/10">
+        <div class="flex items-center space-x-3">
+            <span class="text-xs uppercase tracking-[0.3em] font-light text-neutral-400">Portfolio // </span>
+            <span class="serif-font italic text-lg tracking-wider text-white">Aria Thorne</span>
+        </div>
+        <nav class="hidden md:flex space-x-8 text-xs uppercase tracking-widest font-light">
+            <a href="#work" onclick="scrollToSection('work')" class="hover:text-white transition-colors duration-300">Works</a>
+            <a href="#about" onclick="toggleAboutModal(true)" class="hover:text-white transition-colors duration-300">About</a>
+            <a href="#contact" onclick="toggleContactModal(true)" class="hover:text-white transition-colors duration-300">Inquire</a>
+        </nav>
+        <button onclick="toggleSound()" id="sound-toggle" class="flex items-center space-x-2 text-xs uppercase tracking-wider text-neutral-400 hover:text-white transition-all">
+            <i data-lucide="volume-2" class="w-4 h-4"></i>
+            <span id="sound-status">Audio On</span>
+        </button>
+    </header>
+
+    <!-- Side Indicators / Navigation Progress -->
+    <div class="fixed left-6 md:left-12 bottom-12 z-40 hidden sm:flex flex-col space-y-4">
+        <div class="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-mono">Interactive Loop</div>
+        <div class="flex items-center space-x-2">
+            <span id="carousel-index" class="text-white font-mono text-sm">01</span>
+            <div class="w-12 h-[1px] bg-neutral-700 relative">
+                <div id="carousel-progress" class="absolute left-0 top-0 h-full bg-white transition-all duration-500" style="width: 20%"></div>
+            </div>
+            <span class="text-neutral-500 font-mono text-xs">05</span>
+        </div>
+    </div>
+
+    <!-- Main Carousel Display Container -->
+    <main class="relative w-full h-full flex flex-col justify-center items-center overflow-hidden z-10 pt-16">
+        
+        <!-- Interactive 3D CSS Ring -->
+        <div class="scene w-full max-w-5xl h-[50vh] flex items-center justify-center">
+            <div class="carousel-ring" id="ring">
+                <!-- Javascript dynamically injects the items here -->
+            </div>
+        </div>
+
+        <!-- Dynamic Selected Content Overlay (Below Ring) -->
+        <div class="text-center z-20 mt-8 px-4 max-w-xl transition-all duration-500" id="project-meta-panel">
+            <p id="project-category" class="text-xs uppercase tracking-[0.4em] text-neutral-400 mb-2 font-mono">Digital Sculpture</p>
+            <h2 id="project-title" class="serif-font text-3xl md:text-5xl text-white font-light tracking-wide mb-3">Nebula Ring</h2>
+            <p id="project-description" class="text-sm text-neutral-400 leading-relaxed font-light line-clamp-2">Exploring procedural generation inside organic gold boundaries, reminiscent of deep space dust clusters.</p>
+            
+            <div class="mt-6 flex justify-center space-x-4">
+                <button onclick="openProjectDetail()" class="px-6 py-2.5 bg-white/5 border border-white/10 hover:border-white/40 rounded-full text-xs uppercase tracking-widest text-white backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 flex items-center space-x-2">
+                    <span>Inspect Design</span>
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Controls & Swipe Instructions -->
+        <div class="absolute bottom-6 md:bottom-12 right-6 md:right-12 z-40 flex items-center space-x-6">
+            <div class="hidden lg:flex flex-col text-right">
+                <span class="text-[10px] uppercase tracking-widest text-neutral-400 font-light">Navigate</span>
+                <span class="text-[9px] text-neutral-500 font-mono">Drag Ring / Scroll / Keyboard Left-Right</span>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="rotateRing(-1)" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:border-white/30 backdrop-blur-sm hover:scale-105 active:scale-95 transition-all">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                </button>
+                <button onclick="rotateRing(1)" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:border-white/30 backdrop-blur-sm hover:scale-105 active:scale-95 transition-all">
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- PROJECT DETAIL MODAL / CASE STUDY (Slide-up Panel) -->
+    <div id="detail-modal" class="fixed inset-0 z-50 pointer-events-none opacity-0 transition-all duration-700 ease-out flex items-end">
+        <!-- Backdrop -->
+        <div onclick="closeActiveTab()" class="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity duration-700"></div>
+        
+        <!-- Core Content Area -->
+        <div class="relative w-full h-[90vh] bg-[#0e0f12] border-t border-white/10 rounded-t-3xl z-10 flex flex-col md:flex-row overflow-hidden transform translate-y-full transition-transform duration-700 ease-out" id="detail-content-wrapper">
+            <!-- Close Button -->
+            <button onclick="closeActiveTab()" class="absolute top-6 right-6 z-50 w-10 h-10 rounded-full bg-black/40 border border-white/10 flex items-center justify-center hover:bg-neutral-800 transition-all text-neutral-300">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Left Half: Beautiful Full Photo Workspace Showcase -->
+            <div class="w-full md:w-1/2 h-2/5 md:h-full relative overflow-hidden bg-black flex items-center justify-center">
+                <img id="modal-image" src="" alt="Project Workspace" class="w-full h-full object-cover opacity-80 transition-transform duration-1000 hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#0e0f12] via-transparent to-transparent"></div>
+                <div class="absolute bottom-6 left-6 md:bottom-12 md:left-12">
+                    <span id="modal-tag" class="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-mono tracking-widest text-neutral-300 uppercase">Interactive Build</span>
+                    <h3 id="modal-subtitle" class="serif-font text-2xl md:text-4xl text-white font-light mt-4 italic">Crafting Organic Gravity</h3>
+                </div>
+            </div>
+
+            <!-- Right Half: Editorial Case Study Text Content -->
+            <div class="w-full md:w-1/2 h-3/5 md:h-full overflow-y-auto px-6 py-8 md:p-16 flex flex-col justify-between">
+                <div class="space-y-8">
+                    <div>
+                        <p id="modal-category" class="text-[10px] tracking-[0.4em] font-mono text-neutral-500 uppercase mb-2">Creative Direction & Design</p>
+                        <h1 id="modal-title" class="serif-font text-4xl md:text-5xl font-light text-white tracking-wide">Aura Shell</h1>
+                    </div>
+
+                    <!-- Details/Metadata Grid -->
+                    <div class="grid grid-cols-2 gap-4 py-4 border-y border-white/5 text-xs font-light">
+                        <div>
+                            <span class="block text-neutral-500 uppercase tracking-widest text-[9px] mb-1">Creation Period</span>
+                            <span id="modal-date" class="text-neutral-300 font-mono">Q1 2026</span>
+                        </div>
+                        <div>
+                            <span class="block text-neutral-500 uppercase tracking-widest text-[9px] mb-1">Materials</span>
+                            <span id="modal-materials" class="text-neutral-300">18k Fairmined Gold, Obsidian</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h4 class="text-xs uppercase tracking-widest text-white font-medium">Concept & Architecture</h4>
+                        <p id="modal-story" class="text-sm text-neutral-400 font-light leading-relaxed">
+                            Inspired by the geometric properties of natural defensive exoskeletons, each node was plotted procedurally to fit the wearer's ergonomic curves flawlessly.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pt-12 flex space-x-4">
+                    <button onclick="viewFullCase()" class="flex-1 px-6 py-3 bg-white hover:bg-neutral-200 text-black text-xs font-semibold uppercase tracking-widest rounded-lg transition-all flex items-center justify-center space-x-2">
+                        <span>Launch Project Detail</span>
+                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button onclick="shareProject()" class="px-4 py-3 bg-neutral-900 hover:bg-neutral-800 border border-white/10 rounded-lg text-neutral-400 hover:text-white transition-all flex items-center justify-center">
+                        <i data-lucide="share-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT INFO MODAL -->
+    <div id="about-modal" class="fixed inset-0 z-50 pointer-events-none opacity-0 transition-opacity duration-500 flex items-center justify-center px-4">
+        <div onclick="toggleAboutModal(false)" class="absolute inset-0 bg-black/75 backdrop-blur-sm"></div>
+        <div class="relative w-full max-w-xl bg-[#0e0f12] border border-white/10 p-8 md:p-12 rounded-2xl z-10 text-neutral-300 space-y-6">
+            <button onclick="toggleAboutModal(false)" class="absolute top-6 right-6 text-neutral-500 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <span class="text-[10px] tracking-[0.3em] font-mono text-neutral-500 uppercase">The Creator</span>
+            <h2 class="serif-font text-3xl md:text-4xl text-white font-light">Aria Thorne</h2>
+            <p class="text-sm font-light leading-relaxed">
+                Aria Thorne is an avant-garde digital artisan and jeweler based out of Copenhagen. Specializing in computational aesthetics, she blurs the boundaries of physical wearability and immersive spatial representations.
+            </p>
+            <p class="text-sm font-light leading-relaxed">
+                Her projects combine generative mathematical patterns with classic metalsmithing techniques, rendering pieces as high-fidelity interactive digital sculptures before bringing them to physical form.
+            </p>
+            <div class="pt-4 flex justify-between items-center text-xs text-neutral-500 border-t border-white/5">
+                <span>Copenhagen, DK</span>
+                <span>© 2026 Studio Thorne</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTACT / INQUIRY MODAL -->
+    <div id="contact-modal" class="fixed inset-0 z-50 pointer-events-none opacity-0 transition-opacity duration-500 flex items-center justify-center px-4">
+        <div onclick="toggleContactModal(false)" class="absolute inset-0 bg-black/75 backdrop-blur-sm"></div>
+        <div class="relative w-full max-w-md bg-[#0e0f12] border border-white/10 p-8 rounded-2xl z-10 text-neutral-300 space-y-6">
+            <button onclick="toggleContactModal(false)" class="absolute top-6 right-6 text-neutral-500 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <span class="text-[10px] tracking-[0.3em] font-mono text-neutral-500 uppercase">Inquire / Collaborate</span>
+            <h2 class="serif-font text-3xl text-white font-light">Secure Acquisition</h2>
+            <p class="text-sm font-light text-neutral-400">
+                To request high-resolution prints, acquire physical pieces, or discuss virtual design commissions, submit your contact information below.
+            </p>
+            <form onsubmit="handleContactSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-[9px] uppercase tracking-widest text-neutral-500 mb-1">Your Name</label>
+                    <input type="text" required class="w-full bg-neutral-900/60 border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-white/40 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-[9px] uppercase tracking-widest text-neutral-500 mb-1">Email Address</label>
+                    <input type="email" required class="w-full bg-neutral-900/60 border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-white/40 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-[9px] uppercase tracking-widest text-neutral-500 mb-1">Inquiry / Project Scope</label>
+                    <textarea rows="3" required class="w-full bg-neutral-900/60 border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-white/40 transition-colors"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 bg-white text-black font-semibold text-xs uppercase tracking-widest rounded hover:bg-neutral-200 transition-colors">
+                    Transmit Message
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Micro-Notification / Feedback Toast -->
+    <div id="custom-notification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 bg-black/80 backdrop-blur-md border border-white/15 rounded-full text-xs font-light text-neutral-200 shadow-xl opacity-0 translate-y-4 pointer-events-none transition-all duration-300 flex items-center space-x-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span id="notification-text">Status updated</span>
+    </div>
+
+    <!-- Application Script Logic -->
+    <script src="js/portfolio.js"></script>
+</body>
+</html>
