@@ -74,7 +74,7 @@ const PORTFOLIO_OBJECTS = [
         client: "Client Name",
         tools: "Tools Used",
         description: "A short, simple description of your seventh project goes here.",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 7" class="w-full h-full object-cover
+        visual: `<img src="img/IMG_9120.jpeg" alt="Project 7" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 8,
