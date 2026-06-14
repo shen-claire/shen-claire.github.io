@@ -1,4 +1,5 @@
-// 1. DATA MODEL 
+// Project/Object Mock Database with highly creative descriptive parameters.
+// Simply modify the "image" attribute below with your own photograph URL or relative path (e.g. "images/portfolio1.jpg")
 const PORTFOLIO_OBJECTS = [
     {
         id: "nebula-ring",
@@ -20,7 +21,7 @@ const PORTFOLIO_OBJECTS = [
         timeline: "Q3 2025",
         client: "Siren & Co.",
         tools: "Grasshopper, SLA Printing",
-        story: "Designed directly around ergonomic hand scans to construct a protective shield that feels like an second skin. Highly polished fluid channels catch sunlight playfully.",
+        story: "Designed directly around ergonomic hand scans to construct a protective shield that feels like a second skin. Highly polished fluid channels catch sunlight playfully.",
         soundFreq: 494,
         image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=600&auto=format&fit=crop"
     },
@@ -62,16 +63,7 @@ const PORTFOLIO_OBJECTS = [
     }
 ];
 
-// 2. STATE MANAGER
-let selectedItemIndex = 0;
-let isDragging = false;
-let startX = 0;
-let currentRotation = 0;
-let baseRotation = 0;
-let isAudioEnabled = true;
-let audioCtx = null;
-
-// Backdrop preset palettes matching original look
+// Presets for the customizable background palette shift engine (Original)
 const BACKDROP_PALETTES = [
     { bg: "radial-gradient(circle at 50% 40%, #b3cddb 0%, #7b9eb3 100%)", ringColor: "border-amber-400/25", frameBg: "#f6f5f3" },
     { bg: "radial-gradient(circle at 50% 40%, #e3c4bc 0%, #a98075 100%)", ringColor: "border-amber-500/20", frameBg: "#f8f4f1" },
@@ -80,19 +72,32 @@ const BACKDROP_PALETTES = [
     { bg: "radial-gradient(circle at 50% 40%, #2b303c 0%, #111318 100%)", ringColor: "border-white/10", frameBg: "#16171a" }
 ];
 
-// 3. ENGINE INITIALIZATION
+// Navigation State tracking parameters
+let selectedItemIndex = 0;
+let isDragging = false;
+let startX = 0;
+let currentRotation = 0;
+let baseRotation = 0;
+let isAudioEnabled = true;
+let audioCtx = null;
+
+// Initial Setup
 document.addEventListener("DOMContentLoaded", () => {
+    // Render the icons
     lucide.createIcons();
+    // Build 3D ring cards dynamically from JavaScript Objects
     initRing();
     updateActiveMetadata();
 
-    // Attach Interactivity Hooks
+    // Attach gestures to structural drag-surface
     const dragSurface = document.getElementById("drag-surface");
     
+    // Mouse Event Listeners
     dragSurface.addEventListener("mousedown", dragStart);
     document.addEventListener("mousemove", dragMove);
     document.addEventListener("mouseup", dragEnd);
 
+    // Touch Support
     dragSurface.addEventListener("touchstart", (e) => dragStart(e.touches[0]), { passive: true });
     document.addEventListener("touchmove", (e) => dragMove(e.touches[0]), { passive: false });
     document.addEventListener("touchend", dragEnd);
@@ -104,35 +109,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// 4. 3D CARD RENDERING (Injecting Image/Photos)
+// Calculate geometries and paint cards onto the 3D rotating carousel ring
 function initRing() {
     const ring = document.getElementById("carousel-ring");
     ring.innerHTML = "";
 
     const count = PORTFOLIO_OBJECTS.length;
     const angleIncrement = 360 / count;
-    // Compute distance radius dynamically for clean spatial density
-    const radius = Math.round(100 / Math.tan(Math.PI / count));
+    // Keep identical radial equation so users can scale to fit lots of items
+    const radius = Math.round(140 / Math.tan(Math.PI / count));
 
     PORTFOLIO_OBJECTS.forEach((obj, idx) => {
         const itemAngle = idx * angleIncrement;
         const card = document.createElement("div");
         
         card.id = `item-${idx}`;
-        // Exact original dimensions, colors, borders, and backdrop-blur
         card.className = "carousel-item absolute w-36 h-48 md:w-44 md:h-60 rounded-2xl border border-black/[0.04] bg-white/40 backdrop-blur-md shadow-sm flex flex-col justify-between p-4 cursor-pointer transition-all duration-300";
         card.style.transform = `rotateY(${itemAngle}deg) translateZ(${radius}px)`;
         
-        // Dynamic HTML card structure replacing SVG renders with premium photos/images
+        // Dynamic HTML card structure replacing vector design codes with customizable <img> tags
         card.innerHTML = `
             <div class="w-full flex justify-between items-center z-10">
                 <span class="text-[9px] font-mono font-medium text-neutral-400">0${idx+1}</span>
                 <div class="w-1.5 h-1.5 rounded-full bg-neutral-300"></div>
             </div>
             
-            <!-- Picture container placeholder inside the card frame -->
             <div class="flex-1 w-full flex items-center justify-center py-2 overflow-hidden pointer-events-none z-10">
-                <img src="${obj.image}" alt="${obj.title}" class="w-[85%] h-[85%] object-cover rounded-lg shadow-inner-sm transition-transform duration-500 hover:scale-105">
+                <img src="${obj.image}" alt="${obj.title}" class="max-w-[85%] max-h-[85%] object-contain rounded-lg" style="filter: drop-shadow(0 10px 15px rgba(0,0,0,0.12));" onerror="this.style.opacity='0.2';">
             </div>
             
             <div class="w-full text-left z-10">
@@ -140,11 +143,10 @@ function initRing() {
                 <p class="text-[8px] tracking-widest text-neutral-400 uppercase mt-0.5">${obj.category}</p>
             </div>
             
-            <!-- Beautiful background light refraction effects within glassmorphic card -->
             <div class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none"></div>
         `;
 
-        // Direct click targeting to rotate to clicked card, or open if active
+        // Direct clicking selection mapping
         card.addEventListener("click", () => {
             if (idx === selectedItemIndex) {
                 openDetails();
@@ -159,7 +161,7 @@ function initRing() {
     applyRotationState();
 }
 
-// 5. CAROUSEL SPINNING LOGIC
+// Swipe gestures
 function dragStart(e) {
     isDragging = true;
     startX = e.clientX;
@@ -170,7 +172,7 @@ function dragMove(e) {
     if (!isDragging) return;
     
     const deltaX = e.clientX - startX;
-    // Map drag distance into rotation parameters
+    // Map movement coordinates exactly to original rotating coefficients
     currentRotation = baseRotation + (deltaX * 0.25);
     
     document.getElementById("carousel-ring").style.transform = `rotateY(${currentRotation}deg)`;
@@ -186,7 +188,7 @@ function dragEnd() {
     const count = PORTFOLIO_OBJECTS.length;
     const angleStep = 360 / count;
     
-    // Snap-to angle logic
+    // Nearest angular snap solver
     let normalizedRot = currentRotation % 360;
     if (normalizedRot > 180) normalizedRot -= 360;
     if (normalizedRot < -180) normalizedRot += 360;
@@ -199,7 +201,7 @@ function dragEnd() {
     
     applyRotationState();
     updateActiveMetadata();
-    playAmbientNote(PORTFOLIO_OBJECTS[selectedItemIndex].soundFreq, 'sine', 0.15, 0.08);
+    playAmbientNote(PORTFOLIO_OBJECTS[selectedItemIndex].soundFreq, 'sine', 1.0, 0.08);
 }
 
 function rotateStep(dir) {
@@ -219,13 +221,13 @@ function navigateToIndex(idx) {
     
     applyRotationState();
     updateActiveMetadata();
-    playAmbientNote(PORTFOLIO_OBJECTS[selectedItemIndex].soundFreq, 'sine', 0.15, 0.08);
+    playAmbientNote(PORTFOLIO_OBJECTS[selectedItemIndex].soundFreq, 'sine', 1.0, 0.08);
 }
 
 function applyRotationState() {
     document.getElementById("carousel-ring").style.transform = `rotateY(${currentRotation}deg)`;
     
-    // Manage visual focus states of cards
+    // Focus states of items on the ring (Original brightness/blur transitions)
     const count = PORTFOLIO_OBJECTS.length;
     for (let i = 0; i < count; i++) {
         const card = document.getElementById(`item-${i}`);
@@ -235,7 +237,6 @@ function applyRotationState() {
             card.style.filter = "none";
             card.style.opacity = "1";
         } else {
-            // Apply slight blur and dimming to unfocused works
             card.style.filter = "brightness(0.7) blur(0.5px)";
             card.style.opacity = "0.6";
         }
@@ -247,7 +248,7 @@ function updateActiveMetadata() {
     
     document.getElementById("active-item-index").innerText = `0${selectedItemIndex + 1}`;
     
-    // Soft metadata transitions
+    // Soft overlay transitions
     const nameSpan = document.getElementById("active-item-name");
     nameSpan.style.opacity = "0";
     
@@ -263,11 +264,10 @@ function updateActiveMetadata() {
     }, 200);
 }
 
-// 6. DETAILED DRAWER MODULE
+// Slide out case study drawer
 function openDetails() {
     const current = PORTFOLIO_OBJECTS[selectedItemIndex];
     
-    // Inject correct text fields
     document.getElementById("drawer-category").innerText = current.category;
     document.getElementById("drawer-title").innerText = current.title;
     document.getElementById("drawer-role").innerText = current.role;
@@ -276,38 +276,35 @@ function openDetails() {
     document.getElementById("drawer-tools").innerText = current.tools;
     document.getElementById("drawer-description").innerText = current.story;
     
-    // INJECT DETAILED WORK PHOTOGRAPHY SHOWCASE INSTEAD OF VECTOR DRAFTS
+    // INJECT DETAILED WORK PHOTOGRAPHY SHOWCASE INSTEAD OF ORIGINAL SVG CODE
     const container = document.getElementById("drawer-visual-container");
     container.innerHTML = `
-        <img src="${current.image}" alt="${current.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+        <img src="${current.image}" alt="${current.title}" class="max-w-[80%] max-h-[80%] object-contain rounded-xl" style="filter: drop-shadow(0 20px 25px rgba(0,0,0,0.22));">
     `;
 
-    // Slide-out Drawer interaction animation
     const drawer = document.getElementById("detail-drawer");
     drawer.classList.remove("translate-x-full");
     
-    playAmbientNote(600, 'triangle', 0.15, 0.25);
+    playAmbientNote(600, 'triangle', 0.8, 0.25);
 }
 
 function closeDetails() {
     const drawer = document.getElementById("detail-drawer");
     drawer.classList.add("translate-x-full");
-    playAmbientNote(200, 'sine', 0.2, 0.1);
+    playAmbientNote(200, 'sine', 0.5, 0.1);
 }
 
-// 7. EXTERNAL TABS (About, Lab, Contact Panels)
+// Slide screens
 function openTab(tabId) {
-    // Hide active tabs first
     const overlays = ["about", "lab", "contact"];
     overlays.forEach(id => {
         document.getElementById(`tab-${id}`).classList.add("translate-y-full");
     });
     
-    // Open target overlay screen
     const target = document.getElementById(`tab-${tabId}`);
     if (target) {
         target.classList.remove("translate-y-full");
-        playAmbientNote(500, 'sine', 0.1, 0.2);
+        playAmbientNote(500, 'sine', 0.6, 0.2);
     }
 }
 
@@ -316,63 +313,57 @@ function closeActiveTab() {
     overlays.forEach(id => {
         document.getElementById(`tab-${id}`).classList.add("translate-y-full");
     });
-    playAmbientNote(300, 'sine', 0.1, 0.1);
+    playAmbientNote(300, 'sine', 0.4, 0.1);
 }
 
-// Form inquiries
 function handleInquirySubmit(e) {
     e.preventDefault();
-    showNotification("Inquiry sent securely to Studio Thorne");
+    showNotification("Inquiry sent successfully to Studio Thorne");
     setTimeout(() => {
         closeActiveTab();
     }, 1500);
 }
 
-// 8. RANDOM PALETTE ENGINE (Preserves visual cohesion!)
+// Visual environment color palette shifters
 function randomizePalette() {
     const randomIndex = Math.floor(Math.random() * BACKDROP_PALETTES.length);
     const selected = BACKDROP_PALETTES[randomIndex];
     
-    // Update ambient backdrop element colors
     const backdrop = document.getElementById("backdrop-container");
     backdrop.style.background = selected.bg;
     
-    // Apply styling to frame border ring inside
     const refractingRing = document.querySelector("#backdrop-container div div");
     refractingRing.className = `w-[85%] h-[85%] rounded-full border-[22px] ${selected.ringColor} blur-sm animate-[spin_120s_linear_infinite]`;
     
-    // Shift layout workspace background variables dynamically
     const frame = document.getElementById("web-frame");
     frame.style.backgroundColor = selected.frameBg;
     
     showNotification("Visual environment colorway adjusted");
-    playAmbientNote(650, 'sine', 0.1, 0.1);
+    playAmbientNote(650, 'sine', 0.5, 0.1);
 }
 
-// 9. SCREEN MODES (Mockup Frame versus Fullscreen Mode)
+// Toggle layout display mode (mockup frame versus fullscreen)
 function toggleMockupFrame() {
     const wrapper = document.getElementById("wrapper");
     const frame = document.getElementById("web-frame");
     const icon = document.getElementById("frame-icon");
     
     if (frame.classList.contains("max-h-[850px]")) {
-        // Expand to Fullscreen workspace
         wrapper.className = "absolute inset-0 z-10";
         frame.className = "mockup-frame w-full h-full bg-[#f6f5f3] flex flex-col justify-between overflow-hidden relative pointer-events-auto transition-all duration-700";
         icon.setAttribute("data-lucide", "maximize");
         showNotification("Viewing in Fullscreen Canvas");
     } else {
-        // Restrict to Realistic Desktop Frame mockup view
         wrapper.className = "absolute inset-0 flex items-center justify-center p-4 md:p-12 z-10";
         frame.className = "mockup-frame w-full h-full bg-[#f6f5f3] rounded-[32px] shadow-2xl border border-white/30 flex flex-col justify-between overflow-hidden relative pointer-events-auto max-w-7xl max-h-[850px] transition-all duration-700";
         icon.setAttribute("data-lucide", "minimize");
         showNotification("Viewing inside Mockup Studio Frame");
     }
     lucide.createIcons();
-    playAmbientNote(400, 'sine', 0.1, 0.1);
+    playAmbientNote(400, 'sine', 0.5, 0.1);
 }
 
-// 10. WEBAUDIO AMBIENT SYNTHESIZER (Completely self-contained!)
+// WebAudio Synths (Completely self-contained, high quality parameters!)
 function initAudio() {
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -410,7 +401,7 @@ function toggleAudio() {
     
     if (isAudioEnabled) {
         button.innerHTML = `<i data-lucide="volume-2" class="w-4 h-4 text-[#333333] scale-110 transition-transform"></i>`;
-        playAmbientNote(440, 'sine', 0.15, 0.08);
+        playAmbientNote(440, 'sine', 1.0, 0.08);
         showNotification("Ambient Audio Feedback Activated");
     } else {
         button.innerHTML = `<i data-lucide="volume-x" class="w-4 h-4 text-[#333333]/40 transition-transform"></i>`;
@@ -421,11 +412,11 @@ function toggleAudio() {
 
 function triggerObjectChime() {
     const current = PORTFOLIO_OBJECTS[selectedItemIndex];
-    playAmbientNote(current.soundFreq * 1.5, 'triangle', 0.2, 0.4);
+    playAmbientNote(current.soundFreq * 1.5, 'triangle', 1.0, 0.4);
     showNotification(`Aesthetic sound waves projected: ${current.soundFreq * 1.5}Hz`);
 }
 
-// Custom micro-notification systems
+// Custom micro-toast feedback indicator
 function showNotification(text) {
     const toast = document.getElementById('custom-notification');
     document.getElementById('notification-text').innerText = text;
@@ -441,7 +432,7 @@ function showNotification(text) {
 
 function viewFullCase() {
     showNotification(`Launching full case study detail window...`);
-    playAmbientNote(700, 'sine', 0.3, 0.05);
+    playAmbientNote(700, 'sine', 1.0, 0.05);
 }
 
 function shareProject() {
@@ -453,5 +444,5 @@ function shareProject() {
     document.body.removeChild(dummy);
 
     showNotification("Case study URL copied to clipboard!");
-    playAmbientNote(800, 'sine', 0.2, 0.05);
+    playAmbientNote(800, 'sine', 0.6, 0.05);
 }
