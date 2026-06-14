@@ -11,12 +11,9 @@ const PORTFOLIO_OBJECTS = [
         description: "A gorgeous, powder-blue high fashion shoulder bag displaying elegant sweeping contours. Created with sustainability at its center using vegan apple leather composites and ultra-light architectural frame stabilizers. Represented in our spatial ring to capture organic ergonomic movement under warm procedural light sources.",
         visual: `
             <svg viewBox="0 0 100 100" class="w-full h-full text-sky-200 fill-current drop-shadow-md">
-                <!-- Handle -->
                 <path d="M 30 50 C 30 10, 70 10, 70 50" fill="none" stroke="#2a3040" stroke-width="4.5" stroke-linecap="round"/>
-                <!-- Decorative Ribbons -->
                 <path d="M 30 50 C 27 55, 25 75, 28 80" fill="none" stroke="#2a3040" stroke-width="1.8"/>
                 <path d="M 70 50 C 73 55, 75 75, 72 80" fill="none" stroke="#2a3040" stroke-width="1.8"/>
-                <!-- Bag Body -->
                 <path d="M 28 50 C 26 48, 74 48, 72 50 C 70 72, 60 82, 50 82 C 40 82, 30 72, 28 50 Z" fill="#b0cddb"/>
                 <path d="M 32 54 C 35 70, 65 70, 68 54" fill="none" stroke="white" stroke-width="1" stroke-opacity="0.4"/>
             </svg>
@@ -78,11 +75,9 @@ const PORTFOLIO_OBJECTS = [
             <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
                 <circle cx="50" cy="50" r="38" fill="#10b981" fill-opacity="0.8"/>
                 <circle cx="50" cy="50" r="38" fill="none" stroke="#047857" stroke-width="0.5"/>
-                <!-- Grooves -->
                 <circle cx="50" cy="50" r="30" fill="none" stroke="white" stroke-opacity="0.15" stroke-width="0.3"/>
                 <circle cx="50" cy="50" r="24" fill="none" stroke="white" stroke-opacity="0.15" stroke-width="0.3"/>
                 <circle cx="50" cy="50" r="18" fill="none" stroke="white" stroke-opacity="0.2" stroke-width="0.3"/>
-                <!-- Center Label -->
                 <circle cx="50" cy="50" r="12" fill="white" stroke="#065f46" stroke-width="0.5"/>
                 <circle cx="50" cy="50" r="4" fill="#047857"/>
             </svg>
@@ -99,12 +94,9 @@ const PORTFOLIO_OBJECTS = [
         description: "A sleek tubular futuristic design armchair. Crafted using continuous highly polished stainless steel chrome pipelines and premium leather supports, representing a balanced combination of Bauhaus precision and digital organic style.",
         visual: `
             <svg viewBox="0 0 100 100" class="w-full h-full text-[#4a5568]">
-                <!-- Left Tube Leg -->
                 <path d="M35 70 L35 45 C35 38, 65 38, 65 45 L65 70" fill="none" stroke="#cbd5e0" stroke-width="4.5" stroke-linecap="round"/>
                 <path d="M35 70 L35 45 C35 38, 65 38, 65 45 L65 70" fill="none" stroke="#4a5568" stroke-width="1.5" stroke-linecap="round"/>
-                <!-- Cushion Seat -->
                 <rect x="30" y="52" width="40" height="6" rx="3" fill="#1a202c"/>
-                <!-- Back Cushion -->
                 <rect x="38" y="42" width="24" height="10" rx="2" fill="#2d3748"/>
             </svg>
         `
@@ -138,7 +130,6 @@ const PORTFOLIO_OBJECTS = [
             <svg viewBox="0 0 100 100" class="w-full h-full">
                 <rect x="30" y="20" width="40" height="60" rx="3" fill="#ecd5c5" stroke="#dbbca6" stroke-width="1"/>
                 <line x1="30" y1="28" x2="70" y2="28" stroke="#fff" stroke-width="1" stroke-opacity="0.4"/>
-                <!-- Mini Brand Label -->
                 <rect x="38" y="38" width="24" height="24" fill="white" rx="1"/>
                 <rect x="42" y="42" width="16" height="16" fill="none" stroke="#111" stroke-width="0.5"/>
             </svg>
@@ -155,11 +146,8 @@ const PORTFOLIO_OBJECTS = [
         description: "A minimalist six-panel unstructured baseball cap made of heavy double-woven washed canvas. Featuring custom tone-on-tone sculptural typography embroidery that represents dark streetwear visual paradigms.",
         visual: `
             <svg viewBox="0 0 100 100" class="w-full h-full text-neutral-800 fill-current">
-                <!-- Cap Dome -->
                 <path d="M 25 60 C 25 30, 75 30, 75 60 Z"/>
-                <!-- Cap Brim -->
                 <path d="M 22 59 C 10 58, 12 70, 32 70 C 45 70, 75 68, 77 59 Z" fill="#2d3748"/>
-                <!-- Button on top -->
                 <circle cx="50" cy="30" r="3" fill="#1a202c"/>
             </svg>
         `
@@ -175,12 +163,9 @@ const PORTFOLIO_OBJECTS = [
         description: "Retro-inspired statement sunglasses featuring bold tortoiseshell rims and amber-tinted polarized lenses. Crafted using bio-acetate compounds for absolute environmental compatibility.",
         visual: `
             <svg viewBox="0 0 100 100" class="w-full h-full text-amber-900 fill-current">
-                <!-- Sunglasses bridge -->
                 <rect x="45" y="44" width="10" height="3" rx="1" fill="#e28743"/>
-                <!-- Left Rim -->
                 <rect x="22" y="38" width="24" height="18" rx="8" fill="#e28743" stroke="#763e1a" stroke-width="1.5"/>
                 <rect x="26" y="42" width="16" height="10" rx="5" fill="#f97316" fill-opacity="0.8"/>
-                <!-- Right Rim -->
                 <rect x="54" y="38" width="24" height="18" rx="8" fill="#e28743" stroke="#763e1a" stroke-width="1.5"/>
                 <rect x="58" y="42" width="16" height="10" rx="5" fill="#f97316" fill-opacity="0.8"/>
             </svg>
@@ -197,11 +182,8 @@ const PORTFOLIO_OBJECTS = [
         description: "A contemporary stoneware vase with a raw tactile clay exterior and double organic handles. Merging primitive geometric craft principles with clean, high-end visual systems.",
         visual: `
             <svg viewBox="0 0 100 100" class="w-full h-full text-[#eed9c4]">
-                <!-- Left Handle -->
                 <path d="M36 40 C24 40, 24 60, 36 60" fill="none" stroke="#eed9c4" stroke-width="3" stroke-linecap="round"/>
-                <!-- Right Handle -->
                 <path d="M64 40 C76 40, 76 60, 64 60" fill="none" stroke="#eed9c4" stroke-width="3" stroke-linecap="round"/>
-                <!-- Vase Body -->
                 <path d="M 38 28 C 36 28, 64 28, 62 28 C 66 50, 70 74, 58 78 C 50 80, 42 78, 38 74 C 30 74, 34 50, 38 28 Z" fill="#dfc0a5"/>
                 <ellipse cx="50" cy="28" rx="12" ry="3" fill="#eed9c4"/>
             </svg>
@@ -218,12 +200,9 @@ const PORTFOLIO_OBJECTS = [
         description: "An elegant, heavyweight amber glass bottle containing high-end custom oil formulations. Explores structural glass weight, tactile ergonomics, and minimal label structures.",
         visual: `
             <svg viewBox="0 0 100 100" class="w-full h-full text-amber-700 fill-current">
-                <!-- Cap -->
                 <rect x="42" y="20" width="16" height="12" rx="2" fill="#111"/>
                 <rect x="47" y="31" width="6" height="3" fill="#666"/>
-                <!-- Bottle Body -->
                 <rect x="32" y="34" width="36" height="46" rx="5" fill="#ca8a04" fill-opacity="0.9"/>
-                <!-- White Minimalist Label -->
                 <rect x="38" y="44" width="24" height="24" fill="white" rx="1"/>
                 <rect x="42" y="48" width="16" height="16" fill="none" stroke="#111" stroke-width="0.3"/>
                 <text x="50" y="58" text-anchor="middle" font-size="3" font-family="monospace" fill="#111">N°9</text>
@@ -242,9 +221,7 @@ const PORTFOLIO_OBJECTS = [
         visual: `
             <svg viewBox="0 0 100 100" class="w-full h-full text-neutral-200 fill-current">
                 <rect x="25" y="15" width="50" height="70" rx="3" fill="#fdfbf7" stroke="#eae6dd" stroke-width="1.5"/>
-                <!-- Spine -->
                 <rect x="25" y="15" width="5" height="70" fill="#db2777" rx="0.5"/>
-                <!-- Cover Design -->
                 <circle cx="52" cy="45" r="10" fill="none" stroke="#111" stroke-width="0.5" stroke-dasharray="2 2"/>
                 <line x1="38" y1="62" x2="66" y2="62" stroke="#111" stroke-width="1"/>
                 <text x="52" y="70" text-anchor="middle" font-size="3" font-family="monospace" fill="#111">MONOGRAPH</text>
@@ -549,7 +526,9 @@ function runAnimationLoop() {
 
     // Apply rotation matrices to physical element
     const ring = document.getElementById('carousel-ring');
-    ring.style.transform = `rotateY(${currentRotation}deg)`;
+    if (ring) {
+        ring.style.transform = `rotateY(${currentRotation}deg)`;
+    }
 
     // Figure out which card is currently closest to the front projection camera center
     calculateClosestFrontItem();
@@ -589,8 +568,10 @@ function updateHighlight() {
             card.classList.add('opacity-100', 'border-sky-200', 'scale-105', 'z-30');
             
             // Update active bottom indicators
-            document.getElementById('active-item-index').innerText = String(i + 1).padStart(2, '0');
-            document.getElementById('active-item-name').innerText = PORTFOLIO_OBJECTS[i].name.toUpperCase();
+            const indexEl = document.getElementById('active-item-index');
+            const nameEl = document.getElementById('active-item-name');
+            if (indexEl) indexEl.innerText = String(i + 1).padStart(2, '0');
+            if (nameEl) nameEl.innerText = PORTFOLIO_OBJECTS[i].name.toUpperCase();
         } else {
             card.classList.remove('opacity-100', 'border-sky-200', 'scale-105', 'z-30');
             card.classList.add('opacity-50', 'blur-[1.5px]');
@@ -599,7 +580,7 @@ function updateHighlight() {
 }
 
 // UI navigation interactions
-function openTab(tabId) {
+function openTab(tabId, event) {
     // Remove underline highlight from all nav anchors
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('text-black', 'border-black');
@@ -619,10 +600,12 @@ function openTab(tabId) {
     const tabs = ['about', 'lab', 'contact'];
     tabs.forEach(t => {
         const panel = document.getElementById(`tab-${t}`);
-        if (t === tabId) {
-            panel.classList.remove('translate-y-full');
-        } else {
-            panel.classList.add('translate-y-full');
+        if (panel) {
+            if (t === tabId) {
+                panel.classList.remove('translate-y-full');
+            } else {
+                panel.classList.add('translate-y-full');
+            }
         }
     });
 }
@@ -630,7 +613,8 @@ function openTab(tabId) {
 function closeActiveTab() {
     const tabs = ['about', 'lab', 'contact'];
     tabs.forEach(t => {
-        document.getElementById(`tab-${t}`).classList.add('translate-y-full');
+        const panel = document.getElementById(`tab-${t}`);
+        if (panel) panel.classList.add('translate-y-full');
     });
 
     // Set projects as highlighted
@@ -639,8 +623,10 @@ function closeActiveTab() {
         link.classList.add('text-[#333333]/60', 'border-transparent');
     });
     const firstLink = document.querySelectorAll('.nav-link')[0];
-    firstLink.classList.remove('text-[#333333]/60', 'border-transparent');
-    firstLink.classList.add('text-black', 'border-black');
+    if (firstLink) {
+        firstLink.classList.remove('text-[#333333]/60', 'border-transparent');
+        firstLink.classList.add('text-black', 'border-black');
+    }
 
     playAmbientNote(300, 'sine', 0.5, 0.03);
 }
@@ -662,11 +648,11 @@ function selectProject(index) {
 
     // Clone graphic to drawer visualization section
     const container = document.getElementById('drawer-visual-container');
-    container.innerHTML = item.visual;
+    if (container) container.innerHTML = item.visual;
 
     // Trigger slides
     const drawer = document.getElementById('detail-drawer');
-    drawer.classList.remove('translate-x-full');
+    if (drawer) drawer.classList.remove('translate-x-full');
 
     // Sound design chimes
     playAmbientNote(450, 'triangle', 1.5, 0.08);
@@ -676,7 +662,8 @@ function selectProject(index) {
 }
 
 function closeDetails() {
-    document.getElementById('detail-drawer').classList.add('translate-x-full');
+    const drawer = document.getElementById('detail-drawer');
+    if (drawer) drawer.classList.add('translate-x-full');
     playAmbientNote(350, 'sine', 0.4, 0.04);
 }
 
@@ -691,7 +678,7 @@ function randomizePalette() {
 
     const sel = palettes[Math.floor(Math.random() * palettes.length)];
     const webFrame = document.getElementById('web-frame');
-    webFrame.style.backgroundColor = sel.bg;
+    if (webFrame) webFrame.style.backgroundColor = sel.bg;
     
     showNotification(`Palette shifted to: ${sel.desc}`);
     playAmbientNote(520, 'sine', 1.0, 0.05);
@@ -710,15 +697,18 @@ function handleInquirySubmit(event) {
 // Custom micro notification toast generator
 function showNotification(text) {
     const toast = document.getElementById('custom-notification');
-    document.getElementById('notification-text').innerText = text;
+    const toastText = document.getElementById('notification-text');
+    if (toastText) toastText.innerText = text;
     
-    toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
-    toast.classList.add('opacity-100', 'translate-y-0');
+    if (toast) {
+        toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+        toast.classList.add('opacity-100', 'translate-y-0');
 
-    setTimeout(() => {
-        toast.classList.remove('opacity-100', 'translate-y-0');
-        toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
-    }, 3000);
+        setTimeout(() => {
+            toast.classList.remove('opacity-100', 'translate-y-0');
+            toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+        }, 3000);
+    }
 }
 
 function viewFullCase() {
@@ -727,14 +717,12 @@ function viewFullCase() {
 }
 
 function shareProject() {
-    // Safe fallback for clipboard copying inside sandbox containers
-    const dummy = document.createElement('input');
-    document.body.appendChild(dummy);
-    dummy.value = window.location.href + `?project=${PORTFOLIO_OBJECTS[selectedItemIndex].id}`;
-    dummy.select();
-    document.execCommand('copy');
-    document.body.removeChild(dummy);
-
-    showNotification("Case study URL copied to clipboard!");
-    playAmbientNote(800, 'sine', 0.6, 0.05);
+    const url = window.location.href + `?project=${PORTFOLIO_OBJECTS[selectedItemIndex].id}`;
+    
+    navigator.clipboard.writeText(url).then(() => {
+        showNotification("Case study URL copied to clipboard!");
+        playAmbientNote(800, 'sine', 0.6, 0.05);
+    }).catch(err => {
+        console.error('Failed to copy link via Clipboard API: ', err);
+    });
 }
