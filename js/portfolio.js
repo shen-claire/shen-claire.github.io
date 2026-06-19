@@ -316,8 +316,8 @@ window.addEventListener('resize', updateRingSpacing);
 
 // Interaction Listeners & Swipe Physics Integration
 function initInteractionHandlers() {
-    const surface = document.getElementById('drag-surface');
-    let totalDragDistance = 0; // Track if the user dragged or just clicked
+    // CHANGE THIS LINE: Target the .scene wrapper container instead of the hidden overlay
+    const surface = document.querySelector('.scene');
 
     surface.addEventListener('mousedown', (e) => {
         isDragging = true;
@@ -325,7 +325,6 @@ function initInteractionHandlers() {
         startX = e.clientX;
         currentX = startX;
         dragVelocity = 0;
-        totalDragDistance = 0; // Reset on click down
     });
 
     window.addEventListener('mousemove', (e) => {
@@ -334,8 +333,6 @@ function initInteractionHandlers() {
         const deltaX = currentX - startX;
         startX = currentX;
         
-        totalDragDistance += Math.abs(deltaX); // Accumulate movement
-
         // Map screen drag pixels to 3D cylinder degrees
         const rotationFactor = 0.25;
         currentRotation += deltaX * rotationFactor;
@@ -346,11 +343,6 @@ function initInteractionHandlers() {
         if (!isDragging) return;
         isDragging = false;
         autoSpinActive = true;
-
-        // FIX: If they barely moved the mouse, it's a click! Open the active item.
-        if (totalDragDistance < 5) {
-            selectProject(selectedItemIndex);
-        }
     });
 
     // Touch support for sleek responsive mobile sliding
@@ -360,7 +352,6 @@ function initInteractionHandlers() {
         startX = e.touches[0].clientX;
         currentX = startX;
         dragVelocity = 0;
-        totalDragDistance = 0;
     });
 
     surface.addEventListener('touchmove', (e) => {
@@ -368,9 +359,6 @@ function initInteractionHandlers() {
         currentX = e.touches[0].clientX;
         const deltaX = currentX - startX;
         startX = currentX;
-        
-        totalDragDistance += Math.abs(deltaX);
-
         const rotationFactor = 0.35;
         currentRotation += deltaX * rotationFactor;
         dragVelocity = deltaX * rotationFactor;
@@ -380,11 +368,6 @@ function initInteractionHandlers() {
         if (!isDragging) return;
         isDragging = false;
         autoSpinActive = true;
-
-        // FIX: Mobile tap support
-        if (totalDragDistance < 5) {
-            selectProject(selectedItemIndex);
-        }
     });
 }
 
