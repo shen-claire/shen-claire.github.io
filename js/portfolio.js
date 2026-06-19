@@ -149,12 +149,12 @@ let targetRotation = 0; // Target for animated snaps or ease-to-index
 let audioCtx = null;
 let synthEnabled = true;
 
-// Initialize Lucide Icons
 window.onload = function() {
     lucide.createIcons();
     buildCarouselRing();
     initInteractionHandlers();
     runAnimationLoop();
+    initLightboxViewer(); // Safely loaded right here!
 };
 
 // Synthesizer Engine (Pristine interactive chimes using physical modeling approximation)
@@ -262,7 +262,7 @@ function buildCarouselRing() {
         
         const card = document.createElement('div');
         card.id = `item-${index}`;
-        card.className = "carousel-item absolute w-[90px] md:w-[130px] h-[120px] md:h-[160px] cursor-pointer flex flex-col justify-center items-center rounded-2xl border border-black/[0.03] bg-white/70 backdrop-blur-md shadow-sm p-4";
+        card.className = "carousel-item absolute w-[90px] md:w-[130px] h-[120px] md:h-[160px] cursor-pointer flex flex-col justify-center items-center rounded-2xl border border-black/[0.03] bg-white/70 backdrop-blur-md shadow-sm p-4 transition-all duration-300";
         
         // Cylinder mapping math formula
         card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
@@ -279,7 +279,6 @@ function buildCarouselRing() {
 
         // Item Click details & chime trigger
         card.addEventListener('click', (e) => {
-            // Prevent accidental click during long drag sweeps
             if (Math.abs(dragVelocity) > 0.4) return;
             e.stopPropagation();
             selectProject(index);
@@ -289,12 +288,10 @@ function buildCarouselRing() {
         card.addEventListener('mouseenter', () => {
             autoSpinActive = false;
             playAmbientNote(600 + (index * 40), 'sine', 0.4, 0.02);
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 20}px) scale(1.08)`;
         });
 
         card.addEventListener('mouseleave', () => {
             autoSpinActive = true;
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(1)`;
         });
 
         ring.appendChild(card);
@@ -312,15 +309,7 @@ function calculateRadius() {
 }
 
 function updateRingSpacing() {
-    const totalItems = PORTFOLIO_OBJECTS.length;
-    const radius = calculateRadius();
-    PORTFOLIO_OBJECTS.forEach((item, index) => {
-        const card = document.getElementById(`item-${index}`);
-        if (card) {
-            const angle = index * (360 / totalItems);
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
-        }
-    });
+    updateHighlight();
 }
 
 window.addEventListener('resize', updateRingSpacing);
@@ -343,7 +332,6 @@ function initInteractionHandlers() {
         const deltaX = currentX - startX;
         startX = currentX;
         
-        // Map screen drag pixels to 3D cylinder degrees
         const rotationFactor = 0.25;
         currentRotation += deltaX * rotationFactor;
         dragVelocity = deltaX * rotationFactor;
@@ -385,13 +373,11 @@ function initInteractionHandlers() {
 function rotateStep(direction) {
     autoSpinActive = false;
     const stepAngle = 360 / PORTFOLIO_OBJECTS.length;
-    // Snap target rotation smoothly to neighboring elements
     const currentSnapped = Math.round(currentRotation / stepAngle) * stepAngle;
     targetRotation = currentSnapped - (direction * stepAngle);
     
     playAmbientNote(500, 'sine', 0.6, 0.04);
     
-    // Temporary tween
     let count = 0;
     function animateStep() {
         if (count < 15) {
@@ -413,28 +399,22 @@ function runAnimationLoop() {
     lastTime = now;
 
     if (isDragging) {
-        // Cap extreme velocities
         dragVelocity = Math.max(-10, Math.min(10, dragVelocity));
     } else {
-        // Inertial ring slide-out
         currentRotation += dragVelocity;
         dragVelocity *= 0.94; // friction coefficient
 
-        // Constant idle rotation when inactive
         if (autoSpinActive && Math.abs(dragVelocity) < 0.05) {
             currentRotation += 0.08; // smooth constant drift
         }
     }
 
-    // Apply rotation matrices to physical element
     const ring = document.getElementById('carousel-ring');
     if (ring) {
         ring.style.transform = `rotateY(${currentRotation}deg)`;
     }
 
-    // Figure out which card is currently closest to the front projection camera center
     calculateClosestFrontItem();
-
     requestAnimationFrame(runAnimationLoop);
 }
 
@@ -443,7 +423,6 @@ function calculateClosestFrontItem() {
     const totalItems = PORTFOLIO_OBJECTS.length;
     const stepAngle = 360 / totalItems;
     
-    // Normalize ongoing rotation angle between 0 and 360 degrees
     let normalizedRotation = (-currentRotation) % 360;
     if (normalizedRotation < 0) normalizedRotation += 360;
 
@@ -452,13 +431,11 @@ function calculateClosestFrontItem() {
     if (closestIndex !== selectedItemIndex) {
         selectedItemIndex = closestIndex;
         updateHighlight();
-        // Tick audio generator lightly on each cylinder segment pass
         playAmbientNote(200, 'triangle', 0.15, 0.015);
     }
 }
 
-// Highlighting active nodes and dimming distant backplane cards
-// Highlighting active nodes and dimming distant backplane cards
+// --- DYNAMIC MAGNIFIED FOCUS HIGHLIGHTING ---
 function updateHighlight() {
     const totalItems = PORTFOLIO_OBJECTS.length;
     const radius = calculateRadius();
@@ -470,36 +447,32 @@ function updateHighlight() {
         const angle = i * (360 / totalItems);
 
         if (i === selectedItemIndex) {
-            card.classList.remove('opacity-50', 'blur-[1.5px]');
-            card.classList.add('opacity-100', 'border-sky-200', 'z-30');
+            card.classList.remove('opacity-50', 'blur-[1.5px]', 'scale-75');
+            card.classList.add('opacity-100', 'border-sky-200', 'z-30', 'scale-150'); // High contrast focus scale expansion!
             
-            // Pop the item closer to the screen (radius + 30) and make it larger (scale(1.3))
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 30}px) scale(1.3)`;
+            // Pop the focused object much closer on the screen Z-axis
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 50}px)`;
             
-            // Update active bottom indicators
             const indexEl = document.getElementById('active-item-index');
             const nameEl = document.getElementById('active-item-name');
             if (indexEl) indexEl.innerText = String(i + 1).padStart(2, '0');
             if (nameEl) nameEl.innerText = PORTFOLIO_OBJECTS[i].name.toUpperCase();
         } else {
-            card.classList.remove('opacity-100', 'border-sky-200', 'z-30');
-            card.classList.add('opacity-50', 'blur-[1.5px]');
+            card.classList.remove('opacity-100', 'border-sky-200', 'z-30', 'scale-150');
+            card.classList.add('opacity-50', 'blur-[1.5px]', 'scale-75'); // Backplane items scale down nicely
             
-            // Keep normal items at standard radius and regular scale(1)
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(1)`;
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
         }
     }
 }
 
 // UI navigation interactions
 function openTab(tabId, event) {
-    // Remove underline highlight from all nav anchors
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('text-black', 'border-black');
         link.classList.add('text-[#333333]/60', 'border-transparent');
     });
 
-    // Add back to correct tab
     const sender = event ? event.currentTarget : null;
     if (sender) {
         sender.classList.remove('text-[#333333]/60', 'border-transparent');
@@ -508,7 +481,6 @@ function openTab(tabId, event) {
 
     playAmbientNote(400, 'sine', 0.5, 0.05);
 
-    // Toggle sliding panels
     const tabs = ['about', 'lab', 'contact'];
     tabs.forEach(t => {
         const panel = document.getElementById(`tab-${t}`);
@@ -529,7 +501,6 @@ function closeActiveTab() {
         if (panel) panel.classList.add('translate-y-full');
     });
 
-    // Set projects as highlighted
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('text-black', 'border-black');
         link.classList.add('text-[#333333]/60', 'border-transparent');
@@ -549,7 +520,6 @@ function selectProject(index) {
     selectedItemIndex = index;
     updateHighlight();
 
-    // Populate text elements
     document.getElementById('drawer-title').innerText = item.name;
     document.getElementById('drawer-category').innerText = item.category.toUpperCase();
     document.getElementById('drawer-role').innerText = item.role;
@@ -558,15 +528,17 @@ function selectProject(index) {
     document.getElementById('drawer-tools').innerText = item.tools;
     document.getElementById('drawer-description').innerText = item.description;
 
-    // Clone graphic to drawer visualization section
     const container = document.getElementById('drawer-visual-container');
-    if (container) container.innerHTML = item.visual;
+    if (container) {
+        container.innerHTML = item.visual;
+        // Reinject styling directly to ensure clean display inside the sidebar component
+        const img = container.querySelector('img');
+        if (img) img.className = "w-full h-full object-cover rounded-xl drop-shadow-sm";
+    }
 
-    // Trigger slides
     const drawer = document.getElementById('detail-drawer');
     if (drawer) drawer.classList.remove('translate-x-full');
 
-    // Sound design chimes
     playAmbientNote(450, 'triangle', 1.5, 0.08);
     setTimeout(() => {
         playAmbientNote(900, 'sine', 0.8, 0.03);
@@ -579,7 +551,7 @@ function closeDetails() {
     playAmbientNote(350, 'sine', 0.4, 0.04);
 }
 
-// Randomize visual color palettes (Aesthetic Lab Sketch demo)
+// Randomize visual color palettes
 function randomizePalette() {
     const palettes = [
         { bg: '#f6f5f3', accent: 'rgba(186, 230, 253, 0.35)', desc: 'Warm Ivory & Powder Sky' },
@@ -639,7 +611,7 @@ function shareProject() {
     });
 }
 
-// Open Full-Screen Art Lightbox with Awards
+// --- FULL-SCREEN LIGHTBOX ENGINE ---
 function initLightboxViewer() {
     const drawerVisual = document.getElementById('drawer-visual-container');
     const lightbox = document.getElementById('art-lightbox');
@@ -648,42 +620,36 @@ function initLightboxViewer() {
 
     if (!drawerVisual || !lightbox) return;
 
-    // Make the side panel image container look clickable
-    drawerVisual.classList.add('cursor-zoom-in');
+    // Set cursor styling indicating the element expands
+    drawerVisual.style.cursor = 'zoom-in';
 
-    // When clicking the side panel image
     drawerVisual.addEventListener('click', () => {
         const currentArtwork = PORTFOLIO_OBJECTS[selectedItemIndex];
+        if (!currentArtwork) return;
         
-        // Clone the img into the lightbox and style it to fit the screen
+        // Render artwork layout inside the lightbox overlay component
         lightboxImgContainer.innerHTML = currentArtwork.visual;
         const img = lightboxImgContainer.querySelector('img');
         if (img) {
-            img.className = "max-w-[90vw] max-h-[80vh] object-contain rounded-lg";
+            img.className = "max-w-[90vw] max-h-[75vh] object-contain rounded-xl shadow-2xl";
         }
 
-        // Inject Award information if it exists
-        if (currentArtwork.awards) {
-            lightboxAwards.innerHTML = currentArtwork.awards;
-            lightboxAwards.classList.remove('hidden');
+        // Apply awards meta information text dynamically
+        if (currentArtwork.awards && currentArtwork.awards.trim() !== "") {
+            lightboxAwards.innerHTML = `<span class="bg-amber-500/10 text-amber-300 border border-amber-500/20 px-4 py-2 rounded-full text-xs font-semibold tracking-wider">🏆 ${currentArtwork.awards}</span>`;
+            lightboxAwards.style.display = 'block';
         } else {
             lightboxAwards.innerHTML = "";
-            lightboxAwards.classList.add('hidden');
+            lightboxAwards.style.display = 'none';
         }
 
-        // Fade in lightbox
+        // Display overlay component smooth alpha transition
         lightbox.classList.remove('opacity-0', 'pointer-events-none');
+        playAmbientNote(650, 'sine', 0.8, 0.06);
     });
 
-    // Close lightbox when clicking anywhere on the dark screen
     lightbox.addEventListener('click', () => {
         lightbox.classList.add('opacity-0', 'pointer-events-none');
+        playAmbientNote(350, 'sine', 0.4, 0.03);
     });
 }
-
-// Call this function inside window.onload to initialize it
-const originalOnload = window.onload;
-window.onload = function() {
-    if (originalOnload) originalOnload();
-    initLightboxViewer();
-};
