@@ -516,41 +516,69 @@ function closeActiveTab() {
     playAmbientNote(300, 'sine', 0.5, 0.03);
 }
 
-// Project selection - slide out details card drawer
+// panel selection, expand center panel
 function selectProject(index) {
-    const item = PORTFOLIO_OBJECTS[index];
-    selectedItemIndex = index;
-    updateHighlight();
+    const project = PORTFOLIO_OBJECTS[index];
+    if (!project) return;
 
-    document.getElementById('drawer-title').innerText = item.name;
-    document.getElementById('drawer-category').innerText = item.category.toUpperCase();
-    document.getElementById('drawer-role').innerText = item.role;
-    document.getElementById('drawer-timeline').innerText = item.timeline;
-    document.getElementById('drawer-client').innerText = item.client;
-    document.getElementById('drawer-tools').innerText = item.tools;
-    document.getElementById('drawer-description').innerText = item.description;
+    // Halt carousel auto-spinning entirely while panel is active
+    autoSpinActive = false;
 
-    const container = document.getElementById('drawer-visual-container');
-    if (container) {
-        container.innerHTML = item.visual;
-        // Reinject styling directly to ensure clean display inside the sidebar component
-        const img = container.querySelector('img');
-        if (img) img.className = "w-full h-full object-cover rounded-xl drop-shadow-sm";
+    // Populate panel elements with chosen data
+    document.getElementById('drawer-title').innerText = project.name;
+    document.getElementById('drawer-category').innerText = project.category;
+    document.getElementById('drawer-role').innerText = project.role || 'Creative Direction';
+    document.getElementById('drawer-timeline').innerText = project.timeline || '2026';
+    document.getElementById('drawer-client').innerText = project.client || 'Internal Lab';
+    document.getElementById('drawer-tools').innerText = project.tools || 'Web3D Systems';
+    document.getElementById('drawer-description').innerText = project.description;
+
+    // Duplicate visual asset into the display slot
+    const visualSlot = document.getElementById('drawer-visual-container');
+    visualSlot.innerHTML = '';
+    const originCard = document.getElementById(`item-${index}`);
+    if (originCard) {
+        // Clone the interior visual element of the card
+        const structuralClone = originCard.querySelector('.flex-1')?.cloneNode(true);
+        if (structuralClone) {
+            visualSlot.appendChild(structuralClone);
+        }
     }
 
-    const drawer = document.getElementById('detail-drawer');
-    if (drawer) drawer.classList.remove('translate-x-full');
+    // Trigger UI synthesizer chime audio matching this index
+    triggerObjectChime();
 
-    playAmbientNote(450, 'triangle', 1.5, 0.08);
-    setTimeout(() => {
-        playAmbientNote(900, 'sine', 0.8, 0.03);
-    }, 100);
+    // Reveal the centered backdrop overlay smoothly
+    const modal = document.getElementById('detail-drawer');
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    modal.classList.add('opacity-100');
+    
+    // Pop the inner content card open seamlessly from 95% to 100% scale
+    const innerCard = modal.querySelector('.transform');
+    if (innerCard) {
+        innerCard.classList.remove('scale-95');
+        innerCard.classList.add('scale-100');
+    }
 }
 
+// Close Centered Project Panel
 function closeDetails() {
-    const drawer = document.getElementById('detail-drawer');
-    if (drawer) drawer.classList.add('translate-x-full');
-    playAmbientNote(350, 'sine', 0.4, 0.04);
+    const modal = document.getElementById('detail-drawer');
+    if (!modal) return;
+
+    // Hide backdrop layer
+    modal.classList.remove('opacity-100');
+    modal.classList.add('opacity-0', 'pointer-events-none');
+    
+    // Shrink the inner card slightly back down during transition
+    const innerCard = modal.querySelector('.transform');
+    if (innerCard) {
+        innerCard.classList.remove('scale-100');
+        innerCard.classList.add('scale-95');
+    }
+
+    // Restore background carousel momentum loop safely
+    autoSpinActive = true;
 }
 
 // Randomize visual color palettes
