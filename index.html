@@ -108,74 +108,55 @@
                 </div>
             </footer>
 
-            <div id="detail-drawer" class="absolute top-0 right-0 bottom-0 w-full sm:w-[480px] bg-white border-l border-black/[0.05] shadow-2xl transform translate-x-full transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50 flex flex-col">
-                <div class="px-6 py-5 border-b border-black/[0.05] flex justify-between items-center bg-[#fcfbfa]">
-                    <div>
-                        <span id="drawer-category" class="text-[9px] font-semibold tracking-widest text-neutral-400 uppercase">CATEGORY</span>
-                        <h3 id="drawer-title" class="serif-font text-lg text-neutral-800 italic">Project Name</h3>
-                    </div>
-                    <button onclick="closeDetails()" class="p-2 rounded-full hover:bg-neutral-100 transition-colors">
-                        <i data-lucide="x" class="w-5 h-5 text-neutral-500"></i>
-                    </button>
-                </div>
-
-                <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-8 space-y-8 bg-[#faf9f6]">
-                    <div class="w-full aspect-square rounded-2xl border border-black/[0.03] bg-[#f2f1ed] flex items-center justify-center relative overflow-hidden group">
-                        <div class="absolute inset-0 bg-radial-gradient from-white/40 to-transparent pointer-events-none"></div>
-                        <div id="drawer-visual-container" class="w-[60%] h-[60%] flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-                            </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 pt-2">
-                        <div class="border-b border-black/[0.04] pb-2">
-                            <span class="text-[9px] tracking-widest text-neutral-400 block uppercase">ROLE / SERVICE</span>
-                            <span id="drawer-role" class="text-xs text-neutral-700 font-medium">Art Direction</span>
+            <div id="detail-drawer" class="fixed inset-0 bg-black/40 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-500 z-50 flex items-center justify-center p-4">
+                <div class="bg-white rounded-[24px] shadow-2xl border border-white/20 w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden transform scale-95 transition-transform duration-500">
+                    
+                    <div class="px-6 py-5 border-b border-black/[0.04] flex justify-between items-center bg-[#fcfbfa]">
+                        <div>
+                            <span id="drawer-category" class="text-[9px] font-semibold tracking-widest text-neutral-400 uppercase">CATEGORY</span>
+                            <h3 id="drawer-title" class="serif-font text-xl text-neutral-800 italic">Project Name</h3>
                         </div>
-                        <div class="border-b border-black/[0.04] pb-2">
-                            <span class="text-[9px] tracking-widest text-neutral-400 block uppercase">TIMELINE</span>
-                            <span id="drawer-timeline" class="text-xs text-neutral-700 font-medium">Q3 2025</span>
-                        </div>
-                        <div class="border-b border-black/[0.04] pb-2">
-                            <span class="text-[9px] tracking-widest text-neutral-400 block uppercase">CLIENT</span>
-                            <span id="drawer-client" class="text-xs text-neutral-700 font-medium">Elysian Studio</span>
-                        </div>
-                        <div class="border-b border-black/[0.04] pb-2">
-                            <span class="text-[9px] tracking-widest text-neutral-400 block uppercase">TOOLS</span>
-                            <span id="drawer-tools" class="text-xs text-neutral-700 font-medium">3D modeling, WebGL</span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <h4 class="text-xs font-semibold tracking-wider text-neutral-800 uppercase">CONCEPT &amp; VISION</h4>
-                        <p id="drawer-description" class="text-xs md:text-sm text-neutral-600 leading-relaxed font-light">
-                            Detailed writeup explaining the physical geometry, visual identity, craftsmanship paradigm, and product alignment goals.
-                        </p>
-                    </div>
-
-                    <div class="p-4 rounded-xl border border-dashed border-amber-300/40 bg-amber-50/20 space-y-3">
-                        <div class="flex items-center gap-2">
-                            <div class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></div>
-                            <span class="text-[10px] font-semibold tracking-wider text-amber-800 uppercase">Interactive Lab Note</span>
-                        </div>
-                        <p class="text-[11px] text-amber-900/70 leading-relaxed">
-                            Click 'Experiment' to trigger a synthesized chime matching the aesthetic frequency of this object.
-                        </p>
-                        <button onclick="triggerObjectChime()" class="px-3 py-1.5 bg-amber-750 hover:bg-black hover:text-white border border-black/[0.1] rounded-lg text-[10px] font-semibold tracking-wider text-neutral-700 flex items-center gap-1.5 transition-all">
-                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Experiment Soundwave
+                        <button onclick="closeDetails()" class="p-2 rounded-full hover:bg-neutral-100 transition-colors">
+                            <i data-lucide="x" class="w-5 h-5 text-neutral-500"></i>
                         </button>
                     </div>
-                </div>
-
-                <div class="p-5 border-t border-black/[0.05] bg-white flex gap-3">
-                    <button onclick="viewFullCase()" class="flex-1 py-3 bg-neutral-900 hover:bg-black text-white rounded-xl text-xs font-semibold tracking-widest text-center transition-all shadow-sm">
-                        VIEW FULL CASE STUDY
-                    </button>
-                    <button onclick="shareProject()" class="p-3 border border-black/[0.08] hover:bg-neutral-50 rounded-xl transition-all" title="Share project Link">
-                        <i data-lucide="share-2" class="w-4 h-4 text-neutral-500"></i>
-                    </button>
+            
+                    <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-8 space-y-6 bg-[#faf9f6]">
+                        <div class="w-full aspect-video rounded-xl border border-black/[0.03] bg-[#f2f1ed] flex items-center justify-center relative overflow-hidden">
+                            <div id="drawer-visual-container" class="w-full h-full flex items-center justify-center p-4">
+                                </div>
+                        </div>
+            
+                        <div class="grid grid-cols-2 gap-4 pt-2">
+                            <div class="border-b border-black/[0.04] pb-2">
+                                <span class="text-[9px] tracking-widest text-neutral-400 block uppercase">ROLE / SERVICE</span>
+                                <span id="drawer-role" class="text-xs text-neutral-700 font-medium">Art Direction</span>
+                            </div>
+                            <div class="border-b border-black/[0.04] pb-2">
+                                <span class="text-[9px] tracking-widest text-neutral-400 block uppercase">TIMELINE</span>
+                                <span id="drawer-timeline" class="text-xs text-neutral-700 font-medium">Q3 2025</span>
+                            </div>
+                            <div class="border-b border-black/[0.04] pb-2">
+                                <span class="text-[9px] tracking-widest text-neutral-400 block uppercase">CLIENT</span>
+                                <span id="drawer-client" class="text-xs text-neutral-700 font-medium">Elysian Studio</span>
+                            </div>
+                            <div class="border-b border-black/[0.04] pb-2">
+                                <span class="text-[9px] tracking-widest text-neutral-400 block uppercase">TOOLS</span>
+                                <span id="drawer-tools" class="text-xs text-neutral-700 font-medium">3D modeling, WebGL</span>
+                            </div>
+                        </div>
+            
+                        <div class="space-y-3">
+                            <h4 class="text-xs font-semibold tracking-wider text-neutral-800 uppercase">CONCEPT &amp; VISION</h4>
+                            <p id="drawer-description" class="text-xs md:text-sm text-neutral-600 leading-relaxed font-light">
+                                Detailed writeup explaining the concept vision.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <!-- ABOUT TAB -->
             <div id="tab-about" class="absolute inset-0 bg-[#f6f5f3] z-40 transform translate-y-full transition-transform duration-700 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col">
                 <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-16 space-y-12">
                     <div class="flex justify-between items-start border-b border-black/[0.05] pb-6">
