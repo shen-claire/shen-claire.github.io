@@ -440,7 +440,7 @@ function calculateClosestFrontItem() {
 // --- DYNAMIC MAGNIFIED FOCUS HIGHLIGHTING ---
 function updateHighlight() {
     const totalItems = PORTFOLIO_OBJECTS.length;
-    const radius = calculateRadius();
+    const radius = calculateRadius(); // Get current 3D spacing radius
     
     for (let i = 0; i < totalItems; i++) {
         const card = document.getElementById(`item-${i}`);
@@ -449,21 +449,21 @@ function updateHighlight() {
         const angle = i * (360 / totalItems);
 
         if (i === selectedItemIndex) {
-            card.classList.remove('opacity-50', 'blur-[1.5px]', 'scale-75');
-            card.classList.add('opacity-100', 'border-sky-200', 'z-30', 'scale-150'); // High contrast focus scale expansion!
+            card.classList.remove('opacity-50', 'blur-[1.5px]');
+            card.classList.add('opacity-100', 'border-sky-200', 'z-30');
             
-            // Pop the focused object much closer on the screen Z-axis
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 50}px)`;
+            // EXACT MATCH: Uses your original 20px extra depth and 1.08 scaling factor
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 20}px) scale(1.08)`;
             
-            const indexEl = document.getElementById('active-item-index');
-            const nameEl = document.getElementById('active-item-name');
-            if (indexEl) indexEl.innerText = String(i + 1).padStart(2, '0');
-            if (nameEl) nameEl.innerText = PORTFOLIO_OBJECTS[i].name.toUpperCase();
+            // Update active bottom indicators
+            document.getElementById('active-item-index').innerText = String(i + 1).padStart(2, '0');
+            document.getElementById('active-item-name').innerText = PORTFOLIO_OBJECTS[i].name.toUpperCase();
         } else {
-            card.classList.remove('opacity-100', 'border-sky-200', 'z-30', 'scale-150');
-            card.classList.add('opacity-50', 'blur-[1.5px]', 'scale-75'); // Backplane items scale down nicely
+            card.classList.remove('opacity-100', 'border-sky-200', 'z-30');
+            card.classList.add('opacity-50', 'blur-[1.5px]');
             
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+            // Return inactive items back to their normal 3D circle positions
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(1)`;
         }
     }
 }
