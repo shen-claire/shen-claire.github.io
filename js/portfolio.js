@@ -458,16 +458,23 @@ function calculateClosestFrontItem() {
 }
 
 // Highlighting active nodes and dimming distant backplane cards
+// Highlighting active nodes and dimming distant backplane cards
 function updateHighlight() {
     const totalItems = PORTFOLIO_OBJECTS.length;
+    const radius = calculateRadius();
     
     for (let i = 0; i < totalItems; i++) {
         const card = document.getElementById(`item-${i}`);
         if (!card) continue;
 
+        const angle = i * (360 / totalItems);
+
         if (i === selectedItemIndex) {
             card.classList.remove('opacity-50', 'blur-[1.5px]');
-            card.classList.add('opacity-100', 'border-sky-200', 'scale-105', 'z-30');
+            card.classList.add('opacity-100', 'border-sky-200', 'z-30');
+            
+            // Pop the item closer to the screen (radius + 30) and make it larger (scale(1.3))
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 30}px) scale(1.3)`;
             
             // Update active bottom indicators
             const indexEl = document.getElementById('active-item-index');
@@ -475,8 +482,11 @@ function updateHighlight() {
             if (indexEl) indexEl.innerText = String(i + 1).padStart(2, '0');
             if (nameEl) nameEl.innerText = PORTFOLIO_OBJECTS[i].name.toUpperCase();
         } else {
-            card.classList.remove('opacity-100', 'border-sky-200', 'scale-105', 'z-30');
+            card.classList.remove('opacity-100', 'border-sky-200', 'z-30');
             card.classList.add('opacity-50', 'blur-[1.5px]');
+            
+            // Keep normal items at standard radius and regular scale(1)
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(1)`;
         }
     }
 }
