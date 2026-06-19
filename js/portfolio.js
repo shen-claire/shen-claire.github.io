@@ -453,7 +453,7 @@ function updateHighlight() {
             card.classList.add('opacity-100', 'border-sky-200', 'z-30');
             
             // EXACT MATCH: Uses your original 20px extra depth and 1.08 scaling factor
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 50}px) scale(1.3)`;
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 50}px) scale(1.4)`;
             
             // Update active bottom indicators
             document.getElementById('active-item-index').innerText = String(i + 1).padStart(2, '0');
