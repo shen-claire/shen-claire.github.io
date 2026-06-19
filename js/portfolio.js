@@ -5,7 +5,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "Q1 2026",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your first project goes here. It will display inside the side panel when clicked.",
         visual: `<img src="img/Through_the_Looking_Glass.jpeg" alt="Project 1" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -16,7 +16,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "Q2 2026",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your second project goes here.",
         visual: `<img src="img/IMG_9129.jpeg" alt="Project 2" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -27,7 +27,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "Q3 2026",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your third project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 3" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -38,7 +38,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "Q4 2026",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your fourth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 4" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -49,7 +49,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "2026",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your fifth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 5" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -60,7 +60,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "2026",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your sixth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 6" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -71,7 +71,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "2026",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your seventh project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 7" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -82,7 +82,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "2025",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your eighth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 8" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -93,7 +93,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "2025",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your ninth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 9" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -104,7 +104,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "2025",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your tenth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 10" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -115,7 +115,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "2025",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your eleventh project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 11" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
@@ -126,7 +126,7 @@ const PORTFOLIO_OBJECTS = [
         category: "Category Here",
         role: "Your Role",
         timeline: "2025",
-        client: "Client Name",
+        awards: "",
         tools: "Tools Used",
         description: "A short, simple description of your twelfth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 12" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
