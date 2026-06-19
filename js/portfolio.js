@@ -521,10 +521,8 @@ function selectProject(index) {
     const project = PORTFOLIO_OBJECTS[index];
     if (!project) return;
 
-    // Freeze the carousel rotation immediately
     autoSpinActive = false;
 
-    // Populate panel elements with data
     document.getElementById('drawer-title').innerText = project.name;
     document.getElementById('drawer-category').innerText = project.category;
     document.getElementById('drawer-role').innerText = project.role || 'Creative Direction';
@@ -533,7 +531,6 @@ function selectProject(index) {
     document.getElementById('drawer-tools').innerText = project.tools || 'Web3D Systems';
     document.getElementById('drawer-description').innerText = project.description;
 
-    // Clone and transfer artwork into the container viewport slot
     const visualSlot = document.getElementById('drawer-visual-container');
     if (visualSlot) {
         visualSlot.innerHTML = '';
@@ -544,16 +541,13 @@ function selectProject(index) {
         }
     }
 
-    // Play interaction chime
     triggerObjectChime();
 
-    // TARGET THE MODAL CONTAINER DIRECTLY VIA INLINE STYLES
     const modal = document.getElementById('detail-drawer');
     if (modal) {
         modal.style.opacity = '1';
         modal.style.pointerEvents = 'auto';
         
-        // Grab the inner content card panel and scale it up cleanly in the center
         const innerCard = modal.querySelector('.transform');
         if (innerCard) {
             innerCard.style.transform = 'scale(1)';
@@ -561,7 +555,6 @@ function selectProject(index) {
     }
 }
 
-// Close Centered Project Panel
 function closeDetails() {
     const modal = document.getElementById('detail-drawer');
     if (modal) {
@@ -573,8 +566,6 @@ function closeDetails() {
             innerCard.style.transform = 'scale(0.95)';
         }
     }
-
-    // Safely resume the 3D spinning loop mechanics
     autoSpinActive = true;
 }
 
