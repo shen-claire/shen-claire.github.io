@@ -638,3 +638,52 @@ function shareProject() {
         console.error('Failed to copy link via Clipboard API: ', err);
     });
 }
+
+// Open Full-Screen Art Lightbox with Awards
+function initLightboxViewer() {
+    const drawerVisual = document.getElementById('drawer-visual-container');
+    const lightbox = document.getElementById('art-lightbox');
+    const lightboxImgContainer = document.getElementById('lightbox-img-container');
+    const lightboxAwards = document.getElementById('lightbox-awards');
+
+    if (!drawerVisual || !lightbox) return;
+
+    // Make the side panel image container look clickable
+    drawerVisual.classList.add('cursor-zoom-in');
+
+    // When clicking the side panel image
+    drawerVisual.addEventListener('click', () => {
+        const currentArtwork = PORTFOLIO_OBJECTS[selectedItemIndex];
+        
+        // Clone the img into the lightbox and style it to fit the screen
+        lightboxImgContainer.innerHTML = currentArtwork.visual;
+        const img = lightboxImgContainer.querySelector('img');
+        if (img) {
+            img.className = "max-w-[90vw] max-h-[80vh] object-contain rounded-lg";
+        }
+
+        // Inject Award information if it exists
+        if (currentArtwork.awards) {
+            lightboxAwards.innerHTML = currentArtwork.awards;
+            lightboxAwards.classList.remove('hidden');
+        } else {
+            lightboxAwards.innerHTML = "";
+            lightboxAwards.classList.add('hidden');
+        }
+
+        // Fade in lightbox
+        lightbox.classList.remove('opacity-0', 'pointer-events-none');
+    });
+
+    // Close lightbox when clicking anywhere on the dark screen
+    lightbox.addEventListener('click', () => {
+        lightbox.classList.add('opacity-0', 'pointer-events-none');
+    });
+}
+
+// Call this function inside window.onload to initialize it
+const originalOnload = window.onload;
+window.onload = function() {
+    if (originalOnload) originalOnload();
+    initLightboxViewer();
+};
