@@ -277,22 +277,22 @@
 
     </div>
 
-    <div id="detail-drawer" class="fixed inset-0 bg-black/40 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-500 z-50 flex items-center justify-center p-4" style="opacity: 0; pointer-events: none;">
-        <div class="bg-white rounded-[24px] shadow-2xl border border-white/20 w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden transform scale-95 transition-transform duration-500" style="transform: scale(0.95); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);">
+    <div id="detail-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-hidden="true" class="fixed inset-0 bg-black/40 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-500 z-50 flex items-center justify-center p-4" style="opacity: 0; pointer-events: none;">
+        <div id="detail-card" class="bg-white rounded-[24px] shadow-2xl border border-white/20 w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden transform scale-95 transition-transform duration-500" style="transform: scale(0.95); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);">
             
             <div class="px-6 py-5 border-b border-black/[0.04] flex justify-between items-center bg-[#fcfbfa]">
                 <div>
                     <span id="drawer-category" class="text-[9px] font-semibold tracking-widest text-neutral-400 uppercase">CATEGORY</span>
                     <h3 id="drawer-title" class="serif-font text-xl text-neutral-800 italic">Project Name</h3>
                 </div>
-                <button onclick="closeDetails()" class="p-2 rounded-full hover:bg-neutral-100 transition-colors">
+                <button type="button" onclick="closeDetails()" aria-label="Close project details" class="p-2 rounded-full hover:bg-neutral-100 transition-colors">
                     <i data-lucide="x" class="w-5 h-5 text-neutral-500"></i>
                 </button>
             </div>
 
             <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-8 space-y-6 bg-[#faf9f6]">
                 <div class="w-full aspect-video rounded-xl border border-black/[0.03] bg-[#f2f1ed] flex items-center justify-center relative overflow-hidden">
-                    <div id="drawer-visual-container" class="w-full h-full flex items-center justify-center p-4"></div>
+                    <div id="drawer-visual-container" class="w-full h-full flex items-center justify-center"></div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 pt-2">

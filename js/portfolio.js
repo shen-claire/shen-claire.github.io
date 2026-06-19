@@ -144,6 +144,7 @@ let dragVelocity = 0;
 let autoSpinActive = true;
 let lastTime = performance.now();
 let targetRotation = 0; // Target for animated snaps or ease-to-index
+const ACTIVE_CARD_SCALE = 1.4;
 
 // Web Audio Synthesizer Controls
 let audioCtx = null;
@@ -452,8 +453,8 @@ function updateHighlight() {
             card.classList.remove('opacity-50', 'blur-[1.5px]');
             card.classList.add('opacity-100', 'border-sky-200', 'z-30');
             
-            // EXACT MATCH: Uses your original 20px extra depth and 1.08 scaling factor
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 50}px) scale(1.4)`;
+            // Keep the selected card at the requested scale without extra perspective magnification.
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(${ACTIVE_CARD_SCALE})`;
             
             // Update active bottom indicators
             document.getElementById('active-item-index').innerText = String(i + 1).padStart(2, '0');
@@ -533,11 +534,11 @@ function selectProject(index) {
 
     const visualSlot = document.getElementById('drawer-visual-container');
     if (visualSlot) {
-        visualSlot.innerHTML = '';
-        const originCard = document.getElementById(`item-${index}`);
-        if (originCard) {
-            const structuralClone = originCard.querySelector('.flex-1')?.cloneNode(true);
-            if (structuralClone) visualSlot.appendChild(structuralClone);
+        visualSlot.innerHTML = project.visual;
+        const popupImage = visualSlot.querySelector('img');
+        if (popupImage) {
+            popupImage.classList.remove('object-cover', 'drop-shadow-sm');
+            popupImage.classList.add('object-contain');
         }
     }
 
@@ -547,8 +548,9 @@ function selectProject(index) {
     if (modal) {
         modal.style.opacity = '1';
         modal.style.pointerEvents = 'auto';
+        modal.setAttribute('aria-hidden', 'false');
         
-        const innerCard = modal.querySelector('.transform');
+        const innerCard = document.getElementById('detail-card');
         if (innerCard) {
             innerCard.style.transform = 'scale(1)';
         }
@@ -560,14 +562,25 @@ function closeDetails() {
     if (modal) {
         modal.style.opacity = '0';
         modal.style.pointerEvents = 'none';
+        modal.setAttribute('aria-hidden', 'true');
         
-        const innerCard = modal.querySelector('.transform');
+        const innerCard = document.getElementById('detail-card');
         if (innerCard) {
             innerCard.style.transform = 'scale(0.95)';
         }
     }
     autoSpinActive = true;
 }
+
+document.getElementById('detail-drawer')?.addEventListener('click', (event) => {
+    if (event.target === event.currentTarget) closeDetails();
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.getElementById('detail-drawer')?.getAttribute('aria-hidden') === 'false') {
+        closeDetails();
+    }
+});
 
 // Randomize visual color palettes
 function randomizePalette() {
