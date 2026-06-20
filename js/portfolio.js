@@ -2,133 +2,97 @@ const PORTFOLIO_OBJECTS = [
     {
         id: 1,
         name: "Project One Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "Q1 2026",
+        medium: "Medium Here",
+        year: "2026",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your first project goes here. It will display inside the side panel when clicked.",
         visual: `<img src="img/Through_the_Looking_Glass.jpeg" alt="Project 1" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 2,
         name: "Project Two Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "Q2 2026",
+        medium: "Medium Here",
+        year: "2026",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your second project goes here.",
         visual: `<img src="img/IMG_9129.jpeg" alt="Project 2" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 3,
         name: "Project Three Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "Q3 2026",
+        medium: "Medium Here",
+        year: "2026",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your third project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 3" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 4,
         name: "Project Four Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "Q4 2026",
+        medium: "Medium Here",
+        year: "2026",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your fourth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 4" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 5,
         name: "Project Five Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "2026",
+        medium: "Medium Here",
+        year: "2026",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your fifth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 5" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 6,
         name: "Project Six Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "2026",
+        medium: "Medium Here",
+        year: "2026",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your sixth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 6" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 7,
         name: "Project Seven Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "2026",
+        medium: "Medium Here",
+        year: "2026",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your seventh project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 7" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 8,
         name: "Project Eight Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "2025",
+        medium: "Medium Here",
+        year: "2025",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your eighth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 8" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 9,
         name: "Project Nine Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "2025",
+        medium: "Medium Here",
+        year: "2025",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your ninth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 9" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 10,
         name: "Project Ten Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "2025",
+        medium: "Medium Here",
+        year: "2025",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your tenth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 10" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 11,
         name: "Project Eleven Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "2025",
+        medium: "Medium Here",
+        year: "2025",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your eleventh project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 11" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 12,
         name: "Project Twelve Title",
-        category: "Category Here",
-        role: "Your Role",
-        timeline: "2025",
+        medium: "Medium Here",
+        year: "2025",
         awards: "",
-        tools: "Tools Used",
-        description: "A short, simple description of your twelfth project goes here.",
         visual: `<img src="img/IMG_9120.jpeg" alt="Project 12" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     }
 ];
@@ -145,6 +109,8 @@ let autoSpinActive = true;
 let lastTime = performance.now();
 let targetRotation = 0; // Target for animated snaps or ease-to-index
 const ACTIVE_CARD_SCALE = 1.4;
+let activeProjectIndex = null;
+let isDetailOpen = false;
 
 // Web Audio Synthesizer Controls
 let audioCtx = null;
@@ -292,7 +258,7 @@ function buildCarouselRing() {
         });
 
         card.addEventListener('mouseleave', () => {
-            autoSpinActive = true;
+            autoSpinActive = !isDetailOpen;
         });
 
         ring.appendChild(card);
@@ -522,15 +488,16 @@ function selectProject(index) {
     const project = PORTFOLIO_OBJECTS[index];
     if (!project) return;
 
+    activeProjectIndex = index;
+    isDetailOpen = true;
     autoSpinActive = false;
+    dragVelocity = 0;
 
     document.getElementById('drawer-title').innerText = project.name;
-    document.getElementById('drawer-category').innerText = project.category;
-    document.getElementById('drawer-role').innerText = project.role || 'Creative Direction';
-    document.getElementById('drawer-timeline').innerText = project.timeline || '2026';
-    document.getElementById('drawer-client').innerText = project.client || 'Internal Lab';
-    document.getElementById('drawer-tools').innerText = project.tools || 'Web3D Systems';
-    document.getElementById('drawer-description').innerText = project.description;
+    document.getElementById('drawer-medium-heading').innerText = project.medium || 'Medium';
+    document.getElementById('drawer-medium').innerText = project.medium || 'Medium';
+    document.getElementById('drawer-year').innerText = project.year || '';
+    document.getElementById('drawer-awards').innerText = project.awards?.trim() || 'None listed';
 
     const visualSlot = document.getElementById('drawer-visual-container');
     if (visualSlot) {
@@ -569,6 +536,8 @@ function closeDetails() {
             innerCard.style.transform = 'scale(0.95)';
         }
     }
+    activeProjectIndex = null;
+    isDetailOpen = false;
     autoSpinActive = true;
 }
 
@@ -655,7 +624,9 @@ function initLightboxViewer() {
     drawerVisual.style.cursor = 'zoom-in';
 
     drawerVisual.addEventListener('click', () => {
-        const currentArtwork = PORTFOLIO_OBJECTS[selectedItemIndex];
+        if (!Number.isInteger(activeProjectIndex)) return;
+
+        const currentArtwork = PORTFOLIO_OBJECTS[activeProjectIndex];
         if (!currentArtwork) return;
         
         // Render artwork layout inside the lightbox overlay component
