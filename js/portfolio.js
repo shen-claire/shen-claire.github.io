@@ -98,7 +98,6 @@ const PORTFOLIO_OBJECTS = [
 ];
 // System state
 let isMockupFrame = true;
-let activeTabIndex = null; // 'works', 'about', 'lab', 'contact'
 let selectedItemIndex = 0; // index inside PORTFOLIO_OBJECTS
 let currentRotation = 0; // ongoing rot angle in degrees
 let isDragging = false;
@@ -111,10 +110,14 @@ let targetRotation = 0; // Target for animated snaps or ease-to-index
 const ACTIVE_CARD_SCALE = 1.4;
 let activeProjectIndex = null;
 let isDetailOpen = false;
+let hoverLockedIndex = null;
 
 // Web Audio Synthesizer Controls
 let audioCtx = null;
 let synthEnabled = true;
+let activeHoverVoice = null;
+let lastHoverToneTime = 0;
+const PENTATONIC_FREQUENCIES = [261.63, 293.66, 329.63, 392, 440, 523.25];
 
 window.onload = function() {
     lucide.createIcons();
@@ -163,6 +166,55 @@ function playAmbientNote(frequency = 440, type = 'sine', duration = 1.2, volume 
     }
 }
 
+function playHoverTone(index) {
+    if (!synthEnabled) return;
+
+    const now = performance.now();
+    if (now - lastHoverToneTime < 80) return;
+    lastHoverToneTime = now;
+
+    try {
+        initAudio();
+        if (!audioCtx) return;
+
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
+        const startTime = audioCtx.currentTime;
+        if (activeHoverVoice) {
+            activeHoverVoice.gain.gain.cancelScheduledValues(startTime);
+            activeHoverVoice.gain.gain.setValueAtTime(
+                Math.max(activeHoverVoice.gain.gain.value, 0.0001),
+                startTime
+            );
+            activeHoverVoice.gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.04);
+            activeHoverVoice.osc.stop(startTime + 0.05);
+        }
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const frequency = PENTATONIC_FREQUENCIES[index % PENTATONIC_FREQUENCIES.length];
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(frequency, startTime);
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.018, startTime + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.3);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + 0.32);
+        activeHoverVoice = { osc, gain };
+        osc.onended = () => {
+            if (activeHoverVoice?.osc === osc) activeHoverVoice = null;
+        };
+    } catch (err) {
+        // Audio silent fail
+    }
+}
+
 function toggleAudio() {
     synthEnabled = !synthEnabled;
     const btn = document.getElementById('audio-toggle');
@@ -175,16 +227,6 @@ function toggleAudio() {
         showNotification("Interface muted");
     }
     lucide.createIcons();
-}
-
-function triggerObjectChime() {
-    // Synthesize high aesthetic value frequency based on current selected item's index
-    const freq = 400 + (selectedItemIndex * 70);
-    playAmbientNote(freq, 'triangle', 2.0, 0.12);
-    // Slight echo effect
-    setTimeout(() => {
-        playAmbientNote(freq * 1.5, 'sine', 1.0, 0.04);
-    }, 180);
 }
 
 // Toggles Mockup Frame Mode
@@ -254,10 +296,17 @@ function buildCarouselRing() {
         // Hover sound effect & pause auto-rotation
         card.addEventListener('mouseenter', () => {
             autoSpinActive = false;
-            playAmbientNote(600 + (index * 40), 'sine', 0.4, 0.02);
+            if (index === selectedItemIndex) {
+                hoverLockedIndex = index;
+                dragVelocity = 0;
+            }
+            playHoverTone(index);
         });
 
         card.addEventListener('mouseleave', () => {
+            if (hoverLockedIndex === index) {
+                hoverLockedIndex = null;
+            }
             autoSpinActive = !isDetailOpen;
         });
 
@@ -389,6 +438,8 @@ function runAnimationLoop() {
 
 // Identify front-facing active items & apply blur/focus shadows dynamically
 function calculateClosestFrontItem() {
+    if (hoverLockedIndex !== null) return;
+
     const totalItems = PORTFOLIO_OBJECTS.length;
     const stepAngle = 360 / totalItems;
     
@@ -400,7 +451,6 @@ function calculateClosestFrontItem() {
     if (closestIndex !== selectedItemIndex) {
         selectedItemIndex = closestIndex;
         updateHighlight();
-        playAmbientNote(200, 'triangle', 0.15, 0.015);
     }
 }
 
@@ -450,7 +500,7 @@ function openTab(tabId, event) {
 
     playAmbientNote(400, 'sine', 0.5, 0.05);
 
-    const tabs = ['about', 'lab', 'contact'];
+    const tabs = ['about', 'contact'];
     tabs.forEach(t => {
         const panel = document.getElementById(`tab-${t}`);
         if (panel) {
@@ -464,7 +514,7 @@ function openTab(tabId, event) {
 }
 
 function closeActiveTab() {
-    const tabs = ['about', 'lab', 'contact'];
+    const tabs = ['about', 'contact'];
     tabs.forEach(t => {
         const panel = document.getElementById(`tab-${t}`);
         if (panel) panel.classList.add('translate-y-full');
@@ -509,8 +559,6 @@ function selectProject(index) {
         }
     }
 
-    triggerObjectChime();
-
     const modal = document.getElementById('detail-drawer');
     if (modal) {
         modal.style.opacity = '1';
@@ -550,23 +598,6 @@ document.addEventListener('keydown', (event) => {
         closeDetails();
     }
 });
-
-// Randomize visual color palettes
-function randomizePalette() {
-    const palettes = [
-        { bg: '#f6f5f3', accent: 'rgba(186, 230, 253, 0.35)', desc: 'Warm Ivory & Powder Sky' },
-        { bg: '#faf6f0', accent: 'rgba(253, 186, 116, 0.25)', desc: 'Sandstone & Soft Citrus' },
-        { bg: '#f0f5f5', accent: 'rgba(110, 231, 183, 0.25)', desc: 'Crystalline Glacier & Mint' },
-        { bg: '#faf0f5', accent: 'rgba(244, 114, 182, 0.2)', desc: 'Blush Velvet & Rose Petal' }
-    ];
-
-    const sel = palettes[Math.floor(Math.random() * palettes.length)];
-    const webFrame = document.getElementById('web-frame');
-    if (webFrame) webFrame.style.backgroundColor = sel.bg;
-    
-    showNotification(`Palette shifted to: ${sel.desc}`);
-    playAmbientNote(520, 'sine', 1.0, 0.05);
-}
 
 // Client form submit action
 function handleInquirySubmit(event) {
@@ -647,11 +678,9 @@ function initLightboxViewer() {
 
         // Display overlay component smooth alpha transition
         lightbox.classList.remove('opacity-0', 'pointer-events-none');
-        playAmbientNote(650, 'sine', 0.8, 0.06);
     });
 
     lightbox.addEventListener('click', () => {
         lightbox.classList.add('opacity-0', 'pointer-events-none');
-        playAmbientNote(350, 'sine', 0.4, 0.03);
     });
 }
