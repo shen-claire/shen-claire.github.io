@@ -115,14 +115,17 @@ let hoverLockedIndex = null;
 // Web Audio Synthesizer Controls
 let audioCtx = null;
 let synthEnabled = true;
+let audioUnlocked = false;
 let activeHoverVoice = null;
 let lastHoverToneTime = 0;
 const PENTATONIC_FREQUENCIES = [261.63, 293.66, 329.63, 392, 440, 523.25];
+const SOUND_VOLUME_MULTIPLIER = 1.3;
 
 window.onload = function() {
     lucide.createIcons();
     buildCarouselRing();
     initInteractionHandlers();
+    initAudioUnlock();
     runAnimationLoop();
     initLightboxViewer(); // Safely loaded right here!
 };
@@ -134,17 +137,28 @@ function initAudio() {
     }
 }
 
-function playAmbientNote(frequency = 440, type = 'sine', duration = 1.2, volume = 0.08) {
-    if (!synthEnabled) return;
+async function unlockAudio() {
+    if (!synthEnabled || (audioUnlocked && audioCtx?.state === 'running')) return;
+
     try {
         initAudio();
-        if (!audioCtx) return;
-        
-        // Keep context alive
         if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
+            await audioCtx.resume();
         }
+        audioUnlocked = audioCtx.state === 'running';
+    } catch (err) {
+        audioUnlocked = false;
+    }
+}
 
+function initAudioUnlock() {
+    document.addEventListener('pointerdown', unlockAudio, { capture: true });
+    document.addEventListener('keydown', unlockAudio, { capture: true });
+}
+
+function playAmbientNote(frequency = 440, type = 'sine', duration = 1.2, volume = 0.08) {
+    if (!synthEnabled || !audioUnlocked || audioCtx?.state !== 'running') return;
+    try {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         
@@ -153,7 +167,7 @@ function playAmbientNote(frequency = 440, type = 'sine', duration = 1.2, volume 
         
         // Crystalline physical chime envelope (sharp attack, exponential ring out)
         gain.gain.setValueAtTime(0, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.02);
+        gain.gain.linearRampToValueAtTime(volume * SOUND_VOLUME_MULTIPLIER, audioCtx.currentTime + 0.02);
         gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
         
         osc.connect(gain);
@@ -167,20 +181,13 @@ function playAmbientNote(frequency = 440, type = 'sine', duration = 1.2, volume 
 }
 
 function playHoverTone(index) {
-    if (!synthEnabled) return;
+    if (!synthEnabled || !audioUnlocked || audioCtx?.state !== 'running') return;
 
     const now = performance.now();
     if (now - lastHoverToneTime < 80) return;
     lastHoverToneTime = now;
 
     try {
-        initAudio();
-        if (!audioCtx) return;
-
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-
         const startTime = audioCtx.currentTime;
         if (activeHoverVoice) {
             activeHoverVoice.gain.gain.cancelScheduledValues(startTime);
@@ -199,7 +206,7 @@ function playHoverTone(index) {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(frequency, startTime);
         gain.gain.setValueAtTime(0.0001, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.018, startTime + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.018 * SOUND_VOLUME_MULTIPLIER, startTime + 0.012);
         gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.3);
 
         osc.connect(gain);
@@ -221,7 +228,9 @@ function toggleAudio() {
     if (synthEnabled) {
         btn.innerHTML = `<i data-lucide="volume-2" class="w-4 h-4 text-[#333333]"></i>`;
         showNotification("Acoustic interactions enabled");
-        playAmbientNote(600, 'triangle', 0.8, 0.06);
+        unlockAudio().then(() => {
+            playAmbientNote(600, 'triangle', 0.5, 0.035);
+        });
     } else {
         btn.innerHTML = `<i data-lucide="volume-x" class="w-4 h-4 text-[#333333]/40"></i>`;
         showNotification("Interface muted");
