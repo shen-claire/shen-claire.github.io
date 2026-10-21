@@ -1,99 +1,75 @@
 const PORTFOLIO_OBJECTS = [
     {
         id: 1,
-        name: "Project One Title",
-        medium: "Medium Here",
+        name: "Through the Looking Glass",
+        medium: "Oil",
         year: "2026",
         awards: "",
-        visual: `<img src="img/Through_the_Looking_Glass.jpeg" alt="Project 1" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/Through_the_Looking_Glass.jpeg" alt="Through the Looking Glass" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 2,
-        name: "Project Two Title",
-        medium: "Medium Here",
+        name: "Sunday Morning",
+        medium: "Oil",
         year: "2026",
         awards: "",
-        visual: `<img src="img/IMG_9129.jpeg" alt="Project 2" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/Sunday_Morning.jpeg" alt="Sunday Morning" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 3,
-        name: "Project Three Title",
-        medium: "Medium Here",
+        name: "Starry Blues",
+        medium: "Oil",
         year: "2026",
         awards: "",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 3" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/Starry%20Blues.jpeg" alt="Starry Blues" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 4,
-        name: "Project Four Title",
-        medium: "Medium Here",
+        name: "Admiring",
+        medium: "Oil",
         year: "2026",
         awards: "",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 4" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/Admiring.jpeg" alt="Admiring" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 5,
-        name: "Project Five Title",
-        medium: "Medium Here",
+        name: "Flash",
+        medium: "Acrylic",
         year: "2026",
         awards: "",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 5" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/Flash.jpeg" alt="Flash" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 6,
-        name: "Project Six Title",
-        medium: "Medium Here",
+        name: "Angel's Corner",
+        medium: "Oil on acrylic",
         year: "2026",
         awards: "",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 6" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/Angel%E2%80%99s%20Corner.jpeg" alt="Angel's Corner" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 7,
-        name: "Project Seven Title",
-        medium: "Medium Here",
+        name: "Footprints",
+        medium: "Acrylic",
         year: "2026",
         awards: "",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 7" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/Footprints.jpeg" alt="Footprints" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 8,
-        name: "Project Eight Title",
-        medium: "Medium Here",
+        name: "Lost",
+        medium: "Oil",
         year: "2025",
         awards: "",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 8" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/Lost.jpeg" alt="Lost" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 9,
-        name: "Project Nine Title",
-        medium: "Medium Here",
+        name: "Night",
+        medium: "Acrylic",
         year: "2025",
         awards: "",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 9" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
-    },
-    {
-        id: 10,
-        name: "Project Ten Title",
-        medium: "Medium Here",
-        year: "2025",
-        awards: "",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 10" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
-    },
-    {
-        id: 11,
-        name: "Project Eleven Title",
-        medium: "Medium Here",
-        year: "2025",
-        awards: "",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 11" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
-    },
-    {
-        id: 12,
-        name: "Project Twelve Title",
-        medium: "Medium Here",
-        year: "2025",
-        awards: "",
-        visual: `<img src="img/IMG_9120.jpeg" alt="Project 12" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/Night.jpeg" alt="Night" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     }
 ];
 // System state
@@ -107,6 +83,7 @@ let dragVelocity = 0;
 let autoSpinActive = true;
 let lastTime = performance.now();
 let targetRotation = 0; // Target for animated snaps or ease-to-index
+let stepAnimationFrame = null;
 const ACTIVE_CARD_SCALE = 1.4;
 let activeProjectIndex = null;
 let isDetailOpen = false;
@@ -399,8 +376,13 @@ function initInteractionHandlers() {
 // Accessibility click helpers (forward/backward step buttons)
 function rotateStep(direction) {
     autoSpinActive = false;
+    dragVelocity = 0;
+    hoverLockedIndex = null;
     const stepAngle = 360 / PORTFOLIO_OBJECTS.length;
-    const currentSnapped = Math.round(currentRotation / stepAngle) * stepAngle;
+    const currentSnapped = stepAnimationFrame !== null
+        ? targetRotation
+        : Math.round(currentRotation / stepAngle) * stepAngle;
+    if (stepAnimationFrame !== null) cancelAnimationFrame(stepAnimationFrame);
     targetRotation = currentSnapped - (direction * stepAngle);
     
     playAmbientNote(500, 'sine', 0.6, 0.04);
@@ -410,9 +392,10 @@ function rotateStep(direction) {
         if (count < 15) {
             currentRotation += (targetRotation - currentRotation) * 0.25;
             count++;
-            requestAnimationFrame(animateStep);
+            stepAnimationFrame = requestAnimationFrame(animateStep);
         } else {
             currentRotation = targetRotation;
+            stepAnimationFrame = null;
             autoSpinActive = true;
         }
     }
@@ -606,6 +589,18 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && document.getElementById('detail-drawer')?.getAttribute('aria-hidden') === 'false') {
         closeDetails();
     }
+
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (event.target?.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
+    if (isDetailOpen || isDragging) return;
+    if (['about', 'contact'].some(tab => {
+        const panel = document.getElementById(`tab-${tab}`);
+        return panel && !panel.classList.contains('translate-y-full');
+    })) return;
+
+    event.preventDefault();
+    rotateStep(event.key === 'ArrowRight' ? 1 : -1);
 });
 
 // Client form submit action
