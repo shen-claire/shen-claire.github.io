@@ -84,7 +84,7 @@ let autoSpinActive = true;
 let lastTime = performance.now();
 let targetRotation = 0; // Target for animated snaps or ease-to-index
 let stepAnimationFrame = null;
-const ACTIVE_CARD_SCALE = 1.4;
+const ACTIVE_CARD_SCALE = 1.55;
 let activeProjectIndex = null;
 let isDetailOpen = false;
 let hoverLockedIndex = null;
@@ -257,17 +257,17 @@ function buildCarouselRing() {
         
         const card = document.createElement('div');
         card.id = `item-${index}`;
-        card.className = "carousel-item absolute w-[90px] md:w-[130px] h-[120px] md:h-[160px] cursor-pointer flex flex-col justify-center items-center rounded-2xl border border-black/[0.03] bg-white/70 backdrop-blur-md shadow-sm p-4 transition-all duration-300";
+        card.className = "carousel-item absolute w-[90px] md:w-[130px] h-[120px] md:h-[160px] cursor-pointer flex flex-col justify-center items-center rounded-2xl border border-black/[0.03] bg-white/70 backdrop-blur-md shadow-sm p-2.5 md:p-3 transition-all duration-300";
         
         // Cylinder mapping math formula
         card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
         
         // Injected responsive graphic & minimal subtext
         card.innerHTML = `
-            <div class="w-full h-[70%] flex items-center justify-center relative select-none pointer-events-none">
+            <div class="carousel-artwork w-full flex-1 min-h-0 flex items-center justify-center relative select-none pointer-events-none">
                 ${item.visual}
             </div>
-            <span class="text-[8px] md:text-[9px] text-center tracking-wider text-neutral-500 font-medium block mt-2 select-none truncate w-full pointer-events-none uppercase">
+            <span class="text-[8px] md:text-[9px] text-center tracking-wider text-neutral-500 font-medium block mt-2 shrink-0 select-none truncate w-full pointer-events-none uppercase">
                 ${item.name}
             </span>
         `;
