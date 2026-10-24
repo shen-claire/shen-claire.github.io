@@ -88,6 +88,8 @@ const ACTIVE_CARD_SCALE = 1.55;
 let activeProjectIndex = null;
 let isDetailOpen = false;
 let hoverLockedIndex = null;
+let isGridView = false;
+let isGalleryTransitioning = false;
 
 // Web Audio Synthesizer Controls
 let audioCtx = null;
@@ -255,41 +257,44 @@ function buildCarouselRing() {
     PORTFOLIO_OBJECTS.forEach((item, index) => {
         const angle = index * (360 / totalItems);
         
-        const card = document.createElement('div');
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.setAttribute('aria-label', `View ${item.name}`);
         card.id = `item-${index}`;
         card.className = "carousel-item absolute w-[90px] md:w-[130px] h-[120px] md:h-[160px] cursor-pointer flex flex-col justify-center items-center rounded-2xl border border-black/[0.03] bg-white/70 backdrop-blur-md shadow-sm p-2.5 md:p-3 transition-all duration-300";
         
         // Cylinder mapping math formula
         card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
         
-        // Injected responsive graphic & minimal subtext
+        // Give the uncropped painting the full card area.
         card.innerHTML = `
             <div class="carousel-artwork w-full flex-1 min-h-0 flex items-center justify-center relative select-none pointer-events-none">
                 ${item.visual}
             </div>
-            <span class="text-[8px] md:text-[9px] text-center tracking-wider text-neutral-500 font-medium block mt-2 shrink-0 select-none truncate w-full pointer-events-none uppercase">
-                ${item.name}
-            </span>
+            <span class="grid-work-title">${item.name}</span>
         `;
 
         // Item Click details & chime trigger
         card.addEventListener('click', (e) => {
-            if (Math.abs(dragVelocity) > 0.4) return;
+            if (isGalleryTransitioning || (!isGridView && Math.abs(dragVelocity) > 0.4)) return;
             e.stopPropagation();
             selectProject(index);
         });
 
         // Hover sound effect & pause auto-rotation
         card.addEventListener('mouseenter', () => {
+            if (isGalleryTransitioning) return;
+            playHoverTone(index);
+            if (isGridView) return;
             autoSpinActive = false;
             if (index === selectedItemIndex) {
                 hoverLockedIndex = index;
                 dragVelocity = 0;
             }
-            playHoverTone(index);
         });
 
         card.addEventListener('mouseleave', () => {
+            if (isGridView || isGalleryTransitioning) return;
             if (hoverLockedIndex === index) {
                 hoverLockedIndex = null;
             }
@@ -302,6 +307,136 @@ function buildCarouselRing() {
     updateHighlight();
 }
 
+// Keep the same artwork buttons when switching layouts, preserving their handlers.
+async function toggleGalleryView() {
+    if (isGalleryTransitioning || isDetailOpen) return;
+    isGalleryTransitioning = true;
+    autoSpinActive = false;
+    isDragging = false;
+    dragVelocity = 0;
+    hoverLockedIndex = null;
+    if (stepAnimationFrame !== null) {
+        cancelAnimationFrame(stepAnimationFrame);
+        stepAnimationFrame = null;
+    }
+
+    const main = document.getElementById('gallery-main');
+    const button = document.getElementById('gallery-view-toggle');
+    const scene = document.getElementById('carousel-scene');
+    const viewport = document.getElementById('works-grid-viewport');
+    const ring = document.getElementById('carousel-ring');
+    const grid = document.getElementById('works-grid');
+    const cards = PORTFOLIO_OBJECTS.map((_, index) => document.getElementById(`item-${index}`));
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    button.disabled = true;
+
+    const applyLayout = () => {
+        isGridView = !isGridView;
+        const destination = isGridView ? grid : ring;
+        cards.forEach(card => destination.appendChild(card));
+        scene.hidden = isGridView;
+        viewport.hidden = !isGridView;
+        document.getElementById('gallery-active-work').hidden = isGridView;
+        document.getElementById('gallery-instructions').textContent = isGridView
+            ? `${PORTFOLIO_OBJECTS.length} WORKS · SELECT A PAINTING` : 'DRAG OR SWIPE OR SPIN';
+        document.getElementById('carousel-title-hint').textContent = isGridView ? 'All Works' : 'Select Works';
+        button.setAttribute('aria-pressed', String(isGridView));
+        button.innerHTML = isGridView
+            ? '<i data-lucide="rotate-3d" class="w-3.5 h-3.5" aria-hidden="true"></i><span>Back to carousel</span>'
+            : '<i data-lucide="layout-grid" class="w-3.5 h-3.5" aria-hidden="true"></i><span>View all works</span>';
+        if (isGridView) {
+            viewport.scrollTop = 0;
+            cards.forEach(card => {
+                card.classList.remove('opacity-50', 'blur-[1.5px]', 'border-sky-200', 'z-30');
+                card.style.transform = 'none';
+            });
+        } else {
+            currentRotation = -selectedItemIndex * (360 / PORTFOLIO_OBJECTS.length);
+            ring.style.transform = `rotateY(${currentRotation}deg)`;
+            updateHighlight();
+        }
+        lucide.createIcons();
+    };
+
+    const readFrames = () => cards.map(card => {
+        const frame = isGridView ? card.querySelector('.carousel-artwork') : card;
+        const rect = frame.getBoundingClientRect();
+        return {
+            rect,
+            padding: parseFloat(getComputedStyle(frame).paddingLeft) || 0,
+            opacity: parseFloat(getComputedStyle(card).opacity) || 1
+        };
+    });
+    const layer = document.createElement('div');
+    layer.className = 'gallery-transition-layer';
+    layer.setAttribute('aria-hidden', 'true');
+    let animations = [];
+    const stopAnimation = () => animations.forEach(animation => animation.cancel());
+
+    try {
+        // Reuse decoded artwork rather than capturing blurred 3D browser layers.
+        await Promise.all(cards.map(card => card.querySelector('img')?.decode?.().catch(() => {})));
+        const before = readFrames();
+        main.classList.add('is-rearranging');
+        applyLayout();
+        const after = readFrames();
+
+        if (reducedMotion) {
+            main.classList.remove('is-rearranging');
+            const surface = isGridView ? viewport : scene;
+            if (surface.animate) {
+                await surface.animate([{ opacity: 0.6 }, { opacity: 1 }], { duration: 120 }).finished;
+            }
+        } else {
+            main.appendChild(layer);
+            const bounds = layer.getBoundingClientRect();
+            const visible = rect => rect.bottom > bounds.top && rect.top < bounds.bottom
+                && rect.right > bounds.left && rect.left < bounds.right;
+            const keyframe = ({ rect, padding, opacity }) => ({
+                left: `${rect.left - bounds.left}px`,
+                top: `${rect.top - bounds.top}px`,
+                width: `${rect.width}px`,
+                height: `${rect.height}px`,
+                padding: `${padding}px`,
+                opacity
+            });
+            animations = cards.flatMap((card, index) => {
+                const start = before[index];
+                const end = after[index];
+                const wasVisible = visible(start.rect);
+                const willBeVisible = visible(end.rect);
+                if (!wasVisible && !willBeVisible) return [];
+                const proxy = document.createElement('div');
+                proxy.className = 'gallery-transition-card';
+                const image = card.querySelector('img').cloneNode(true);
+                image.removeAttribute('class');
+                image.alt = '';
+                proxy.appendChild(image);
+                layer.appendChild(proxy);
+                // Offscreen rows fade locally instead of sweeping across the frame.
+                const from = wasVisible ? keyframe(start) : { ...keyframe(end), opacity: 0 };
+                const to = willBeVisible ? keyframe(end) : { ...keyframe(start), opacity: 0 };
+                Object.assign(proxy.style, from);
+                return [proxy.animate([from, to], {
+                    duration: 680,
+                    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                    fill: 'forwards'
+                })];
+            });
+            window.addEventListener('resize', stopAnimation, { once: true });
+            await Promise.allSettled(animations.map(animation => animation.finished));
+        }
+    } finally {
+        window.removeEventListener('resize', stopAnimation);
+        layer.remove();
+        stopAnimation();
+        main.classList.remove('is-rearranging');
+        isGalleryTransitioning = false;
+        autoSpinActive = !isGridView && !isDetailOpen;
+        button.disabled = false;
+    }
+}
+
 // Adjusts radius of carousel to match viewport size (responsive layout calculations)
 function calculateRadius() {
     const width = window.innerWidth;
@@ -311,6 +446,7 @@ function calculateRadius() {
 }
 
 function updateRingSpacing() {
+    if (isGridView || isGalleryTransitioning) return;
     updateHighlight();
 }
 
@@ -322,6 +458,7 @@ function initInteractionHandlers() {
     const surface = document.querySelector('.scene');
 
     surface.addEventListener('mousedown', (e) => {
+        if (isGridView || isGalleryTransitioning || e.target.closest('button:not(.carousel-item)')) return;
         isDragging = true;
         autoSpinActive = false;
         startX = e.clientX;
@@ -349,6 +486,7 @@ function initInteractionHandlers() {
 
     // Touch support for sleek responsive mobile sliding
     surface.addEventListener('touchstart', (e) => {
+        if (isGridView || isGalleryTransitioning) return;
         isDragging = true;
         autoSpinActive = false;
         startX = e.touches[0].clientX;
@@ -375,6 +513,7 @@ function initInteractionHandlers() {
 
 // Accessibility click helpers (forward/backward step buttons)
 function rotateStep(direction) {
+    if (isGridView || isGalleryTransitioning) return;
     autoSpinActive = false;
     dragVelocity = 0;
     hoverLockedIndex = null;
@@ -407,6 +546,11 @@ function runAnimationLoop() {
     const now = performance.now();
     const dt = (now - lastTime) / 1000;
     lastTime = now;
+
+    if (isGridView || isGalleryTransitioning) {
+        requestAnimationFrame(runAnimationLoop);
+        return;
+    }
 
     if (isDragging) {
         dragVelocity = Math.max(-10, Math.min(10, dragVelocity));
@@ -448,6 +592,7 @@ function calculateClosestFrontItem() {
 
 // --- DYNAMIC MAGNIFIED FOCUS HIGHLIGHTING ---
 function updateHighlight() {
+    if (isGridView) return;
     const totalItems = PORTFOLIO_OBJECTS.length;
     const radius = calculateRadius(); // Get current 3D spacing radius
     
@@ -528,7 +673,8 @@ function closeActiveTab() {
 // panel selection, expand center panel
 function selectProject(index) {
     const project = PORTFOLIO_OBJECTS[index];
-    if (!project) return;
+    if (!project || isGalleryTransitioning) return;
+    if (isGridView) selectedItemIndex = index;
 
     activeProjectIndex = index;
     isDetailOpen = true;
@@ -578,7 +724,7 @@ function closeDetails() {
     }
     activeProjectIndex = null;
     isDetailOpen = false;
-    autoSpinActive = true;
+    autoSpinActive = !isGridView;
 }
 
 document.getElementById('detail-drawer')?.addEventListener('click', (event) => {
@@ -593,7 +739,7 @@ document.addEventListener('keydown', (event) => {
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
     if (event.target?.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
-    if (isDetailOpen || isDragging) return;
+    if (isDetailOpen || isDragging || isGridView || isGalleryTransitioning) return;
     if (['about', 'contact'].some(tab => {
         const panel = document.getElementById(`tab-${tab}`);
         return panel && !panel.classList.contains('translate-y-full');

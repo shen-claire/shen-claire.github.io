@@ -36,6 +36,159 @@ body {
     border-radius: 0;
 }
 
+/* Shared artwork cards move between the ring and a scrollable collection. */
+#gallery-main { isolation: isolate; contain: paint; }
+#web-frame > header, #web-frame > footer { flex-shrink: 0; }
+#gallery-main [hidden] { display: none !important; }
+.gallery-toolbar {
+    position: absolute;
+    top: 20px;
+    left: 16px;
+    right: 16px;
+    z-index: 35;
+    text-align: center;
+}
+.gallery-instruction-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    min-height: 28px;
+    margin-bottom: 5px;
+}
+#gallery-instructions { grid-column: 2; }
+.gallery-view-toggle {
+    grid-column: 3;
+    justify-self: start;
+    margin-left: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 0;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    color: rgba(51, 51, 51, 0.65);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: color 180ms, border-color 180ms;
+}
+.gallery-view-toggle:hover { color: #111; border-bottom-color: currentColor; }
+.gallery-view-toggle:focus-visible, .carousel-item:focus-visible {
+    outline: 2px solid #7b9eb3;
+    outline-offset: 4px;
+}
+.gallery-view-toggle:disabled { cursor: progress; }
+.works-grid-viewport {
+    position: absolute;
+    inset: 94px 12px 12px;
+    border-radius: 14px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+}
+.works-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px 26px;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 10px 32px 36px;
+}
+.works-grid .carousel-item {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    transform: none;
+    filter: none;
+    opacity: 1;
+}
+.works-grid .carousel-artwork {
+    flex: none;
+    height: clamp(180px, 24vw, 260px);
+    padding: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.7);
+    transition: background 200ms, box-shadow 200ms;
+}
+.works-grid .carousel-item:hover .carousel-artwork {
+    background: white;
+    box-shadow: 0 8px 24px rgba(51, 51, 51, 0.07);
+}
+.grid-work-title { display: none; }
+.works-grid .grid-work-title {
+    display: block;
+    margin-top: 12px;
+    color: #555;
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 180ms ease;
+}
+.is-rearranging .carousel-item, .is-rearranging .carousel-ring { transition: none !important; }
+.is-rearranging .carousel-item { visibility: hidden; }
+.is-rearranging .grid-work-title { opacity: 0; }
+.is-rearranging #gallery-active-work { opacity: 0; }
+.is-rearranging .works-grid-viewport { overflow: hidden; }
+.gallery-transition-layer {
+    position: absolute;
+    inset: 94px 0 0;
+    overflow: hidden;
+    contain: strict;
+    pointer-events: none;
+    z-index: 30;
+}
+.gallery-transition-card {
+    position: absolute;
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+}
+.gallery-transition-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 0;
+    filter: none;
+}
+@media (max-width: 767px) {
+    .works-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; padding: 10px 20px 28px; }
+    .works-grid .carousel-artwork { height: 210px; padding: 10px; }
+}
+@media (max-width: 599px) {
+    .gallery-instruction-row { display: flex; justify-content: center; gap: 12px; }
+    #gallery-instructions { font-size: 9px; letter-spacing: 0.1em; }
+    .gallery-view-toggle { margin-left: 0; font-size: 9px; letter-spacing: 0.08em; }
+}
+@media (max-width: 399px) {
+    .gallery-instruction-row { gap: 8px; }
+    #gallery-instructions, .gallery-view-toggle { font-size: 8px; letter-spacing: 0.05em; }
+}
+@media (max-width: 379px) {
+    .works-grid { grid-template-columns: minmax(0, 1fr); }
+    .works-grid .carousel-artwork { height: 260px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .carousel-item, .carousel-ring, .gallery-view-toggle, .grid-work-title { transition: none; }
+}
+
 /* Ambient Grain effect */
 .grain {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");

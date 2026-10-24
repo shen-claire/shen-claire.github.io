@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-     <link rel="stylesheet" href="css/styles.css">
+     <link rel="stylesheet" href="css/styles.css?v=gallery-toolbar-2">
 </head>
 <body class="h-full relative overflow-hidden text-[#1c1d1f] transition-colors duration-700">
 
@@ -57,14 +57,20 @@
                 </div>
             </header>
 
-            <main class="flex-1 w-full relative flex flex-col justify-center items-center overflow-hidden z-10 py-4">
+            <main id="gallery-main" class="flex-1 min-h-0 w-full relative flex flex-col justify-center items-center overflow-hidden z-10 py-4">
                 
-                <div class="absolute top-6 text-center pointer-events-none z-10 transition-all duration-500">
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-neutral-400 font-medium mb-1 animate-pulse">DRAG OR SWIPE OR SPIN</p>
-                    <h2 id="carousel-title-hint" class="serif-font text-2xl md:text-3xl text-neutral-800 italic opacity-85 transition-opacity duration-300">Select Works</h2>
+                <div class="gallery-toolbar">
+                    <div class="gallery-instruction-row">
+                        <p id="gallery-instructions" class="text-[10px] uppercase tracking-[0.3em] text-neutral-400 font-medium">DRAG OR SWIPE OR SPIN</p>
+                        <button id="gallery-view-toggle" type="button" onclick="toggleGalleryView()" aria-controls="carousel-scene works-grid-viewport" aria-pressed="false" class="gallery-view-toggle">
+                            <i data-lucide="layout-grid" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                            <span>View all works</span>
+                        </button>
+                    </div>
+                    <h2 id="carousel-title-hint" class="serif-font text-2xl md:text-3xl text-neutral-800 italic opacity-85">Select Works</h2>
                 </div>
 
-                <div class="scene w-full h-[380px] md:h-[460px] flex items-center justify-center cursor-grab active:cursor-grabbing relative">
+                <div id="carousel-scene" class="scene w-full h-[380px] md:h-[460px] flex items-center justify-center cursor-grab active:cursor-grabbing relative">
 
                     <button onclick="rotateStep(-1)" class="absolute left-4 p-3 rounded-full bg-white/70 hover:bg-white border border-black/[0.05] shadow-sm z-30 group transition-all transform hover:scale-105 active:scale-95 hidden md:block">
                         <i data-lucide="arrow-left" class="w-4 h-4 text-neutral-600 group-hover:text-black"></i>
@@ -77,7 +83,11 @@
                         </div>
                 </div>
 
-                <div class="absolute bottom-6 flex items-center gap-2 pointer-events-none z-10">
+                <div id="works-grid-viewport" class="works-grid-viewport custom-scroll" role="region" aria-label="All works" tabindex="0" hidden>
+                    <div id="works-grid" class="works-grid"></div>
+                </div>
+
+                <div id="gallery-active-work" class="absolute bottom-6 flex items-center gap-2 pointer-events-none z-10">
                     <span id="active-item-index" class="text-xs font-medium font-mono text-neutral-400">01</span>
                     <div class="w-8 h-[1px] bg-neutral-300"></div>
                     <span id="active-item-name" class="text-xs tracking-[0.1em] text-neutral-600 font-medium">Loading Portfolio...</span>
