@@ -53,8 +53,8 @@
                         <i data-lucide="volume-2" class="w-4 h-4 text-[#333333] group-hover:scale-110 transition-transform"></i>
                     </button>
 
-                    <button onclick="toggleMockupFrame()" class="p-2 rounded-full hover:bg-black/[0.04] transition-all group" title="Toggle Frame Mode">
-                        <i id="frame-icon" data-lucide="minimize" class="w-4 h-4 text-[#333333] group-hover:scale-110 transition-transform"></i>
+                    <button id="fullscreen-toggle" type="button" onclick="toggleFullscreen()" class="p-2 rounded-full hover:bg-black/[0.04] transition-all group" title="Enter fullscreen" aria-label="Enter fullscreen" aria-pressed="false">
+                        <i id="frame-icon" data-lucide="maximize" class="w-4 h-4 text-[#333333] group-hover:scale-110 transition-transform" aria-hidden="true"></i>
                     </button>
                 </div>
             </header>
@@ -223,7 +223,7 @@
         </div>
     </div>
     <script src="js/about.js?v=artist-catalog-1"></script>
-    <script src="js/portfolio.js?v=page-change-1"></script>
+    <script src="js/portfolio.js?v=native-fullscreen-1"></script>
 
     <div id="art-lightbox" class="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-zoom-out">
     <div id="lightbox-img-container" class="max-w-[90vw] max-h-[80vh] rounded-lg overflow-hidden shadow-2xl"></div>

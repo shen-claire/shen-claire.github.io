@@ -75,7 +75,6 @@ const PORTFOLIO_OBJECTS = [
     }
 ];
 // System state
-let isMockupFrame = true;
 let selectedItemIndex = 0; // index inside PORTFOLIO_OBJECTS
 let currentRotation = 0; // ongoing rot angle in degrees
 let isDragging = false;
@@ -220,34 +219,46 @@ function toggleAudio() {
     lucide.createIcons();
 }
 
-// Toggles Mockup Frame Mode
-function toggleMockupFrame() {
-    isMockupFrame = !isMockupFrame;
-    const webFrame = document.getElementById('web-frame');
-    const backdrop = document.getElementById('backdrop-container');
-    const icon = document.getElementById('frame-icon');
-
-    playAmbientNote(350, 'sine', 0.8, 0.05);
-
-    if (isMockupFrame) {
-        // Mimic image frame
-        webFrame.classList.remove('rounded-none', 'max-w-none', 'max-h-none', 'p-0', 'border-0');
-        webFrame.classList.add('rounded-[32px]', 'max-w-7xl', 'max-h-[850px]', 'shadow-2xl');
-        backdrop.classList.remove('opacity-0');
-        backdrop.classList.add('opacity-100');
-        icon.setAttribute('data-lucide', 'minimize');
-    } else {
-        // Edge-to-edge absolute layout
-        webFrame.classList.add('rounded-none', 'max-w-none', 'max-h-none', 'p-0', 'border-0');
-        webFrame.classList.remove('rounded-[32px]', 'max-w-7xl', 'max-h-[850px]', 'shadow-2xl');
-        backdrop.classList.remove('opacity-100');
-        backdrop.classList.add('opacity-0');
-        icon.setAttribute('data-lucide', 'maximize');
-    }
+// Fullscreen the whole document so artwork dialogs and all page views stay available.
+function syncFullscreenControl() {
+    const active = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+    const button = document.getElementById('fullscreen-toggle');
+    if (!button) return;
+    const label = active ? 'Exit fullscreen' : 'Enter fullscreen';
+    button.title = label;
+    button.setAttribute('aria-label', label);
+    button.setAttribute('aria-pressed', String(active));
+    button.innerHTML = `<i id="frame-icon" data-lucide="${active ? 'minimize' : 'maximize'}" class="w-4 h-4 text-[#333333] group-hover:scale-110 transition-transform" aria-hidden="true"></i>`;
     lucide.createIcons();
-    // recalculate coordinates
-    setTimeout(updateRingSpacing, 300);
+    requestAnimationFrame(updateRingSpacing);
 }
+
+async function toggleFullscreen() {
+    try {
+        const active = document.fullscreenElement || document.webkitFullscreenElement;
+        if (active) {
+            const exit = document.exitFullscreen || document.webkitExitFullscreen;
+            if (exit) await exit.call(document);
+        } else {
+            const root = document.documentElement;
+            const enter = root.requestFullscreen || root.webkitRequestFullscreen;
+            if (!enter) {
+                showNotification('Fullscreen is not supported in this browser.');
+                return;
+            }
+            // Must be called directly from the click to preserve browser user activation.
+            await enter.call(root);
+        }
+        syncFullscreenControl();
+    } catch (error) {
+        syncFullscreenControl();
+        showNotification('Fullscreen is unavailable here. Try opening the site in a browser tab.');
+    }
+}
+
+// Keep the control accurate when Escape or the browser's own controls exit fullscreen.
+document.addEventListener('fullscreenchange', syncFullscreenControl);
+document.addEventListener('webkitfullscreenchange', syncFullscreenControl);
 
 // Generate the 3D rotating cylindrical items
 function buildCarouselRing() {
