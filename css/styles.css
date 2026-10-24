@@ -38,7 +38,12 @@ body {
 
 /* Shared artwork cards move between the ring and a scrollable collection. */
 #gallery-main { isolation: isolate; contain: paint; }
-#web-frame > header, #web-frame > footer { flex-shrink: 0; }
+#web-frame > header { flex-shrink: 0; }
+#carousel-scene {
+    position: absolute;
+    inset: 78px 0 72px;
+    height: auto;
+}
 #gallery-main [hidden] { display: none !important; }
 .gallery-toolbar {
     position: absolute;
