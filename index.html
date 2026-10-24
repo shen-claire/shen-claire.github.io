@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-     <link rel="stylesheet" href="css/styles.css?v=footprints-frame-4">
+     <link rel="stylesheet" href="css/styles.css?v=artist-catalog-1">
 </head>
 <body class="h-full relative overflow-hidden text-[#1c1d1f] transition-colors duration-700">
 
@@ -97,55 +97,28 @@
 
             <!-- Page views live below the shared site header. -->
             <section id="tab-about" class="site-page absolute top-[77px] md:top-[81px] inset-x-0 bottom-0 bg-[#f6f5f3] z-[15] flex flex-col" aria-hidden="true" aria-label="About Claire Shen">
-                <div class="page-content flex-1 overflow-y-auto custom-scroll p-6 md:p-16 space-y-12">
-                    <div class="border-b border-black/[0.05] pb-6">
-                        <div>
-                            <span class="text-[10px] font-semibold tracking-widest text-neutral-400 uppercase">PORTFOLIO INDEX</span>
-                            <h2 class="serif-font text-3xl md:text-5xl text-neutral-800 italic mt-1">Claire Shen</h2>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
-                        <div class="md:col-span-5 space-y-6">
-                            <div class="w-full aspect-square bg-[#eae8e4] rounded-2xl border border-black/[0.02] flex items-center justify-center p-8 relative overflow-hidden">
-                                <div class="absolute inset-0 bg-gradient-to-tr from-sky-100/30 to-rose-100/30"></div>
-                                <svg class="w-4/5 h-4/5 text-neutral-400 opacity-80" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="100" cy="80" r="35" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
-                                    <path d="M40 160C40 120 70 110 100 110C130 110 160 120 160 160" stroke="currentColor" stroke-width="2"/>
-                                    <line x1="20" y1="100" x2="180" y2="100" stroke="currentColor" stroke-width="1" stroke-opacity="0.3"/>
-                                    <circle cx="100" cy="100" r="85" stroke="currentColor" stroke-width="1" stroke-opacity="0.3"/>
-                                </svg>
+                <div class="page-content about-scroll flex-1 min-h-0 overflow-y-auto custom-scroll" tabindex="0" aria-label="About page content">
+                    <div class="about-catalog">
+                        <header class="about-intro">
+                            <div>
+                                <p class="about-kicker">About the artist</p>
+                                <h2 class="serif-font about-name">Claire Shen</h2>
+                                <p id="about-introduction" class="about-introduction"></p>
                             </div>
-                            <p class="text-xs text-neutral-500 tracking-wide text-center italic">Independent Digital Sculptor &amp; Creative Technologist</p>
-                        </div>
-
-                        <div class="md:col-span-7 space-y-8">
-                            <h3 class="serif-font text-2xl text-neutral-800">Blending spatial architecture with digital poetry.</h3>
-                            <p class="text-xs md:text-sm text-neutral-600 leading-relaxed space-y-4">
-                                Claire Shen is an artist focusing on bespoke e-commerce experiences, luxury tangible objects, and browser-based spatial engineering. Working closely with modern design studios, luxury houses, and technological visionaries, she designs interfaces that are felt, not just seen.
-                            </p>
-                            
-                            <div class="grid grid-cols-2 gap-6 pt-4">
-                                <div>
-                                    <h4 class="text-[10px] font-semibold tracking-widest text-neutral-400 uppercase">CAPABILITIES</h4>
-                                    <ul class="text-xs text-neutral-600 mt-2 space-y-1.5 list-disc pl-4">
-                                        <li>Art Direction</li>
-                                        <li>3D WebGL / CSS-3D Systems</li>
-                                        <li>Physical Product Design</li>
-                                        <li>Interaction Modeling</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="text-[10px] font-semibold tracking-widest text-neutral-400 uppercase">RECOGNITIONS</h4>
-                                    <ul class="text-xs text-neutral-600 mt-2 space-y-1.5 list-disc pl-4">
-                                        <li>Awwwards SOTD (x3)</li>
-                                        <li>FWA of the Month (2025)</li>
-                                        <li>CSS Design Awards Best UI</li>
-                                        <li>Behance Featured (Fashion)</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                            <figure id="about-portrait" class="about-portrait"></figure>
+                        </header>
+                        <section class="about-section" aria-labelledby="recognition-title">
+                            <div class="about-section-heading"><span class="about-kicker">01 / Recognition</span><h3 id="recognition-title" class="serif-font">Selected Recognition</h3></div>
+                            <div id="about-recognition"></div>
+                        </section>
+                        <section class="about-section" aria-labelledby="press-title">
+                            <div class="about-section-heading"><span class="about-kicker">02 / In print &amp; online</span><h3 id="press-title" class="serif-font">Press Coverage</h3></div>
+                            <div id="about-press" class="about-press"></div>
+                        </section>
+                        <section class="about-section" aria-labelledby="highlights-title">
+                            <div class="about-section-heading"><span class="about-kicker">03 / Selected moments</span><h3 id="highlights-title" class="serif-font">Art Highlights</h3></div>
+                            <div id="about-highlights" class="about-highlights"></div>
+                        </section>
                     </div>
                 </div>
             </section>
@@ -247,6 +220,7 @@
             </div>
         </div>
     </div>
+    <script src="js/about.js?v=artist-catalog-1"></script>
     <script src="js/portfolio.js?v=page-change-1"></script>
 
     <div id="art-lightbox" class="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-zoom-out">
