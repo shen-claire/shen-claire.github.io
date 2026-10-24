@@ -680,13 +680,17 @@ function openTab(tabId, event) {
     playAmbientNote(400, 'sine', 0.5, 0.05);
 
     const tabs = ['about', 'contact'];
+    const gallery = document.getElementById('gallery-main');
+    if (gallery) gallery.classList.toggle('is-page-inactive', tabId !== 'works');
     tabs.forEach(t => {
         const panel = document.getElementById(`tab-${t}`);
         if (panel) {
             if (t === tabId) {
-                panel.classList.remove('translate-y-full');
+                panel.classList.add('is-active');
+                panel.setAttribute('aria-hidden', 'false');
             } else {
-                panel.classList.add('translate-y-full');
+                panel.classList.remove('is-active');
+                panel.setAttribute('aria-hidden', 'true');
             }
         }
     });
@@ -694,9 +698,13 @@ function openTab(tabId, event) {
 
 function closeActiveTab() {
     const tabs = ['about', 'contact'];
+    document.getElementById('gallery-main')?.classList.remove('is-page-inactive');
     tabs.forEach(t => {
         const panel = document.getElementById(`tab-${t}`);
-        if (panel) panel.classList.add('translate-y-full');
+        if (panel) {
+            panel.classList.remove('is-active');
+            panel.setAttribute('aria-hidden', 'true');
+        }
     });
 
     document.querySelectorAll('.nav-link').forEach(link => {
@@ -784,7 +792,7 @@ document.addEventListener('keydown', (event) => {
     if (isDetailOpen || isDragging || isGridView || isGalleryTransitioning) return;
     if (['about', 'contact'].some(tab => {
         const panel = document.getElementById(`tab-${tab}`);
-        return panel && !panel.classList.contains('translate-y-full');
+        return panel && panel.classList.contains('is-active');
     })) return;
 
     event.preventDefault();

@@ -95,17 +95,14 @@
 
             </main>
 
-            <!-- ABOUT TAB -->
-            <div id="tab-about" class="absolute inset-0 bg-[#f6f5f3] z-40 transform translate-y-full transition-transform duration-700 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col">
-                <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-16 space-y-12">
-                    <div class="flex justify-between items-start border-b border-black/[0.05] pb-6">
+            <!-- Page views live below the shared site header. -->
+            <section id="tab-about" class="site-page absolute top-[77px] md:top-[81px] inset-x-0 bottom-0 bg-[#f6f5f3] z-[15] flex flex-col" aria-hidden="true" aria-label="About Claire Shen">
+                <div class="page-content flex-1 overflow-y-auto custom-scroll p-6 md:p-16 space-y-12">
+                    <div class="border-b border-black/[0.05] pb-6">
                         <div>
                             <span class="text-[10px] font-semibold tracking-widest text-neutral-400 uppercase">PORTFOLIO INDEX</span>
                             <h2 class="serif-font text-3xl md:text-5xl text-neutral-800 italic mt-1">Claire Shen</h2>
                         </div>
-                        <button onclick="closeActiveTab()" class="p-2 rounded-full hover:bg-neutral-100 transition-colors">
-                            <i data-lucide="arrow-down" class="w-6 h-6 text-neutral-500"></i>
-                        </button>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
@@ -151,18 +148,15 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div id="tab-contact" class="absolute inset-0 bg-[#f6f5f3] z-40 transform translate-y-full transition-transform duration-700 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col">
-                <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-16 space-y-12">
-                    <div class="flex justify-between items-start border-b border-black/[0.05] pb-6">
+            <section id="tab-contact" class="site-page absolute top-[77px] md:top-[81px] inset-x-0 bottom-0 bg-[#f6f5f3] z-[15] flex flex-col" aria-hidden="true" aria-label="Inquire">
+                <div class="page-content flex-1 overflow-y-auto custom-scroll p-6 md:p-16 space-y-12">
+                    <div class="border-b border-black/[0.05] pb-6">
                         <div>
                             <span class="text-[10px] font-semibold tracking-widest text-neutral-400 uppercase">COMMISSIONS &amp; CHATS</span>
                             <h2 class="serif-font text-3xl md:text-5xl text-neutral-800 italic mt-1">Initiate Collaboration</h2>
                         </div>
-                        <button onclick="closeActiveTab()" class="p-2 rounded-full hover:bg-neutral-100 transition-colors">
-                            <i data-lucide="arrow-down" class="w-6 h-6 text-neutral-500"></i>
-                        </button>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
@@ -204,7 +198,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <div id="custom-notification" class="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-neutral-900 text-white text-xs px-6 py-3 rounded-full shadow-xl opacity-0 translate-y-4 pointer-events-none transition-all duration-300 z-55 flex items-center gap-2">
                 <i data-lucide="info" class="w-4 h-4 text-sky-300"></i>
@@ -253,7 +247,7 @@
             </div>
         </div>
     </div>
-    <script src="js/portfolio.js?v=footprints-frame-4"></script>
+    <script src="js/portfolio.js?v=page-change-1"></script>
 
     <div id="art-lightbox" class="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-zoom-out">
     <div id="lightbox-img-container" class="max-w-[90vw] max-h-[80vh] rounded-lg overflow-hidden shadow-2xl"></div>
