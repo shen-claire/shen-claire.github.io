@@ -20,20 +20,125 @@ body {
     transition: transform 0.1s cubic-bezier(0.1, 0.8, 0.2, 1);
 }
 .carousel-item {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
     backface-visibility: visible;
-    transform-style: preserve-3d;
+    transform-style: flat;
     transition: filter 0.3s, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .carousel-item:hover {
-    filter: brightness(1.1) drop-shadow(0 15px 30px rgba(186, 230, 253, 0.25));
+    filter: brightness(1.035);
 }
 
-/* Keep each painting intact, with the card acting as a quiet surrounding mat. */
+/* The supplied photographed frame is nine-sliced; its center is never drawn. */
+@property --frame-rail { syntax: '<length>'; inherits: true; initial-value: 10px; }
+@property --frame-mat { syntax: '<length>'; inherits: true; initial-value: 3px; }
+.artwork-frame {
+    --frame-rail: 13px;
+    --frame-mat: 2px;
+    position: relative;
+    flex: none;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: var(--frame-rail);
+    background: #8e6b3e;
+    transform-style: flat;
+    isolation: isolate;
+    border-radius: 1px;
+    box-shadow:
+        0 1px 0 #65472c,
+        1px 2px 0 #765333,
+        2px 3px 0 #5e442b,
+        0 5px 9px rgba(56, 37, 18, 0.20);
+    transition: box-shadow 350ms ease;
+}
+.artwork-frame::before, .artwork-frame::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+}
+.artwork-frame::before {
+    inset: 0;
+    border: var(--frame-rail) solid #bb9654;
+    border-image-source: url('../img/frames/antique-gallery-frame.png');
+    border-image-slice: 70 73 70 73;
+    border-image-width: 1;
+    border-image-repeat: round;
+}
+.artwork-frame::after {
+    inset: var(--frame-rail);
+    border: 1px solid rgba(89, 61, 29, .65);
+    box-shadow: inset 0 1px 2px rgba(55, 36, 19, .25);
+}
+.artwork-mat {
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: var(--frame-mat);
+    background: linear-gradient(135deg, #f7f0df, #eae0c9);
+    box-shadow: inset 1px 2px 3px rgba(58, 40, 21, .25);
+}
 .carousel-artwork img {
+    position: relative;
+    z-index: 1;
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: contain;
     border-radius: 0;
+    filter: none;
+}
+.carousel-item.is-active .artwork-frame {
+    box-shadow:
+        0 1px 0 #67482a,
+        1px 2px 0 #82603b,
+        2px 3px 0 #5d4026,
+        0 9px 15px rgba(63, 42, 20, .28),
+        0 2px 5px rgba(81, 57, 28, .16);
+}
+@media (max-width: 767px) {
+    .artwork-frame { --frame-rail: 10px; --frame-mat: 2px; }
+}
+
+/* Night's alternate photographed frame: wide silver molding and silver liner. */
+.artwork-frame.artwork-frame-silver {
+    --frame-rail: 18px;
+    --frame-mat: 1px;
+    background: #88867b;
+    box-shadow: 1px 2px 0 #77756c, 2px 3px 0 #5d5b55, 0 5px 9px rgba(38, 40, 42, .20);
+}
+.artwork-frame-silver::before {
+    border-color: #b9b9ad;
+    border-image-source: url('../img/frames/silver-gallery-frame.png');
+    border-image-slice: 300 299 298 299;
+    border-image-repeat: stretch;
+}
+.artwork-frame-silver::after { border-color: rgba(80, 81, 78, .6); }
+.artwork-frame-silver .artwork-mat { background: #ecebe3; }
+.carousel-item.is-active .artwork-frame-silver {
+    box-shadow: 1px 2px 0 #77756c, 2px 3px 0 #5d5b55, 0 9px 15px rgba(38, 40, 42, .27);
+}
+@media (max-width: 767px) {
+    .artwork-frame.artwork-frame-silver { --frame-rail: 14px; }
+}
+
+/* Footprints: the supplied slimmer silver profile, with rounded inner lip. */
+.artwork-frame.artwork-frame-silver-slim { --frame-rail: 11px; }
+.artwork-frame-silver-slim::before {
+    border-image-source: url('../img/frames/footprints-silver-frame.png');
+    border-image-slice: 34;
+}
+.artwork-frame-silver-slim::after { border-color: rgba(92, 94, 94, .4); }
+@media (max-width: 767px) {
+    .artwork-frame.artwork-frame-silver-slim { --frame-rail: 9px; }
 }
 
 /* Shared artwork cards move between the ring and a scrollable collection. */
@@ -122,15 +227,23 @@ body {
 .works-grid .carousel-artwork {
     flex: none;
     height: clamp(180px, 24vw, 260px);
-    padding: 14px;
-    border: 1px solid rgba(0, 0, 0, 0.04);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.7);
-    transition: background 200ms, box-shadow 200ms;
+    padding: 0;
+    background: transparent;
 }
-.works-grid .carousel-item:hover .carousel-artwork {
-    background: white;
-    box-shadow: 0 8px 24px rgba(51, 51, 51, 0.07);
+.works-grid .artwork-frame {
+    --frame-rail: 18px;
+    --frame-mat: 3px;
+}
+.works-grid .artwork-frame.artwork-frame-silver {
+    --frame-rail: 24px;
+    --frame-mat: 1px;
+}
+.works-grid .artwork-frame.artwork-frame-silver-slim { --frame-rail: 16px; }
+.works-grid .carousel-item:hover .artwork-frame {
+    box-shadow: 1px 2px 0 #765333, 2px 3px 0 #5e442b, 0 9px 18px rgba(56, 37, 18, .22);
+}
+.works-grid .carousel-item:hover .artwork-frame-silver {
+    box-shadow: 1px 2px 0 #77756c, 2px 3px 0 #5d5b55, 0 9px 18px rgba(38, 40, 42, .22);
 }
 .grid-work-title { display: none; }
 .works-grid .grid-work-title {
@@ -158,13 +271,8 @@ body {
 }
 .gallery-transition-card {
     position: absolute;
-    display: flex;
     box-sizing: border-box;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(0, 0, 0, 0.04);
-    border-radius: 16px;
+    transition: none;
 }
 .gallery-transition-card img {
     width: 100%;
@@ -175,7 +283,10 @@ body {
 }
 @media (max-width: 767px) {
     .works-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; padding: 10px 20px 28px; }
-    .works-grid .carousel-artwork { height: 210px; padding: 10px; }
+    .works-grid .carousel-artwork { height: 210px; }
+    .works-grid .artwork-frame { --frame-rail: 14px; --frame-mat: 2px; }
+    .works-grid .artwork-frame.artwork-frame-silver { --frame-rail: 18px; }
+    .works-grid .artwork-frame.artwork-frame-silver-slim { --frame-rail: 12px; }
 }
 @media (max-width: 599px) {
     .gallery-instruction-row { display: flex; justify-content: center; gap: 12px; }
@@ -191,7 +302,7 @@ body {
     .works-grid .carousel-artwork { height: 260px; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .carousel-item, .carousel-ring, .gallery-view-toggle, .grid-work-title { transition: none; }
+    .carousel-item, .carousel-ring, .gallery-view-toggle, .grid-work-title, .artwork-frame { transition: none; }
 }
 
 /* Ambient Grain effect */

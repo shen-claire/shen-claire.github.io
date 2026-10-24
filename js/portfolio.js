@@ -50,6 +50,7 @@ const PORTFOLIO_OBJECTS = [
     {
         id: 7,
         name: "Footprints",
+        frame: "silver-slim",
         medium: "Acrylic",
         year: "2026",
         awards: "",
@@ -66,6 +67,7 @@ const PORTFOLIO_OBJECTS = [
     {
         id: 9,
         name: "Night",
+        frame: "silver",
         medium: "Acrylic",
         year: "2025",
         awards: "",
@@ -90,6 +92,7 @@ let isDetailOpen = false;
 let hoverLockedIndex = null;
 let isGridView = false;
 let isGalleryTransitioning = false;
+let artworkSizeObserver = null;
 
 // Web Audio Synthesizer Controls
 let audioCtx = null;
@@ -250,18 +253,28 @@ function toggleMockupFrame() {
 function buildCarouselRing() {
     const ring = document.getElementById('carousel-ring');
     ring.innerHTML = '';
+    artworkSizeObserver?.disconnect();
+    if (window.ResizeObserver) {
+        artworkSizeObserver = new ResizeObserver(entries => {
+            entries.forEach(entry => fitArtworkFrame(entry.target));
+        });
+    }
     
     const totalItems = PORTFOLIO_OBJECTS.length;
     const radius = calculateRadius();
 
     PORTFOLIO_OBJECTS.forEach((item, index) => {
         const angle = index * (360 / totalItems);
+        const frameClass = {
+            silver: ' artwork-frame-silver',
+            'silver-slim': ' artwork-frame-silver artwork-frame-silver-slim'
+        }[item.frame] || '';
         
         const card = document.createElement('button');
         card.type = 'button';
         card.setAttribute('aria-label', `View ${item.name}`);
         card.id = `item-${index}`;
-        card.className = "carousel-item absolute w-[90px] md:w-[130px] h-[120px] md:h-[160px] cursor-pointer flex flex-col justify-center items-center rounded-2xl border border-black/[0.03] bg-white/70 backdrop-blur-md shadow-sm p-2.5 md:p-3 transition-all duration-300";
+        card.className = "carousel-item absolute w-[90px] md:w-[130px] h-[120px] md:h-[160px] cursor-pointer flex flex-col justify-center items-center";
         
         // Cylinder mapping math formula
         card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
@@ -269,7 +282,9 @@ function buildCarouselRing() {
         // Give the uncropped painting the full card area.
         card.innerHTML = `
             <div class="carousel-artwork w-full flex-1 min-h-0 flex items-center justify-center relative select-none pointer-events-none">
-                ${item.visual}
+                <div class="artwork-frame${frameClass}">
+                    <div class="artwork-mat">${item.visual}</div>
+                </div>
             </div>
             <span class="grid-work-title">${item.name}</span>
         `;
@@ -302,9 +317,34 @@ function buildCarouselRing() {
         });
 
         ring.appendChild(card);
+        const artworkStage = card.querySelector('.carousel-artwork');
+        const artworkImage = artworkStage.querySelector('img');
+        artworkImage.addEventListener('load', () => fitArtworkFrame(artworkStage));
+        artworkSizeObserver?.observe(artworkStage);
+        fitArtworkFrame(artworkStage);
     });
     
     updateHighlight();
+}
+
+// Fit the painted area, not the surrounding molding, to the original ratio.
+// clientWidth/clientHeight deliberately ignore the carousel's 3D magnification.
+function fitArtworkFrame(stage) {
+    if (!stage?.clientWidth || !stage.clientHeight) return;
+    const frame = stage.querySelector('.artwork-frame');
+    const image = frame.querySelector('img');
+    if (!image.naturalWidth || !image.naturalHeight) return;
+    const rail = parseFloat(getComputedStyle(frame).paddingLeft) || 10;
+    const mat = parseFloat(getComputedStyle(frame.querySelector('.artwork-mat')).paddingLeft) || 3;
+    const rim = 2 * (rail + mat);
+    const ratio = image.naturalWidth / image.naturalHeight;
+    const imageWidth = Math.min(Math.max(1, stage.clientWidth - rim), Math.max(1, stage.clientHeight - rim) * ratio);
+    frame.style.width = `${imageWidth + rim}px`;
+    frame.style.height = `${imageWidth / ratio + rim}px`;
+}
+
+function fitAllArtworkFrames() {
+    document.querySelectorAll('.carousel-artwork').forEach(fitArtworkFrame);
 }
 
 // Keep the same artwork buttons when switching layouts, preserving their handlers.
@@ -347,7 +387,7 @@ async function toggleGalleryView() {
         if (isGridView) {
             viewport.scrollTop = 0;
             cards.forEach(card => {
-                card.classList.remove('opacity-50', 'blur-[1.5px]', 'border-sky-200', 'z-30');
+                card.classList.remove('opacity-50', 'blur-[1.5px]', 'is-active', 'z-30');
                 card.style.transform = 'none';
             });
         } else {
@@ -355,15 +395,17 @@ async function toggleGalleryView() {
             ring.style.transform = `rotateY(${currentRotation}deg)`;
             updateHighlight();
         }
+        fitAllArtworkFrames();
         lucide.createIcons();
     };
 
     const readFrames = () => cards.map(card => {
-        const frame = isGridView ? card.querySelector('.carousel-artwork') : card;
+        const frame = card.querySelector('.artwork-frame');
         const rect = frame.getBoundingClientRect();
         return {
             rect,
-            padding: parseFloat(getComputedStyle(frame).paddingLeft) || 0,
+            rail: parseFloat(getComputedStyle(frame).paddingLeft) || 10,
+            mat: parseFloat(getComputedStyle(frame.querySelector('.artwork-mat')).paddingLeft) || 3,
             opacity: parseFloat(getComputedStyle(card).opacity) || 1
         };
     });
@@ -392,12 +434,13 @@ async function toggleGalleryView() {
             const bounds = layer.getBoundingClientRect();
             const visible = rect => rect.bottom > bounds.top && rect.top < bounds.bottom
                 && rect.right > bounds.left && rect.left < bounds.right;
-            const keyframe = ({ rect, padding, opacity }) => ({
+            const keyframe = ({ rect, rail, mat, opacity }) => ({
                 left: `${rect.left - bounds.left}px`,
                 top: `${rect.top - bounds.top}px`,
                 width: `${rect.width}px`,
                 height: `${rect.height}px`,
-                padding: `${padding}px`,
+                '--frame-rail': `${rail}px`,
+                '--frame-mat': `${mat}px`,
                 opacity
             });
             animations = cards.flatMap((card, index) => {
@@ -406,12 +449,10 @@ async function toggleGalleryView() {
                 const wasVisible = visible(start.rect);
                 const willBeVisible = visible(end.rect);
                 if (!wasVisible && !willBeVisible) return [];
-                const proxy = document.createElement('div');
-                proxy.className = 'gallery-transition-card';
-                const image = card.querySelector('img').cloneNode(true);
-                image.removeAttribute('class');
+                const proxy = card.querySelector('.artwork-frame').cloneNode(true);
+                proxy.classList.add('gallery-transition-card');
+                const image = proxy.querySelector('img');
                 image.alt = '';
-                proxy.appendChild(image);
                 layer.appendChild(proxy);
                 // Offscreen rows fade locally instead of sweeping across the frame.
                 const from = wasVisible ? keyframe(start) : { ...keyframe(end), opacity: 0 };
@@ -446,6 +487,7 @@ function calculateRadius() {
 }
 
 function updateRingSpacing() {
+    fitAllArtworkFrames();
     if (isGridView || isGalleryTransitioning) return;
     updateHighlight();
 }
@@ -604,7 +646,7 @@ function updateHighlight() {
 
         if (i === selectedItemIndex) {
             card.classList.remove('opacity-50', 'blur-[1.5px]');
-            card.classList.add('opacity-100', 'border-sky-200', 'z-30');
+            card.classList.add('opacity-100', 'is-active', 'z-30');
             
             // Keep the selected card at the requested scale without extra perspective magnification.
             card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(${ACTIVE_CARD_SCALE})`;
@@ -613,7 +655,7 @@ function updateHighlight() {
             document.getElementById('active-item-index').innerText = String(i + 1).padStart(2, '0');
             document.getElementById('active-item-name').innerText = PORTFOLIO_OBJECTS[i].name.toUpperCase();
         } else {
-            card.classList.remove('opacity-100', 'border-sky-200', 'z-30');
+            card.classList.remove('opacity-100', 'is-active', 'z-30');
             card.classList.add('opacity-50', 'blur-[1.5px]');
             
             // Return inactive items back to their normal 3D circle positions
