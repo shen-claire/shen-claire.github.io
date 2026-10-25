@@ -82,9 +82,17 @@ let startX = 0;
 let currentX = 0;
 let dragVelocity = 0;
 let autoSpinActive = true;
-let lastTime = performance.now();
+let lastTime = 0;
 let targetRotation = 0; // Target for animated snaps or ease-to-index
-let stepAnimationFrame = null;
+let stepTween = null;
+let animationFrame = null;
+let activePage = 'works';
+let carouselRing = null;
+let carouselCards = [];
+let artworkStages = [];
+let resizeFrame = null;
+let frameFitRequest = null;
+const artworkDecodePromises = new WeakMap();
 const ACTIVE_CARD_SCALE = 1.55;
 let activeProjectIndex = null;
 let isDetailOpen = false;
@@ -102,14 +110,14 @@ let lastHoverToneTime = 0;
 const PENTATONIC_FREQUENCIES = [261.63, 293.66, 329.63, 392, 440, 523.25];
 const SOUND_VOLUME_MULTIPLIER = 1.3;
 
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
     buildCarouselRing();
     initInteractionHandlers();
     initAudioUnlock();
-    runAnimationLoop();
+    wakeAnimationLoop();
     initLightboxViewer(); // Safely loaded right here!
-};
+});
 
 // Synthesizer Engine (Pristine interactive chimes using physical modeling approximation)
 function initAudio() {
@@ -230,7 +238,7 @@ function syncFullscreenControl() {
     button.setAttribute('aria-pressed', String(active));
     button.innerHTML = `<i id="frame-icon" data-lucide="${active ? 'minimize' : 'maximize'}" class="w-4 h-4 text-[#333333] group-hover:scale-110 transition-transform" aria-hidden="true"></i>`;
     lucide.createIcons();
-    requestAnimationFrame(updateRingSpacing);
+    scheduleRingSpacing();
 }
 
 async function toggleFullscreen() {
@@ -263,12 +271,11 @@ document.addEventListener('webkitfullscreenchange', syncFullscreenControl);
 // Generate the 3D rotating cylindrical items
 function buildCarouselRing() {
     const ring = document.getElementById('carousel-ring');
+    carouselRing = ring;
     ring.innerHTML = '';
     artworkSizeObserver?.disconnect();
     if (window.ResizeObserver) {
-        artworkSizeObserver = new ResizeObserver(entries => {
-            entries.forEach(entry => fitArtworkFrame(entry.target));
-        });
+        artworkSizeObserver = new ResizeObserver(scheduleArtworkFit);
     }
     
     const totalItems = PORTFOLIO_OBJECTS.length;
@@ -325,51 +332,76 @@ function buildCarouselRing() {
                 hoverLockedIndex = null;
             }
             autoSpinActive = !isDetailOpen;
+            wakeAnimationLoop();
         });
 
         ring.appendChild(card);
         const artworkStage = card.querySelector('.carousel-artwork');
         const artworkImage = artworkStage.querySelector('img');
-        artworkImage.addEventListener('load', () => fitArtworkFrame(artworkStage));
+        artworkImage.decoding = 'async';
+        decodeArtwork(artworkImage);
+        artworkImage.addEventListener('load', scheduleArtworkFit, { once: true });
         artworkSizeObserver?.observe(artworkStage);
-        fitArtworkFrame(artworkStage);
     });
-    
+    carouselCards = Array.from(ring.children);
+    artworkStages = carouselCards.map(card => card.querySelector('.carousel-artwork'));
+    fitAllArtworkFrames();
     updateHighlight();
 }
 
 // Fit the painted area, not the surrounding molding, to the original ratio.
 // clientWidth/clientHeight deliberately ignore the carousel's 3D magnification.
-function fitArtworkFrame(stage) {
-    if (!stage?.clientWidth || !stage.clientHeight) return;
+function measureArtworkFrame(stage) {
+    const width = stage.clientWidth;
+    const height = stage.clientHeight;
+    if (!width || !height) return null;
     const frame = stage.querySelector('.artwork-frame');
     const image = frame.querySelector('img');
-    if (!image.naturalWidth || !image.naturalHeight) return;
+    if (!image.naturalWidth || !image.naturalHeight) return null;
     const rail = parseFloat(getComputedStyle(frame).paddingLeft) || 10;
     const mat = parseFloat(getComputedStyle(frame.querySelector('.artwork-mat')).paddingLeft) || 3;
     const rim = 2 * (rail + mat);
     const ratio = image.naturalWidth / image.naturalHeight;
-    const imageWidth = Math.min(Math.max(1, stage.clientWidth - rim), Math.max(1, stage.clientHeight - rim) * ratio);
-    frame.style.width = `${imageWidth + rim}px`;
-    frame.style.height = `${imageWidth / ratio + rim}px`;
+    const imageWidth = Math.min(Math.max(1, width - rim), Math.max(1, height - rim) * ratio);
+    return { frame, width: `${imageWidth + rim}px`, height: `${imageWidth / ratio + rim}px` };
 }
 
 function fitAllArtworkFrames() {
-    document.querySelectorAll('.carousel-artwork').forEach(fitArtworkFrame);
+    // Measure all cards before changing any dimensions, avoiding repeated forced layout.
+    const measurements = artworkStages.map(measureArtworkFrame);
+    measurements.forEach(size => {
+        if (!size) return;
+        if (size.frame.style.width !== size.width) size.frame.style.width = size.width;
+        if (size.frame.style.height !== size.height) size.frame.style.height = size.height;
+    });
+}
+
+function scheduleArtworkFit() {
+    if (frameFitRequest !== null) return;
+    frameFitRequest = requestAnimationFrame(() => {
+        frameFitRequest = null;
+        fitAllArtworkFrames();
+    });
+}
+
+function decodeArtwork(image) {
+    if (!image || !image.decode) return Promise.resolve();
+    if (!artworkDecodePromises.has(image)) {
+        artworkDecodePromises.set(image, image.decode().catch(() => {}));
+    }
+    return artworkDecodePromises.get(image);
 }
 
 // Keep the same artwork buttons when switching layouts, preserving their handlers.
 async function toggleGalleryView() {
     if (isGalleryTransitioning || isDetailOpen) return;
     isGalleryTransitioning = true;
+    pauseAnimationLoop();
     autoSpinActive = false;
     isDragging = false;
     dragVelocity = 0;
     hoverLockedIndex = null;
-    if (stepAnimationFrame !== null) {
-        cancelAnimationFrame(stepAnimationFrame);
-        stepAnimationFrame = null;
-    }
+    stepTween = null;
 
     const main = document.getElementById('gallery-main');
     const button = document.getElementById('gallery-view-toggle');
@@ -428,7 +460,7 @@ async function toggleGalleryView() {
 
     try {
         // Reuse decoded artwork rather than capturing blurred 3D browser layers.
-        await Promise.all(cards.map(card => card.querySelector('img')?.decode?.().catch(() => {})));
+        await Promise.all(cards.map(card => decodeArtwork(card.querySelector('img'))));
         const before = readFrames();
         main.classList.add('is-rearranging');
         applyLayout();
@@ -486,6 +518,7 @@ async function toggleGalleryView() {
         isGalleryTransitioning = false;
         autoSpinActive = !isGridView && !isDetailOpen;
         button.disabled = false;
+        wakeAnimationLoop();
     }
 }
 
@@ -503,7 +536,14 @@ function updateRingSpacing() {
     updateHighlight();
 }
 
-window.addEventListener('resize', updateRingSpacing);
+function scheduleRingSpacing() {
+    if (resizeFrame !== null) return;
+    resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = null;
+        updateRingSpacing();
+    });
+}
+window.addEventListener('resize', scheduleRingSpacing);
 
 // Interaction Listeners & Swipe Physics Integration
 function initInteractionHandlers() {
@@ -513,10 +553,12 @@ function initInteractionHandlers() {
     surface.addEventListener('mousedown', (e) => {
         if (isGridView || isGalleryTransitioning || e.target.closest('button:not(.carousel-item)')) return;
         isDragging = true;
+        stepTween = null;
         autoSpinActive = false;
         startX = e.clientX;
         currentX = startX;
         dragVelocity = 0;
+        wakeAnimationLoop();
     });
 
     window.addEventListener('mousemove', (e) => {
@@ -529,22 +571,26 @@ function initInteractionHandlers() {
         const rotationFactor = 0.25;
         currentRotation += deltaX * rotationFactor;
         dragVelocity = deltaX * rotationFactor;
+        wakeAnimationLoop();
     });
 
     window.addEventListener('mouseup', () => {
         if (!isDragging) return;
         isDragging = false;
         autoSpinActive = true;
+        wakeAnimationLoop();
     });
 
     // Touch support for sleek responsive mobile sliding
     surface.addEventListener('touchstart', (e) => {
         if (isGridView || isGalleryTransitioning) return;
         isDragging = true;
+        stepTween = null;
         autoSpinActive = false;
         startX = e.touches[0].clientX;
         currentX = startX;
         dragVelocity = 0;
+        wakeAnimationLoop();
     });
 
     surface.addEventListener('touchmove', (e) => {
@@ -555,12 +601,14 @@ function initInteractionHandlers() {
         const rotationFactor = 0.35;
         currentRotation += deltaX * rotationFactor;
         dragVelocity = deltaX * rotationFactor;
+        wakeAnimationLoop();
     });
 
     surface.addEventListener('touchend', () => {
         if (!isDragging) return;
         isDragging = false;
         autoSpinActive = true;
+        wakeAnimationLoop();
     });
 }
 
@@ -571,59 +619,81 @@ function rotateStep(direction) {
     dragVelocity = 0;
     hoverLockedIndex = null;
     const stepAngle = 360 / PORTFOLIO_OBJECTS.length;
-    const currentSnapped = stepAnimationFrame !== null
+    const currentSnapped = stepTween !== null
         ? targetRotation
         : Math.round(currentRotation / stepAngle) * stepAngle;
-    if (stepAnimationFrame !== null) cancelAnimationFrame(stepAnimationFrame);
     targetRotation = currentSnapped - (direction * stepAngle);
     
     playAmbientNote(500, 'sine', 0.6, 0.04);
     
-    let count = 0;
-    function animateStep() {
-        if (count < 15) {
-            currentRotation += (targetRotation - currentRotation) * 0.25;
-            count++;
-            stepAnimationFrame = requestAnimationFrame(animateStep);
-        } else {
-            currentRotation = targetRotation;
-            stepAnimationFrame = null;
-            autoSpinActive = true;
-        }
-    }
-    animateStep();
+    stepTween = { elapsed: 0 };
+    wakeAnimationLoop();
 }
 
-// Animation Frame loop (Physics momentum modeling)
-function runAnimationLoop() {
-    const now = performance.now();
-    const dt = (now - lastTime) / 1000;
+function canAnimateCarousel() {
+    return activePage === 'works' && !document.hidden && !isDetailOpen
+        && !isGridView && !isGalleryTransitioning;
+}
+
+function pauseAnimationLoop() {
+    if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+    animationFrame = null;
+    lastTime = 0;
+}
+
+function wakeAnimationLoop() {
+    if (animationFrame === null && canAnimateCarousel()) {
+        lastTime = 0;
+        animationFrame = requestAnimationFrame(runAnimationLoop);
+    }
+}
+
+// One clock for drift, inertia, and arrow steps, calibrated to the original 60Hz motion.
+function runAnimationLoop(now) {
+    animationFrame = null;
+    if (!canAnimateCarousel()) { lastTime = 0; return; }
+    const dt = lastTime ? Math.min((now - lastTime) / 1000, 0.05) : 1 / 60;
+    const frames = dt * 60;
     lastTime = now;
 
-    if (isGridView || isGalleryTransitioning) {
-        requestAnimationFrame(runAnimationLoop);
-        return;
-    }
-
-    if (isDragging) {
+    if (stepTween) {
+        stepTween.elapsed += dt;
+        currentRotation += (targetRotation - currentRotation) * (1 - Math.pow(0.75, frames));
+        if (stepTween.elapsed >= 0.25) {
+            currentRotation = targetRotation;
+            stepTween = null;
+            autoSpinActive = true;
+        }
+    } else if (isDragging) {
         dragVelocity = Math.max(-10, Math.min(10, dragVelocity));
     } else {
-        currentRotation += dragVelocity;
-        dragVelocity *= 0.94; // friction coefficient
+        const friction = Math.pow(0.94, frames);
+        currentRotation += dragVelocity * (1 - friction) / (1 - 0.94);
+        dragVelocity *= friction;
+        if (Math.abs(dragVelocity) < 0.0001) dragVelocity = 0;
 
         if (autoSpinActive && Math.abs(dragVelocity) < 0.05) {
-            currentRotation += 0.08; // smooth constant drift
+            currentRotation += 4.8 * dt;
         }
     }
 
-    const ring = document.getElementById('carousel-ring');
-    if (ring) {
-        ring.style.transform = `rotateY(${currentRotation}deg)`;
+    if (carouselRing) {
+        carouselRing.style.transform = `rotateY(${currentRotation}deg)`;
     }
 
     calculateClosestFrontItem();
-    requestAnimationFrame(runAnimationLoop);
+    if (isDragging || stepTween || autoSpinActive || dragVelocity !== 0) {
+        animationFrame = requestAnimationFrame(runAnimationLoop);
+    } else {
+        lastTime = 0;
+    }
 }
+
+document.addEventListener('visibilitychange', () => {
+    document.documentElement.classList.toggle('is-document-hidden', document.hidden);
+    if (document.hidden) pauseAnimationLoop();
+    else wakeAnimationLoop();
+});
 
 // Identify front-facing active items & apply blur/focus shadows dynamically
 function calculateClosestFrontItem() {
@@ -650,7 +720,7 @@ function updateHighlight() {
     const radius = calculateRadius(); // Get current 3D spacing radius
     
     for (let i = 0; i < totalItems; i++) {
-        const card = document.getElementById(`item-${i}`);
+        const card = carouselCards[i];
         if (!card) continue;
 
         const angle = i * (360 / totalItems);
@@ -677,6 +747,9 @@ function updateHighlight() {
 
 // UI navigation interactions
 function openTab(tabId, event) {
+    activePage = tabId;
+    if (tabId === 'works') wakeAnimationLoop();
+    else pauseAnimationLoop();
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('text-black', 'border-black');
         link.classList.add('text-[#333333]/60', 'border-transparent');
@@ -708,6 +781,8 @@ function openTab(tabId, event) {
 }
 
 function closeActiveTab() {
+    activePage = 'works';
+    wakeAnimationLoop();
     const tabs = ['about', 'contact'];
     document.getElementById('gallery-main')?.classList.remove('is-page-inactive');
     tabs.forEach(t => {
@@ -739,6 +814,7 @@ function selectProject(index) {
 
     activeProjectIndex = index;
     isDetailOpen = true;
+    pauseAnimationLoop();
     autoSpinActive = false;
     dragVelocity = 0;
 
@@ -786,6 +862,7 @@ function closeDetails() {
     activeProjectIndex = null;
     isDetailOpen = false;
     autoSpinActive = !isGridView;
+    wakeAnimationLoop();
 }
 
 document.getElementById('detail-drawer')?.addEventListener('click', (event) => {

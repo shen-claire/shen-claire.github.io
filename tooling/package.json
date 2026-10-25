@@ -1,0 +1,13 @@
+{
+  "name": "claire-shen-portfolio",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-assets.cjs",
+    "test": "node tests/performance.cjs"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17",
+    "lucide": "1.61.0",
+    "esbuild": "0.25.12"
+  }
+}
