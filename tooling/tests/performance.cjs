@@ -39,7 +39,7 @@ function driftAt(hz) {
 assert.ok(Math.abs(driftAt(60) - driftAt(120)) < 0.00001, 'Drift should match at 60 and 120Hz');
 assert.ok(Math.abs(driftAt(60) - driftAt(144)) < 0.00001, 'Drift should match at 144Hz');
 
-for (const state of ["activePage = 'about'", "activePage = 'contact'", 'document.hidden = true',
+for (const state of ["activePage = 'about'", "activePage = 'press'", "activePage = 'contact'", 'document.hidden = true',
     'isGridView = true', 'isDetailOpen = true', 'isGalleryTransitioning = true']) {
     const clock = simulation();
     clock.run('wakeAnimationLoop(); wakeAnimationLoop()');

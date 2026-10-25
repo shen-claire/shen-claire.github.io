@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claire Shen</title>
-    <link rel="stylesheet" href="css/utilities.css?v=performance-1">
+    <link rel="stylesheet" href="css/utilities.css?v=press-page-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="js/vendor/icons.js?v=performance-1" defer></script>
-     <link rel="stylesheet" href="css/styles.css?v=performance-1">
+     <link rel="stylesheet" href="css/styles.css?v=press-banner-8">
 </head>
 <body class="h-full relative overflow-hidden text-[#1c1d1f] transition-colors duration-700">
 
@@ -42,9 +42,10 @@
                     </span>
                 </div>
                 
-                <nav class="hidden md:flex items-center gap-12">
+                <nav class="site-navigation hidden md:flex items-center gap-6 lg:gap-12" aria-label="Main navigation">
                     <button onclick="openTab('works', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333] hover:text-black font-medium transition-all relative py-1 border-b border-black">PROJECTS</button>
                     <button onclick="openTab('about', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">ABOUT</button>
+                    <button onclick="openTab('press', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">PRESS</button>
                     <button onclick="openTab('contact', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">INQUIRE</button>
                 </nav>
 
@@ -113,14 +114,23 @@
                             <div class="about-section-heading"><span class="about-kicker">01 / Recognition</span><h3 id="recognition-title" class="serif-font">Selected Recognition</h3></div>
                             <div id="about-recognition"></div>
                         </section>
-                        <section class="about-section" aria-labelledby="press-title">
-                            <div class="about-section-heading"><span class="about-kicker">02 / In print &amp; online</span><h3 id="press-title" class="serif-font">Press Coverage</h3></div>
-                            <div id="about-press" class="about-press"></div>
-                        </section>
                         <section class="about-section" aria-labelledby="highlights-title">
-                            <div class="about-section-heading"><span class="about-kicker">03 / Selected moments</span><h3 id="highlights-title" class="serif-font">Art Highlights</h3></div>
+                            <div class="about-section-heading"><span class="about-kicker">02 / Selected moments</span><h3 id="highlights-title" class="serif-font">Art Highlights</h3></div>
                             <div id="about-highlights" class="about-highlights"></div>
                         </section>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-press" class="site-page absolute inset-x-0 bottom-0 bg-[#f6f5f3] z-[15] flex flex-col" aria-hidden="true" aria-labelledby="press-title">
+                <div class="page-content press-scroll flex-1 min-h-0 overflow-y-auto custom-scroll" tabindex="0" aria-label="Press page content">
+                    <div class="about-catalog">
+                        <header>
+                            <h2 id="press-title" class="serif-font about-name">Press Coverage</h2>
+                        </header>
+                        <div class="press-ribbon-window">
+                            <div id="press-publications" class="press-ribbon" aria-label="Publications featuring Claire Shen"></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -222,8 +232,8 @@
             </div>
         </div>
     </div>
-    <script src="js/about.js?v=artist-catalog-1" defer></script>
-    <script src="js/portfolio.js?v=performance-1" defer></script>
+    <script src="js/about.js?v=press-banner-3" defer></script>
+    <script src="js/portfolio.js?v=press-page-1" defer></script>
 
     <div id="art-lightbox" class="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-zoom-out">
     <div id="lightbox-img-container" class="max-w-[90vw] max-h-[80vh] rounded-lg overflow-hidden shadow-2xl"></div>

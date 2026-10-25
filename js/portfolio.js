@@ -763,7 +763,7 @@ function openTab(tabId, event) {
 
     playAmbientNote(400, 'sine', 0.5, 0.05);
 
-    const tabs = ['about', 'contact'];
+    const tabs = ['about', 'press', 'contact'];
     const gallery = document.getElementById('gallery-main');
     if (gallery) gallery.classList.toggle('is-page-inactive', tabId !== 'works');
     tabs.forEach(t => {
@@ -783,7 +783,7 @@ function openTab(tabId, event) {
 function closeActiveTab() {
     activePage = 'works';
     wakeAnimationLoop();
-    const tabs = ['about', 'contact'];
+    const tabs = ['about', 'press', 'contact'];
     document.getElementById('gallery-main')?.classList.remove('is-page-inactive');
     tabs.forEach(t => {
         const panel = document.getElementById(`tab-${t}`);
@@ -878,7 +878,7 @@ document.addEventListener('keydown', (event) => {
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
     if (event.target?.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
     if (isDetailOpen || isDragging || isGridView || isGalleryTransitioning) return;
-    if (['about', 'contact'].some(tab => {
+    if (['about', 'press', 'contact'].some(tab => {
         const panel = document.getElementById(`tab-${tab}`);
         return panel && panel.classList.contains('is-active');
     })) return;

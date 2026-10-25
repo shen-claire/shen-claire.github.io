@@ -11,7 +11,9 @@ body {
 }
 
 /* Page changes dissolve beneath the persistent header instead of moving like a panel. */
+#web-frame { --site-header-height: 81px; }
 .site-page {
+    top: var(--site-header-height);
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
@@ -67,6 +69,7 @@ body {
 
 /* About: an exhibition catalog, with content managed in js/about.js. */
 #tab-about .about-scroll { min-height: 0; overscroll-behavior: contain; }
+#tab-press .press-scroll { min-height: 0; overscroll-behavior: contain; }
 .about-catalog { max-width: 1000px; margin: 0 auto; padding: 48px 48px 64px; color: #333; user-select: text; }
 .about-kicker { font-size: 9px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: #777a7b; }
 .about-intro { display: grid; grid-template-columns: minmax(0, 1fr) 136px; align-items: center; gap: 48px; padding-bottom: 40px; }
@@ -91,15 +94,39 @@ body {
 .recognition-artwork { font-size: 11px; font-style: italic; color: #777; margin-top: 5px; }
 .about-meta { font-size: 10px; line-height: 1.8; color: #7d8283; }
 .recognition-entry > .about-meta { flex: none; }
-.about-press { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
-.press-entry { padding: 17px 0; border-top: 1px solid rgba(0, 0, 0, .045); }
-.press-entry h4 { font-size: 22px; font-weight: 400; line-height: 1.5; margin-top: 8px; }
-.press-entry a { text-decoration: underline; text-decoration-color: #bbb; text-underline-offset: 5px; }
-.press-entry a:hover { color: #607f91; }
-.press-entry a:focus-visible { outline: 1px solid #607f91; outline-offset: 5px; }
-.press-pending { margin-top: 12px; font-size: 10px; color: #888; }
-.press-entry.has-thumbnail { display: flex; gap: 18px; }
-.press-entry > img { width: 80px; height: 100px; object-fit: cover; }
+.press-ribbon-window { position: relative; left: 50%; width: var(--press-page-width, 100%); transform: translateX(-50%); padding: 28px 0; overflow: hidden; }
+.press-ribbon { background: #7da3c8; color: #fff; border-bottom: 3px solid #4f748a; width: 100%; }
+.press-ribbon-track { display: flex; width: max-content; animation: press-ribbon-scroll 95s linear infinite; }
+.press-ribbon-group { display: flex; flex: none; align-items: center; justify-content: space-around; min-width: var(--press-page-width, 100%); gap: 40px; padding: 10px 40px 10px 0; }
+.press-ribbon-item { display: flex; flex: none; align-items: center; gap: 12px; white-space: nowrap; }
+.press-logo { display: block; flex: none; width: 64px; height: 34px; overflow: hidden; border-radius: 7px; background: #fff; }
+.press-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.press-logo-chicago-tribune img { transform: scale(1.65); }
+.press-logo-nctv17 img { transform: scale(1.2); }
+.press-logo-daily-herald img { transform: scale(1.6); }
+.press-logo-positively-naperville img { transform: scale(1.75); }
+.press-logo-naper-today { background: #131211; }
+.press-publication-name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; line-height: 1.5; color: #fff; }
+.press-article-link { font-size: 13px; font-weight: 600; line-height: 1.5; color: #ffe6a3; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.press-article-link:hover { color: #fff3d5; }
+.press-ribbon-group a:focus-visible { outline: 1px solid #fff; outline-offset: 6px; }
+.press-ribbon-dot { flex: none; width: 6px; height: 6px; margin-left: 4px; border-radius: 50%; background: #df7053; }
+.press-ribbon:not(.is-ready) .press-ribbon-track,
+.press-ribbon:focus-within .press-ribbon-track,
+.site-page:not(.is-active) .press-ribbon-track { animation-play-state: paused; }
+@media (hover: hover) {
+    .press-ribbon:hover .press-ribbon-track { animation-play-state: paused; }
+}
+@keyframes press-ribbon-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .press-ribbon-track { animation: none; width: 100%; }
+    .press-ribbon-group { flex-wrap: wrap; justify-content: center; width: 100%; min-width: 0; gap: 12px 24px; padding: 20px; }
+    .press-ribbon-group[aria-hidden="true"] { display: none; }
+    .press-ribbon-item { flex-wrap: wrap; justify-content: center; max-width: 100%; white-space: normal; }
+}
 .about-highlights { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 32px 24px; align-items: start; }
 .highlight-photo { grid-column: span 3; margin: 0; min-width: 0; }
 .highlight-wide { grid-column: span 4; }
@@ -110,6 +137,9 @@ body {
 .highlight-image > * { width: 100%; height: 100%; object-fit: cover; }
 .highlight-photo figcaption { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 10px; line-height: 1.7; color: #747a7d; }
 @media (max-width: 767px) {
+    #web-frame { --site-header-height: 103px; }
+    #web-frame > header { flex-wrap: wrap; row-gap: 12px; padding-top: 16px; padding-bottom: 16px; }
+    .site-navigation { display: flex; order: 3; width: 100%; justify-content: center; gap: 24px; }
     .about-catalog { padding: 30px 24px 48px; }
     .about-intro { gap: 22px; grid-template-columns: minmax(0, 1fr) 88px; align-items: start; padding-bottom: 28px; }
     .about-name { font-size: 34px; margin-bottom: 16px; }
@@ -117,7 +147,12 @@ body {
     .about-portrait { margin-top: 28px; }
     .about-portrait .about-image-placeholder { padding: 8px; }
     .recognition-group { grid-template-columns: 1fr; gap: 18px; }
-    .about-press { grid-template-columns: 1fr; gap: 8px; }
+    .press-ribbon-window { padding: 18px 0; }
+    .press-ribbon-group { gap: 28px; padding: 9px 28px 9px 0; }
+    .press-ribbon-item { gap: 10px; }
+    .press-logo { width: 56px; height: 30px; border-radius: 6px; }
+    .press-publication-name { font-size: 12px; }
+    .press-article-link { font-size: 12px; }
     .about-highlights { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 16px; }
     .highlight-photo, .highlight-portrait { grid-column: span 1; padding-top: 0; }
     .highlight-wide { grid-column: span 2; }
