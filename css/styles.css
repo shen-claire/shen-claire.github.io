@@ -214,7 +214,7 @@ body {
 .artwork-frame::before {
     inset: 0;
     border: var(--frame-rail) solid #bb9654;
-    border-image-source: url('../img/frames/antique-gallery-frame.png');
+    border-image-source: url('../img/PROJECTS/frames/antique-gallery-frame.png');
     border-image-slice: 70 73 70 73;
     border-image-width: 1;
     border-image-repeat: round;
@@ -266,7 +266,7 @@ body {
 }
 .artwork-frame-silver::before {
     border-color: #b9b9ad;
-    border-image-source: url('../img/frames/silver-gallery-frame.png');
+    border-image-source: url('../img/PROJECTS/frames/silver-gallery-frame.png');
     border-image-slice: 300 299 298 299;
     border-image-repeat: stretch;
 }
@@ -282,7 +282,7 @@ body {
 /* Footprints: the supplied slimmer silver profile, with rounded inner lip. */
 .artwork-frame.artwork-frame-silver-slim { --frame-rail: 11px; }
 .artwork-frame-silver-slim::before {
-    border-image-source: url('../img/frames/footprints-silver-frame.png');
+    border-image-source: url('../img/PROJECTS/frames/footprints-silver-frame.png');
     border-image-slice: 34;
 }
 .artwork-frame-silver-slim::after { border-color: rgba(92, 94, 94, .4); }

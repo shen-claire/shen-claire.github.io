@@ -1,5 +1,5 @@
 // Edit these lists to add, remove, or reorder About content. All bracketed text
-// is intentionally a placeholder. Image paths can be relative, e.g. img/about/photo.jpg.
+// is intentionally a placeholder. Image paths can be relative, e.g. img/ABOUT/photo.jpg.
 const ABOUT_CONTENT = {
     introduction: '[Artist introduction to come — add a short paragraph about your work, subjects, and approach here.]',
     portrait: { src: '', alt: '', placeholder: 'Optional portrait', caption: '[Portrait caption]' },
@@ -21,11 +21,11 @@ const ABOUT_CONTENT = {
     ],
     // Publication labels appear in the ribbon, linking directly to each supplied article.
     press: [
-        { publication: 'Chicago Tribune', logo: 'img/other/chicago-tribune-logo.png', logoStyle: 'chicago-tribune', url: 'https://www.chicagotribune.com/2026/07/28/naperville-student-second-international-art-contest/' },
-        { publication: 'NCTV17', logo: 'img/other/nctv17-logo.png', logoStyle: 'nctv17', url: 'https://www.nctv17.org/news/naperville-student-places-2nd-at-international-art-showcase/' },
-        { publication: 'Daily Herald', logo: 'img/other/daily-herald-logo.png', logoStyle: 'daily-herald', url: 'https://www.dailyherald.com/20260803/visual-arts/naperville-central-teen-takes-2nd-in-international-art-contest/' },
-        { publication: 'NaperToday', logo: 'img/other/naper-today-logo.png', logoStyle: 'naper-today', url: 'https://napertoday.com/articles/naperville-central-student-s-oil-painting-earns-second-place-in-international-art-competition-ms5ui04n' },
-        { publication: 'Positively Naperville', logo: 'img/other/positively-naperville-logo.png', logoStyle: 'positively-naperville', url: 'https://www.positivelynaperville.com/2026/10/01/community-members-recognized-for-creativity-service-and-global-connection/161381' }
+        { publication: 'Chicago Tribune', logo: 'img/PRESS/chicago-tribune-logo.png', logoStyle: 'chicago-tribune', url: 'https://www.chicagotribune.com/2026/07/28/naperville-student-second-international-art-contest/' },
+        { publication: 'NCTV17', logo: 'img/PRESS/nctv17-logo.png', logoStyle: 'nctv17', url: 'https://www.nctv17.org/news/naperville-student-places-2nd-at-international-art-showcase/' },
+        { publication: 'Daily Herald', logo: 'img/PRESS/daily-herald-logo.png', logoStyle: 'daily-herald', url: 'https://www.dailyherald.com/20260803/visual-arts/naperville-central-teen-takes-2nd-in-international-art-contest/' },
+        { publication: 'NaperToday', logo: 'img/PRESS/naper-today-logo.png', logoStyle: 'naper-today', url: 'https://napertoday.com/articles/naperville-central-student-s-oil-painting-earns-second-place-in-international-art-competition-ms5ui04n' },
+        { publication: 'Positively Naperville', logo: 'img/PRESS/positively-naperville-logo.png', logoStyle: 'positively-naperville', url: 'https://www.positivelynaperville.com/2026/10/01/community-members-recognized-for-creativity-service-and-global-connection/161381' }
     ],
     // Use layout: 'wide', 'portrait', or 'standard' to vary the editorial rhythm.
     highlights: [

@@ -5,7 +5,7 @@ const PORTFOLIO_OBJECTS = [
         medium: "Oil",
         year: "2026",
         awards: "",
-        visual: `<img src="img/Through_the_Looking_Glass.jpeg" alt="Through the Looking Glass" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/PROJECTS/Through_the_Looking_Glass.jpeg" alt="Through the Looking Glass" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 2,
@@ -13,7 +13,7 @@ const PORTFOLIO_OBJECTS = [
         medium: "Oil",
         year: "2026",
         awards: "",
-        visual: `<img src="img/Sunday_Morning.jpeg" alt="Sunday Morning" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/PROJECTS/Sunday_Morning.jpeg" alt="Sunday Morning" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 3,
@@ -21,7 +21,7 @@ const PORTFOLIO_OBJECTS = [
         medium: "Oil",
         year: "2026",
         awards: "",
-        visual: `<img src="img/Starry%20Blues.jpeg" alt="Starry Blues" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/PROJECTS/Starry%20Blues.jpeg" alt="Starry Blues" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 4,
@@ -29,7 +29,7 @@ const PORTFOLIO_OBJECTS = [
         medium: "Oil",
         year: "2026",
         awards: "",
-        visual: `<img src="img/Admiring.jpeg" alt="Admiring" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/PROJECTS/Admiring.jpeg" alt="Admiring" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 5,
@@ -37,7 +37,7 @@ const PORTFOLIO_OBJECTS = [
         medium: "Acrylic",
         year: "2026",
         awards: "",
-        visual: `<img src="img/Flash.jpeg" alt="Flash" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/PROJECTS/Flash.jpeg" alt="Flash" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 6,
@@ -45,7 +45,7 @@ const PORTFOLIO_OBJECTS = [
         medium: "Oil on acrylic",
         year: "2026",
         awards: "",
-        visual: `<img src="img/Angel%E2%80%99s%20Corner.jpeg" alt="Angel's Corner" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/PROJECTS/Angel%E2%80%99s%20Corner.jpeg" alt="Angel's Corner" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 7,
@@ -54,7 +54,7 @@ const PORTFOLIO_OBJECTS = [
         medium: "Acrylic",
         year: "2026",
         awards: "",
-        visual: `<img src="img/Footprints.jpeg" alt="Footprints" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/PROJECTS/Footprints.jpeg" alt="Footprints" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 8,
@@ -62,7 +62,7 @@ const PORTFOLIO_OBJECTS = [
         medium: "Oil",
         year: "2025",
         awards: "",
-        visual: `<img src="img/Lost.jpeg" alt="Lost" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/PROJECTS/Lost.jpeg" alt="Lost" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     },
     {
         id: 9,
@@ -71,7 +71,7 @@ const PORTFOLIO_OBJECTS = [
         medium: "Acrylic",
         year: "2025",
         awards: "",
-        visual: `<img src="img/Night.jpeg" alt="Night" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
+        visual: `<img src="img/PROJECTS/Night.jpeg" alt="Night" class="w-full h-full object-cover rounded-xl drop-shadow-sm">`
     }
 ];
 // System state
