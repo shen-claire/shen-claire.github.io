@@ -1,7 +1,7 @@
 // Edit these lists to add, remove, or reorder About content. All bracketed text
 // is intentionally a placeholder. Image paths can be relative, e.g. img/ABOUT/photo.jpg.
 const ABOUT_CONTENT = {
-    introduction: '[Artist introduction to come — add a short paragraph about your work, subjects, and approach here.]',
+    introduction: 'placeholder',
     portrait: { src: '', alt: '', placeholder: 'Optional portrait', caption: '[Portrait caption]' },
     recognition: [
         {

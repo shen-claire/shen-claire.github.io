@@ -46,7 +46,7 @@
                     <button onclick="openTab('works', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333] hover:text-black font-medium transition-all relative py-1 border-b border-black">PROJECTS</button>
                     <button onclick="openTab('about', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">ABOUT</button>
                     <button onclick="openTab('press', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">PRESS</button>
-                    <button onclick="openTab('contact', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">INQUIRE</button>
+                    <button hidden onclick="openTab('contact', event)" class="nav-link text-xs tracking-[0.15em] text-[#333333]/60 hover:text-black font-medium transition-all py-1 border-b border-transparent">INQUIRE</button>
                 </nav>
 
                 <div class="flex items-center gap-4">
@@ -111,7 +111,6 @@
                             <figure id="about-portrait" class="about-portrait"></figure>
                         </header>
                         <section class="about-section" aria-labelledby="recognition-title">
-                            <div class="about-section-heading"><span class="about-kicker">01 / Recognition</span><h3 id="recognition-title" class="serif-font">Selected Recognition</h3></div>
                             <div id="about-recognition"></div>
                         </section>
                         <section class="about-section" aria-labelledby="highlights-title">
@@ -232,7 +231,7 @@
             </div>
         </div>
     </div>
-    <script src="js/about.js?v=page-image-paths-1" defer></script>
+    <script src="js/about.js?v=about-placeholder-1" defer></script>
     <script src="js/portfolio.js?v=page-image-paths-1" defer></script>
 
     <div id="art-lightbox" class="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 cursor-zoom-out">
