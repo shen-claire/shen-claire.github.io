@@ -94,6 +94,7 @@ let resizeFrame = null;
 let frameFitRequest = null;
 const artworkDecodePromises = new WeakMap();
 const ACTIVE_CARD_SCALE = 1.55;
+let carouselFitScale = 1;
 let activeProjectIndex = null;
 let isDetailOpen = false;
 let hoverLockedIndex = null;
@@ -276,6 +277,10 @@ function buildCarouselRing() {
     artworkSizeObserver?.disconnect();
     if (window.ResizeObserver) {
         artworkSizeObserver = new ResizeObserver(scheduleArtworkFit);
+        // Refit when the usable gallery height or either text boundary changes.
+        ['gallery-main', 'gallery-active-work', 'carousel-title-hint'].forEach(id => {
+            artworkSizeObserver.observe(document.getElementById(id));
+        });
     }
     
     const totalItems = PORTFOLIO_OBJECTS.length;
@@ -367,6 +372,7 @@ function measureArtworkFrame(stage) {
 }
 
 function fitAllArtworkFrames() {
+    fitCarouselToViewport();
     // Measure all cards before changing any dimensions, avoiding repeated forced layout.
     const measurements = artworkStages.map(measureArtworkFrame);
     measurements.forEach(size => {
@@ -374,6 +380,54 @@ function fitAllArtworkFrames() {
         if (size.frame.style.width !== size.width) size.frame.style.width = size.width;
         if (size.frame.style.height !== size.height) size.frame.style.height = size.height;
     });
+}
+
+// Bound the full rotating card, including front emphasis and perspective depth.
+// This is deliberately independent of the current angle, so cards never pump in size.
+function calculateCarouselFitScale(halfSpace, width, height, perspective, radius, originOffset) {
+    const maxDepth = Math.hypot(radius, width * ACTIVE_CARD_SCALE / 2);
+    const magnification = perspective / Math.max(1, perspective - maxDepth);
+    const centerShift = Math.abs(originOffset) * (magnification - 1);
+    const halfHeight = height * ACTIVE_CARD_SCALE * magnification / 2;
+    return Math.min(1, Math.max(0, halfSpace - centerShift) / Math.max(1, halfHeight));
+}
+
+function fitCarouselToViewport() {
+    if (isGridView || !carouselCards.length) return;
+    const scene = document.getElementById('carousel-scene');
+    const toolbar = document.querySelector('.gallery-toolbar');
+    const label = document.getElementById('gallery-active-work');
+    // Start from the original layout so taller windows recover their exact design.
+    scene.style.top = '';
+    scene.style.bottom = '';
+    let sceneRect = scene.getBoundingClientRect();
+    if (!sceneRect.height) return;
+    const topBoundary = toolbar.getBoundingClientRect().bottom + 12;
+    const bottomBoundary = label.getBoundingClientRect().top - 12;
+    const width = Math.max(...carouselCards.map(card => card.offsetWidth));
+    const height = Math.max(...carouselCards.map(card => card.offsetHeight));
+    const measureScale = () => {
+        const center = sceneRect.top + sceneRect.height / 2;
+        const halfSpace = Math.max(0, Math.min(center - topBoundary, bottomBoundary - center));
+        const style = getComputedStyle(scene);
+        const perspective = parseFloat(style.perspective) || 1200;
+        const originY = parseFloat(style.perspectiveOrigin.split(' ')[1]) || sceneRect.height / 2;
+        return calculateCarouselFitScale(halfSpace, width, height, perspective,
+            calculateRadius(), sceneRect.height / 2 - originY);
+    };
+    let scale = measureScale();
+    if (scale < 1) {
+        // Center within the real text boundaries, rather than wasting scarce height.
+        const main = document.getElementById('gallery-main').getBoundingClientRect();
+        scene.style.top = `${topBoundary - main.top}px`;
+        scene.style.bottom = `${main.bottom - Math.max(topBoundary, bottomBoundary)}px`;
+        sceneRect = scene.getBoundingClientRect();
+        scale = measureScale();
+    }
+    if (Math.abs(scale - carouselFitScale) > 0.0001) {
+        carouselFitScale = scale;
+        updateHighlight();
+    }
 }
 
 function scheduleArtworkFit() {
@@ -730,7 +784,7 @@ function updateHighlight() {
             card.classList.add('opacity-100', 'is-active', 'z-30');
             
             // Keep the selected card at the requested scale without extra perspective magnification.
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(${ACTIVE_CARD_SCALE})`;
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(${ACTIVE_CARD_SCALE * carouselFitScale})`;
             
             // Update active bottom indicators
             document.getElementById('active-item-index').innerText = String(i + 1).padStart(2, '0');
@@ -740,7 +794,7 @@ function updateHighlight() {
             card.classList.add('opacity-50', 'blur-[1.5px]');
             
             // Return inactive items back to their normal 3D circle positions
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(1)`;
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px) scale(${carouselFitScale})`;
         }
     }
 }

@@ -72,4 +72,22 @@ for (const hz of [60, 120, 144]) {
     assert.equal(clock.run('stepTween'), null, 'Arrow step must finish in about 250ms');
     assert.ok(Math.abs(clock.run('currentRotation') + 40) < 0.2, 'Arrow step should reach the same painting');
 }
-console.log('PASS: refresh-rate timing, hidden-view suspension, single animation clock, resume, resize batching, arrow steps');
+const fit = simulation();
+assert.equal(fit.run('calculateCarouselFitScale(240, 130, 160, 1200, 450, 20)'), 1,
+    'Tall layouts must retain the original size');
+const shortScale = fit.run('calculateCarouselFitScale(95, 130, 160, 1200, 450, 10)');
+assert.ok(shortScale > 0 && shortScale < 1, 'Short layouts must shrink the paintings');
+for (const halfSpace of [0, 25, 60, 95, 150, 240]) {
+    const scale = fit.run(`calculateCarouselFitScale(${halfSpace}, 130, 160, 1200, 450, 10)`);
+    for (let degrees = 0; degrees < 360; degrees++) {
+        const angle = degrees * Math.PI / 180;
+        for (const x of [-65, 65]) {
+            const depth = 450 * Math.cos(angle) - x * 1.55 * scale * Math.sin(angle);
+            const magnification = 1200 / (1200 - depth);
+            const extent = 80 * 1.55 * scale * magnification + 10 * (magnification - 1);
+            // At zero space there is no drawable area, but no negative scale is allowed.
+            if (halfSpace >= 25) assert.ok(extent <= halfSpace + 0.01, 'Every rotation must fit');
+        }
+    }
+}
+console.log('PASS: animation timing, suspension, resize batching, arrow steps, height-aware carousel sizing');
