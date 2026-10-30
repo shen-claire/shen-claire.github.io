@@ -2,7 +2,7 @@
 // is intentionally a placeholder. Image paths can be relative, e.g. img/ABOUT/photo.jpg.
 const ABOUT_CONTENT = {
     introduction: 'placeholder',
-    portrait: { src: '', alt: '', placeholder: 'Optional portrait', caption: '[Portrait caption]' },
+    portrait: { src: 'img/ABOUT/headshot.png', alt: 'Portrait of Claire Shen', placeholder: 'Optional portrait', caption: '' },
     recognition: [
         {
             competition: '[Competition / award name]',
@@ -43,7 +43,7 @@ const ABOUT_CONTENT = {
         : `<div class="about-image-placeholder"><span>${escape(label)}</span><small>Image placeholder</small></div>`;
 
     document.getElementById('about-introduction').textContent = ABOUT_CONTENT.introduction;
-    document.getElementById('about-portrait').innerHTML = `${image(ABOUT_CONTENT.portrait, ABOUT_CONTENT.portrait.placeholder)}<figcaption>${escape(ABOUT_CONTENT.portrait.caption)}</figcaption>`;
+    document.getElementById('about-portrait').innerHTML = `${image(ABOUT_CONTENT.portrait, ABOUT_CONTENT.portrait.placeholder)}${ABOUT_CONTENT.portrait.caption ? `<figcaption>${escape(ABOUT_CONTENT.portrait.caption)}</figcaption>` : ''}`;
 
     document.getElementById('about-recognition').innerHTML = ABOUT_CONTENT.recognition.map(group => `
         <article class="recognition-group">
