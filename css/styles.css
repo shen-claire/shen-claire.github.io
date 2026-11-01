@@ -93,7 +93,8 @@ body {
 .recognition-highlights-list, .recognition-award-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 .recognition-highlights-list { gap: 16px; }
 .recognition-competition-name { font-size: 11px; font-weight: 500; line-height: 1.8; color: #747a7d; margin-bottom: 12px; }
-.recognition-other { border-top: 1px solid rgba(0, 0, 0, .06); padding-top: 14px; margin-top: 16px; }
+.recognition-competition + .recognition-competition { border-top: 1px solid rgba(0, 0, 0, .06); padding-top: 14px; margin-top: 16px; }
+.recognition-competition-name + .recognition-award-list { padding-left: 12px; }
 .recognition-year + .recognition-year { border-top: 1px solid rgba(0, 0, 0, .09); margin-top: 30px; padding-top: 24px; }
 .recognition-year-heading { font-size: 28px; line-height: 1.2; font-weight: 400; color: #58788b; margin-bottom: 16px; }
 .recognition-award { font-family: 'Josefin Sans', 'Plus Jakarta Sans', sans-serif; font-size: 16px; line-height: 1.45; font-weight: 500; color: #333; }

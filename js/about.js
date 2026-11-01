@@ -12,13 +12,13 @@ const ABOUT_CONTENT = {
     // Newest year first. Omit × 1 for single awards. Blank labels separate other competitions.
     recognition: [
         { year: '2026', groups: [
-            { competition: 'Scholastic Art & Writing Awards', awards: [
-                'National Gold Medal', 'National Silver Medal', 'Gold Keys × 3 — Art',
-                'Gold Key — Writing', 'Silver Keys × 2', 'Honorable Mentions × 3'
-            ] },
             { competition: '', awards: [
                 'Congressional Art Competition Winner',
                 'International Sister Cities Young Artists and Authors Competition Winner'
+            ] },
+            { competition: 'Scholastic Art & Writing Awards', awards: [
+                'National Gold Medal', 'National Silver Medal', 'Gold Keys × 3',
+                'Gold Key (Writing)', 'Silver Keys × 2', 'Honorable Mentions × 3'
             ] }
         ] },
         { year: '2025', groups: [
