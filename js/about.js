@@ -5,18 +5,25 @@ const ABOUT_CONTENT = {
     portrait: { src: 'img/ABOUT/headshot.png', alt: 'Portrait of Claire Shen', placeholder: 'Optional portrait', caption: '' },
     recognition: [
         {
-            competition: '[Competition / award name]',
-            achievements: [
-                { distinction: '[Most significant honor]', year: '[Year]', artwork: '[Artwork title]', featured: true },
-                { distinction: '[Additional distinction]', year: '[Year]', artwork: '[Artwork title]' }
-            ]
+            title: 'National Gold Medal — Scholastic Art & Writing Awards',
+            detail: 'In painting',
+            year: '[Year]'
         },
         {
-            competition: '[Competition / award name]',
-            achievements: [
-                { distinction: '[Distinction]', year: '[Year]', artwork: '[Artwork title]' },
-                { distinction: '[Additional distinction]', year: '[Year]', artwork: '[Artwork title]' }
-            ]
+            title: 'National Silver Medals — Scholastic Art & Writing Awards',
+            detail: 'In photography, painting, and editorial cartoon',
+            year: '[Year]'
+        },
+        {
+            title: 'Congressional Art Competition Winner — IL-11',
+            detail: 'Artwork displayed at the U.S. Capitol',
+            year: '[Year]'
+        },
+        {
+            title: 'Sister Cities International Young Artists and Authors Competition',
+            // Add your supporting sentence here; blank space is kept until then.
+            detail: '',
+            year: '[Year]'
         }
     ],
     // Publication labels appear in the ribbon, linking directly to each supplied article.
@@ -45,14 +52,13 @@ const ABOUT_CONTENT = {
     document.getElementById('about-introduction').textContent = ABOUT_CONTENT.introduction;
     document.getElementById('about-portrait').innerHTML = `${image(ABOUT_CONTENT.portrait, ABOUT_CONTENT.portrait.placeholder)}${ABOUT_CONTENT.portrait.caption ? `<figcaption>${escape(ABOUT_CONTENT.portrait.caption)}</figcaption>` : ''}`;
 
-    document.getElementById('about-recognition').innerHTML = ABOUT_CONTENT.recognition.map(group => `
+    document.getElementById('about-recognition').innerHTML = ABOUT_CONTENT.recognition.map(award => `
         <article class="recognition-group">
-            <h4>${escape(group.competition)}</h4>
-            <ul>${group.achievements.map(award => `
-                <li class="recognition-entry${award.featured ? ' recognition-featured' : ''}">
-                    <div><p class="recognition-distinction${award.featured ? ' serif-font' : ''}">${escape(award.distinction)}</p>${award.artwork ? `<p class="recognition-artwork">${escape(award.artwork)}</p>` : ''}</div>
-                    <span class="about-meta">${escape(award.year)}</span>
-                </li>`).join('')}</ul>
+            <h3 class="serif-font recognition-award">${escape(award.title)}</h3>
+            <div class="recognition-support">
+                <p class="recognition-detail">${escape(award.detail)}</p>
+                <span class="about-meta">${escape(award.year)}</span>
+            </div>
         </article>`).join('');
 
     const pressRibbon = document.getElementById('press-publications');
