@@ -6,24 +6,23 @@ const ABOUT_CONTENT = {
     recognition: [
         {
             title: 'National Gold Medal — Scholastic Art & Writing Awards',
-            detail: 'In painting',
-            year: '[Year]'
+            detail: 'Category: Painting',
+            year: '2026'
         },
         {
             title: 'National Silver Medals — Scholastic Art & Writing Awards',
-            detail: 'In photography, painting, and editorial cartoon',
-            year: '[Year]'
+            detail: 'Cartegories: Painting, Editorial Cartoon, and Photography',
+            year: '2025-2026'
         },
         {
             title: 'Congressional Art Competition Winner — IL-11',
-            detail: 'Artwork displayed at the U.S. Capitol',
-            year: '[Year]'
+            detail: 'Painting displayed at the U.S. Capitol.',
+            year: '2026'
         },
         {
             title: 'Sister Cities International Young Artists and Authors Competition',
-            // Add your supporting sentence here; blank space is kept until then.
-            detail: '',
-            year: '[Year]'
+            detail: 'International Winner, representing Naperville.',
+            year: '2026'
         }
     ],
     // Publication labels appear in the ribbon, linking directly to each supplied article.
@@ -54,7 +53,7 @@ const ABOUT_CONTENT = {
 
     document.getElementById('about-recognition').innerHTML = ABOUT_CONTENT.recognition.map(award => `
         <article class="recognition-group">
-            <h3 class="serif-font recognition-award">${escape(award.title)}</h3>
+            <h4 class="recognition-award">${escape(award.title)}</h4>
             <div class="recognition-support">
                 <p class="recognition-detail">${escape(award.detail)}</p>
                 <span class="about-meta">${escape(award.year)}</span>
