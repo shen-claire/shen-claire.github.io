@@ -3,27 +3,39 @@
 const ABOUT_CONTENT = {
     introduction: "Hi, I'm Claire. I've been creating art for as long as I can remember.",
     portrait: { src: 'img/ABOUT/headshot.png', alt: 'Portrait of Claire Shen', placeholder: 'Optional portrait', caption: '' },
+    awardHighlights: [
+        'National Gold Medal — Scholastic Art & Writing Awards',
+        'National Silver Medals — Scholastic Art & Writing Awards',
+        'International Sister Cities Young Artists and Authors Competition Winner',
+        'Congressional Art Competition Winner'
+    ],
+    // Newest year first. Omit × 1 for single awards. Blank labels separate other competitions.
     recognition: [
-        {
-            title: 'National Gold Medal — Scholastic Art & Writing Awards',
-            detail: 'Category: Painting',
-            year: '2026'
-        },
-        {
-            title: 'National Silver Medals — Scholastic Art & Writing Awards',
-            detail: 'Cartegories: Painting, Editorial Cartoon, and Photography',
-            year: '2025-2026'
-        },
-        {
-            title: 'Congressional Art Competition Winner — IL-11',
-            detail: 'Painting displayed at the U.S. Capitol.',
-            year: '2026'
-        },
-        {
-            title: 'Sister Cities International Young Artists and Authors Competition',
-            detail: 'International Winner, representing Naperville.',
-            year: '2026'
-        }
+        { year: '2026', groups: [
+            { competition: 'Scholastic Art & Writing Awards', awards: [
+                'National Gold Medal', 'National Silver Medal', 'Gold Keys × 3 — Art',
+                'Gold Key — Writing', 'Silver Keys × 2', 'Honorable Mentions × 3'
+            ] },
+            { competition: '', awards: [
+                'Congressional Art Competition Winner',
+                'International Sister Cities Young Artists and Authors Competition Winner'
+            ] }
+        ] },
+        { year: '2025', groups: [
+            { competition: 'Scholastic Art & Writing Awards', awards: [
+                'National Silver Medal', 'Gold Keys × 3', 'Silver Key', 'Honorable Mention'
+            ] }
+        ] },
+        { year: '2024', groups: [
+            { competition: 'Scholastic Art & Writing Awards', awards: [
+                'National Silver Medal', 'Gold Keys × 2', 'Silver Keys × 2'
+            ] }
+        ] },
+        { year: '2023', groups: [
+            { competition: 'Scholastic Art & Writing Awards', awards: [
+                'Gold Key', 'Silver Key', 'Honorable Mention'
+            ] }
+        ] }
     ],
     // Publication labels appear in the ribbon, linking directly to each supplied article.
     press: [
@@ -57,14 +69,23 @@ const ABOUT_CONTENT = {
     document.getElementById('about-introduction').textContent = ABOUT_CONTENT.introduction;
     document.getElementById('about-portrait').innerHTML = `${image(ABOUT_CONTENT.portrait, ABOUT_CONTENT.portrait.placeholder)}${ABOUT_CONTENT.portrait.caption ? `<figcaption>${escape(ABOUT_CONTENT.portrait.caption)}</figcaption>` : ''}`;
 
-    document.getElementById('about-recognition').innerHTML = ABOUT_CONTENT.recognition.map(award => `
-        <article class="recognition-group">
-            <h4 class="recognition-award">${escape(award.title)}</h4>
-            <div class="recognition-support">
-                <p class="recognition-detail">${escape(award.detail)}</p>
-                <span class="about-meta">${escape(award.year)}</span>
-            </div>
-        </article>`).join('');
+    document.getElementById('about-award-highlights').innerHTML = ABOUT_CONTENT.awardHighlights
+        .map(award => `<li class="recognition-award">${escape(award)}</li>`).join('');
+
+    // Keep the easy-to-edit award strings; present any count in its own column.
+    const awardRow = award => {
+        const count = award.match(/\s×\s(\d+)/);
+        const label = award.replace(/\s×\s\d+/, '');
+        return `<li class="recognition-award"><span>${escape(label)}</span>${count ? `<span class="recognition-count">× ${escape(count[1])}</span>` : ''}</li>`;
+    };
+    document.getElementById('about-recognition').innerHTML = ABOUT_CONTENT.recognition.map(group => `
+        <section class="recognition-year" aria-label="Awards in ${escape(group.year)}">
+            <h4 class="serif-font recognition-year-heading">${escape(group.year)}</h4>
+            ${group.groups.map(category => `<div class="recognition-competition${category.competition ? '' : ' recognition-other'}">
+                ${category.competition ? `<h5 class="recognition-competition-name">${escape(category.competition)}</h5>` : ''}
+                <ul class="recognition-award-list">${category.awards.map(awardRow).join('')}</ul>
+            </div>`).join('')}
+        </section>`).join('');
 
     const pressRibbon = document.getElementById('press-publications');
     const pressGroup = duplicate => `<div class="press-ribbon-group"${duplicate ? ' aria-hidden="true"' : ''}>${ABOUT_CONTENT.press.map(article => `
