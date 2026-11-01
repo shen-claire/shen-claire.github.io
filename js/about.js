@@ -1,7 +1,7 @@
 // Edit these lists to add, remove, or reorder About content. All bracketed text
 // is intentionally a placeholder. Image paths can be relative, e.g. img/ABOUT/photo.jpg.
 const ABOUT_CONTENT = {
-    introduction: 'placeholder',
+    introduction: "Hi, I'm Claire. I've been creating art for as long as I can remember.",
     portrait: { src: 'img/ABOUT/headshot.png', alt: 'Portrait of Claire Shen', placeholder: 'Optional portrait', caption: '' },
     recognition: [
         {
@@ -35,10 +35,12 @@ const ABOUT_CONTENT = {
     ],
     // Use layout: 'wide', 'portrait', or 'standard' to vary the editorial rhythm.
     highlights: [
-        { src: '', alt: '', placeholder: 'Artwork & artist photo', caption: '[Caption to come]', year: '[Year]', layout: 'wide' },
-        { src: '', alt: '', placeholder: 'Art event photo', caption: '[Caption to come]', year: '[Year]', layout: 'portrait' },
-        { src: '', alt: '', placeholder: 'Award ceremony photo', caption: '[Caption to come]', year: '[Year]', layout: 'standard' },
-        { src: '', alt: '', placeholder: 'Art highlight photo', caption: '[Caption to come]', year: '[Year]', layout: 'standard' }
+        { src: 'img/ABOUT/IMG_7114.jpeg', alt: 'Through the Looking Glass projected above a line of artists on a theater stage', caption: 'Through the Looking Glass at Carnegie Hall', year: '', layout: 'wide' },
+        { src: 'img/ABOUT/IMG_7127.jpeg', alt: 'Artist holding a Scholastic Art & Writing Awards national medal in a theater', caption: 'Scholastic Art & Writing Awards', year: '', layout: 'portrait' },
+        { src: 'img/ABOUT/IMG_1257.jpeg', alt: 'Artist beside the framed painting Through the Looking Glass in an exhibition', caption: 'With Through the Looking Glass', year: '', layout: 'standard' },
+        { src: 'img/ABOUT/IMG_8394.jpeg', alt: 'Artist posing with a photo frame in front of the Congressional Art Competition backdrop', caption: 'At the Congressional Art Competition', year: '', layout: 'standard' },
+        { src: 'img/ABOUT/IMG_8472.jpeg', alt: 'Through the Looking Glass displayed on a screen at the Congressional Art Competition event', caption: 'Through the Looking Glass at the Congressional Art Competition', year: '', layout: 'wide' },
+        { src: 'img/ABOUT/IMG_8428.jpeg', alt: 'Artist in an auditorium with the Congressional Art Competition stage in the background', caption: 'Congressional Art Competition celebration', year: '', layout: 'portrait' }
     ]
 };
 
@@ -76,7 +78,7 @@ const ABOUT_CONTENT = {
     document.getElementById('about-highlights').innerHTML = ABOUT_CONTENT.highlights.map(photo => `
         <figure class="highlight-photo highlight-${['wide', 'portrait', 'standard'].includes(photo.layout) ? photo.layout : 'standard'}">
             <div class="highlight-image">${image(photo, photo.placeholder)}</div>
-            <figcaption><span>${escape(photo.caption)}</span><span>${escape(photo.year)}</span></figcaption>
+            <figcaption><span>${escape(photo.caption)}</span>${photo.year ? `<span>${escape(photo.year)}</span>` : ''}</figcaption>
         </figure>`).join('');
 
     // Break out of the centered catalog while accounting for the actual scrollbar.
