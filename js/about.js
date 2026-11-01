@@ -33,14 +33,18 @@ const ABOUT_CONTENT = {
         { publication: 'NaperToday', logo: 'img/PRESS/naper-today-logo.png', logoStyle: 'naper-today', url: 'https://napertoday.com/articles/naperville-central-student-s-oil-painting-earns-second-place-in-international-art-competition-ms5ui04n' },
         { publication: 'Positively Naperville', logo: 'img/PRESS/positively-naperville-logo.png', logoStyle: 'positively-naperville', url: 'https://www.positivelynaperville.com/2026/10/01/community-members-recognized-for-creativity-service-and-global-connection/161381' }
     ],
-    // Use layout: 'wide', 'portrait', or 'standard' to vary the editorial rhythm.
+    // Set to true to display the saved captions and any years beneath highlight photos.
+    showHighlightCaptions: true,
+    // Use layout: 'wide', 'portrait', 'standard', or 'compact' (three across).
     highlights: [
-        { src: 'img/ABOUT/IMG_7114.jpeg', alt: 'Through the Looking Glass projected above a line of artists on a theater stage', caption: 'Through the Looking Glass at Carnegie Hall', year: '', layout: 'wide' },
-        { src: 'img/ABOUT/IMG_7127.jpeg', alt: 'Artist holding a Scholastic Art & Writing Awards national medal in a theater', caption: 'Scholastic Art & Writing Awards', year: '', layout: 'portrait' },
-        { src: 'img/ABOUT/IMG_1257.jpeg', alt: 'Artist beside the framed painting Through the Looking Glass in an exhibition', caption: 'With Through the Looking Glass', year: '', layout: 'standard' },
-        { src: 'img/ABOUT/IMG_8394.jpeg', alt: 'Artist posing with a photo frame in front of the Congressional Art Competition backdrop', caption: 'At the Congressional Art Competition', year: '', layout: 'standard' },
-        { src: 'img/ABOUT/IMG_8472.jpeg', alt: 'Through the Looking Glass displayed on a screen at the Congressional Art Competition event', caption: 'Through the Looking Glass at the Congressional Art Competition', year: '', layout: 'wide' },
-        { src: 'img/ABOUT/IMG_8428.jpeg', alt: 'Artist in an auditorium with the Congressional Art Competition stage in the background', caption: 'Congressional Art Competition celebration', year: '', layout: 'portrait' }
+        { src: 'img/ABOUT/IMG_4175.jpeg', alt: 'Artist and the congressman holding the framed painting Through the Looking Glass with its award ribbon', caption: 'With Congressman Foster', year: '', layout: 'standard' },
+        { src: 'img/ABOUT/IMG_2856.jpeg', alt: 'Artist beside a display of framed artwork beneath the Gallery 777 sign', caption: '@ Lisle Public Library: Gallery 777', year: '', layout: 'standard' },
+        { src: 'img/ABOUT/IMG_8394.jpeg', alt: 'Artist posing with a photo frame in front of the Congressional Art Competition backdrop', caption: '@ the Congressional Art Competition', year: '', layout: 'standard' },
+        { src: 'img/ABOUT/IMG_8472.jpeg', alt: 'Through the Looking Glass displayed on a screen at the Congressional Art Competition event', caption: '', year: '', layout: 'standard' },
+        { src: 'img/ABOUT/IMG_7127.jpeg', alt: 'Artist holding a Scholastic Art & Writing Awards national medal in a theater', caption: '@ Carnegie Hall', year: '', layout: 'standard' },
+        { src: 'img/ABOUT/IMG_9615.jpeg', alt: 'Group posing with Naperville Sister Cities recognition plaques', caption: 'Recognition @ Naperville Sister Cities International Festival', year: '', layout: 'standard' },
+        { src: 'img/ABOUT/FullSizeRender.jpeg', alt: 'Artist and a presenter holding a certificate at a community recognition event', caption: 'With Naperville Mayor Wehrli', year: '', layout: 'standard' },
+        { src: 'img/ABOUT/IMG_8428.jpeg', alt: 'Artist in an auditorium with the Congressional Art Competition stage in the background', caption: '@ the Congressional Art Competition', year: '', layout: 'standard' }
     ]
 };
 
@@ -76,9 +80,9 @@ const ABOUT_CONTENT = {
     (document.fonts?.ready || Promise.resolve()).then(() => pressRibbon.classList.add('is-ready'));
 
     document.getElementById('about-highlights').innerHTML = ABOUT_CONTENT.highlights.map(photo => `
-        <figure class="highlight-photo highlight-${['wide', 'portrait', 'standard'].includes(photo.layout) ? photo.layout : 'standard'}">
+        <figure class="highlight-photo highlight-${['wide', 'portrait', 'standard', 'compact'].includes(photo.layout) ? photo.layout : 'standard'}">
             <div class="highlight-image">${image(photo, photo.placeholder)}</div>
-            <figcaption><span>${escape(photo.caption)}</span>${photo.year ? `<span>${escape(photo.year)}</span>` : ''}</figcaption>
+            ${ABOUT_CONTENT.showHighlightCaptions && (photo.caption || photo.year) ? `<figcaption><span>${escape(photo.caption)}</span>${photo.year ? `<span>${escape(photo.year)}</span>` : ''}</figcaption>` : ''}
         </figure>`).join('');
 
     // Break out of the centered catalog while accounting for the actual scrollbar.
