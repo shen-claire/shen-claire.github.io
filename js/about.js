@@ -63,7 +63,7 @@ const ABOUT_CONTENT = {
 (() => {
     const escape = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
     const image = (item, label) => item.src
-        ? `<img src="${escape(item.src)}" alt="${escape(item.alt)}" loading="lazy" decoding="async">`
+        ? `<img src="${escape(item.src)}" alt="${escape(item.alt)}" loading="eager" decoding="sync">`
         : `<div class="about-image-placeholder"><span>${escape(label)}</span><small>Image placeholder</small></div>`;
 
     document.getElementById('about-introduction').textContent = ABOUT_CONTENT.introduction;
