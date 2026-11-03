@@ -68,9 +68,6 @@ body {
 }
 
 /* About: an exhibition catalog, with content managed in js/about.js. */
-/* About is a static, natively scrolling page, without the shared entry effects. */
-#tab-about { transform: none; filter: none; transition: none; }
-#tab-about .page-content { opacity: 1; transform: none; transition: none; }
 #tab-about .about-scroll { min-height: 0; overscroll-behavior: contain; scroll-behavior: auto; }
 #tab-press .press-scroll { min-height: 0; overscroll-behavior: contain; }
 .about-catalog { max-width: 1000px; margin: 0 auto; padding: 48px 48px 64px; color: #333; user-select: text; }
