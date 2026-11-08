@@ -479,9 +479,33 @@ body {
     transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Release hidden blur layers after their existing fade has finished. */
-#detail-drawer { visibility: hidden; transition: opacity 500ms, visibility 0s linear 500ms; }
-#detail-drawer[aria-hidden="false"] { visibility: visible; transition-delay: 0ms; }
+/* One-step painting viewer. Native dialog provides focus containment and inert background. */
+.painting-viewer { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 48px; border: 0; background: transparent; color: #fff; overflow: auto; overscroll-behavior: contain; }
+.painting-viewer[open] { display: grid; place-items: center; animation: painting-viewer-open 180ms ease-out; }
+.painting-viewer::backdrop { background: rgba(5, 7, 8, .80); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.painting-viewer[open].is-closing, .painting-viewer.is-closing::backdrop { animation: painting-viewer-close 200ms ease-in both; }
+.painting-viewer-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, 240px); align-items: center; gap: clamp(28px, 5vw, 72px); width: min(1200px, 100%); min-width: 0; }
+.painting-viewer-artwork { display: flex; align-items: center; justify-content: center; min-width: 0; }
+.painting-viewer-image { display: block; width: auto; height: auto; max-width: 100%; max-height: calc(100vh - 96px); max-height: calc(100dvh - 96px); object-fit: contain; border-radius: 3px; }
+.painting-viewer-details { min-width: 0; }
+.painting-viewer-title { font-size: clamp(26px, 3vw, 42px); font-weight: 400; line-height: 1.2; text-wrap: balance; }
+.painting-viewer-medium { margin-top: 16px; font-size: 13px; line-height: 1.7; color: rgba(255, 255, 255, .72); }
+.painting-viewer-close { position: fixed; top: 16px; right: 16px; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid rgba(255, 255, 255, .18); border-radius: 50%; background: rgba(15, 17, 18, .5); color: #fff; cursor: pointer; z-index: 1; }
+.painting-viewer-close:hover { background: rgba(255, 255, 255, .12); }
+.painting-viewer-close:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.painting-viewer-close svg { width: 20px; height: 20px; }
+@keyframes painting-viewer-open { from { opacity: 0; } to { opacity: 1; } }
+@keyframes painting-viewer-close { from { opacity: 1; } to { opacity: 0; } }
+@media (max-width: 700px) {
+    .painting-viewer { padding: 68px 24px 28px; }
+    .painting-viewer-layout { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+    .painting-viewer-image { max-height: calc(100vh - 220px); max-height: calc(100dvh - 220px); }
+    .painting-viewer-title { font-size: 26px; }
+    .painting-viewer-medium { margin-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .painting-viewer[open], .painting-viewer.is-closing::backdrop { animation: none; }
+}
 .is-document-hidden *, .is-document-hidden *::before, .is-document-hidden *::after {
     animation-play-state: paused !important;
 }

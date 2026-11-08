@@ -96,6 +96,8 @@ const artworkDecodePromises = new WeakMap();
 const ACTIVE_CARD_SCALE = 1.55;
 let carouselFitScale = 1;
 let activeProjectIndex = null;
+let viewerReturnFocus = null;
+let viewerCloseTimer = null;
 let isDetailOpen = false;
 let hoverLockedIndex = null;
 let isGridView = false;
@@ -117,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initInteractionHandlers();
     initAudioUnlock();
     wakeAnimationLoop();
-    initLightboxViewer(); // Safely loaded right here!
+    initPaintingViewer();
 });
 
 // Synthesizer Engine (Pristine interactive chimes using physical modeling approximation)
@@ -860,10 +862,13 @@ function closeActiveTab() {
     playAmbientNote(300, 'sine', 0.5, 0.03);
 }
 
-// panel selection, expand center panel
+// A painting opens directly in a single native modal viewer.
 function selectProject(index) {
     const project = PORTFOLIO_OBJECTS[index];
-    if (!project || isGalleryTransitioning) return;
+    if (!project || isGalleryTransitioning || isDetailOpen) return;
+    const modal = document.getElementById('detail-drawer');
+    if (!modal) return;
+    viewerReturnFocus = document.activeElement;
     if (isGridView) selectedItemIndex = index;
 
     activeProjectIndex = index;
@@ -873,61 +878,49 @@ function selectProject(index) {
     dragVelocity = 0;
 
     document.getElementById('drawer-title').innerText = project.name;
-    document.getElementById('drawer-medium-heading').innerText = project.medium || 'Medium';
     document.getElementById('drawer-medium').innerText = project.medium || 'Medium';
-    document.getElementById('drawer-year').innerText = project.year || '';
-    document.getElementById('drawer-awards').innerText = project.awards?.trim() || 'None listed';
 
     const visualSlot = document.getElementById('drawer-visual-container');
     if (visualSlot) {
         visualSlot.innerHTML = project.visual;
         const popupImage = visualSlot.querySelector('img');
         if (popupImage) {
-            popupImage.classList.remove('object-cover', 'drop-shadow-sm');
-            popupImage.classList.add('object-contain');
+            popupImage.className = 'painting-viewer-image';
         }
     }
 
-    const modal = document.getElementById('detail-drawer');
-    if (modal) {
-        modal.style.opacity = '1';
-        modal.style.pointerEvents = 'auto';
-        modal.setAttribute('aria-hidden', 'false');
-        
-        const innerCard = document.getElementById('detail-card');
-        if (innerCard) {
-            innerCard.style.transform = 'scale(1)';
-        }
-    }
+    modal.setAttribute('aria-hidden', 'false');
+    modal.showModal();
 }
 
 function closeDetails() {
     const modal = document.getElementById('detail-drawer');
-    if (modal) {
-        modal.style.opacity = '0';
-        modal.style.pointerEvents = 'none';
-        modal.setAttribute('aria-hidden', 'true');
-        
-        const innerCard = document.getElementById('detail-card');
-        if (innerCard) {
-            innerCard.style.transform = 'scale(0.95)';
-        }
+    if (modal?.classList.contains('is-closing')) return;
+    if (!modal?.open || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        finishClosingPaintingViewer();
+        return;
     }
+    // Keep the modal and its backdrop present until both have faded out.
+    modal.classList.add('is-closing');
+    viewerCloseTimer = window.setTimeout(finishClosingPaintingViewer, 220);
+}
+
+function finishClosingPaintingViewer() {
+    if (viewerCloseTimer !== null) window.clearTimeout(viewerCloseTimer);
+    viewerCloseTimer = null;
+    const modal = document.getElementById('detail-drawer');
+    if (modal?.open) modal.close();
+    modal?.classList.remove('is-closing');
+    modal?.setAttribute('aria-hidden', 'true');
     activeProjectIndex = null;
     isDetailOpen = false;
     autoSpinActive = !isGridView;
     wakeAnimationLoop();
+    if (viewerReturnFocus?.isConnected) viewerReturnFocus.focus({ preventScroll: true });
+    viewerReturnFocus = null;
 }
 
-document.getElementById('detail-drawer')?.addEventListener('click', (event) => {
-    if (event.target === event.currentTarget) closeDetails();
-});
-
 document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && document.getElementById('detail-drawer')?.getAttribute('aria-hidden') === 'false') {
-        closeDetails();
-    }
-
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
     if (event.target?.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
@@ -984,45 +977,30 @@ function shareProject() {
     });
 }
 
-// --- FULL-SCREEN LIGHTBOX ENGINE ---
-function initLightboxViewer() {
-    const drawerVisual = document.getElementById('drawer-visual-container');
-    const lightbox = document.getElementById('art-lightbox');
-    const lightboxImgContainer = document.getElementById('lightbox-img-container');
-    const lightboxAwards = document.getElementById('lightbox-awards');
-
-    if (!drawerVisual || !lightbox) return;
-
-    // Set cursor styling indicating the element expands
-    drawerVisual.style.cursor = 'zoom-in';
-
-    drawerVisual.addEventListener('click', () => {
-        if (!Number.isInteger(activeProjectIndex)) return;
-
-        const currentArtwork = PORTFOLIO_OBJECTS[activeProjectIndex];
-        if (!currentArtwork) return;
-        
-        // Render artwork layout inside the lightbox overlay component
-        lightboxImgContainer.innerHTML = currentArtwork.visual;
-        const img = lightboxImgContainer.querySelector('img');
-        if (img) {
-            img.className = "max-w-[90vw] max-h-[75vh] object-contain rounded-xl shadow-2xl";
+function initPaintingViewer() {
+    const viewer = document.getElementById('detail-drawer');
+    viewer.addEventListener('keydown', event => {
+        if (event.key !== 'Tab') return;
+        const controls = Array.from(viewer.querySelectorAll('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'))
+            .filter(control => control.getClientRects().length);
+        const first = controls[0], last = controls[controls.length - 1];
+        if (!first) { event.preventDefault(); return; }
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault(); last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault(); first.focus();
         }
-
-        // Apply awards meta information text dynamically
-        if (currentArtwork.awards && currentArtwork.awards.trim() !== "") {
-            lightboxAwards.innerHTML = `<span class="bg-amber-500/10 text-amber-300 border border-amber-500/20 px-4 py-2 rounded-full text-xs font-semibold tracking-wider">🏆 ${currentArtwork.awards}</span>`;
-            lightboxAwards.style.display = 'block';
-        } else {
-            lightboxAwards.innerHTML = "";
-            lightboxAwards.style.display = 'none';
-        }
-
-        // Display overlay component smooth alpha transition
-        lightbox.classList.remove('opacity-0', 'pointer-events-none');
     });
-
-    lightbox.addEventListener('click', () => {
-        lightbox.classList.add('opacity-0', 'pointer-events-none');
+    viewer.addEventListener('click', event => {
+        // Empty space around the painting, including gaps inside the layout,
+        // acts as the backdrop. Painting and text clicks remain safe.
+        if (!event.target.closest('img, .painting-viewer-details, button')) closeDetails();
+    });
+    viewer.addEventListener('cancel', event => {
+        event.preventDefault();
+        closeDetails();
+    });
+    viewer.addEventListener('close', () => {
+        if (isDetailOpen) finishClosingPaintingViewer();
     });
 }
