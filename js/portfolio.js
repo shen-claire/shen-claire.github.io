@@ -433,10 +433,10 @@ function fitCarouselToViewport() {
 }
 
 function scheduleArtworkFit() {
-    if (frameFitRequest !== null) return;
+    if (isGalleryTransitioning || frameFitRequest !== null) return;
     frameFitRequest = requestAnimationFrame(() => {
         frameFitRequest = null;
-        fitAllArtworkFrames();
+        if (!isGalleryTransitioning) fitAllArtworkFrames();
     });
 }
 
@@ -501,10 +501,17 @@ async function toggleGalleryView() {
     const readFrames = () => cards.map(card => {
         const frame = card.querySelector('.artwork-frame');
         const rect = frame.getBoundingClientRect();
+        // Proxies live in 2D screen space; include 3D magnification and foreshortening.
+        const scaleX = rect.width / Math.max(1, frame.offsetWidth);
+        const scaleY = rect.height / Math.max(1, frame.offsetHeight);
+        const rail = parseFloat(getComputedStyle(frame).paddingLeft) || 10;
+        const mat = parseFloat(getComputedStyle(frame.querySelector('.artwork-mat')).paddingLeft) || 3;
         return {
             rect,
-            rail: parseFloat(getComputedStyle(frame).paddingLeft) || 10,
-            mat: parseFloat(getComputedStyle(frame.querySelector('.artwork-mat')).paddingLeft) || 3,
+            rail: rail * scaleY,
+            railX: rail * scaleX,
+            mat: mat * scaleY,
+            matX: mat * scaleX,
             opacity: parseFloat(getComputedStyle(card).opacity) || 1
         };
     });
@@ -533,13 +540,15 @@ async function toggleGalleryView() {
             const bounds = layer.getBoundingClientRect();
             const visible = rect => rect.bottom > bounds.top && rect.top < bounds.bottom
                 && rect.right > bounds.left && rect.left < bounds.right;
-            const keyframe = ({ rect, rail, mat, opacity }) => ({
+            const keyframe = ({ rect, rail, railX, mat, matX, opacity }) => ({
                 left: `${rect.left - bounds.left}px`,
                 top: `${rect.top - bounds.top}px`,
                 width: `${rect.width}px`,
                 height: `${rect.height}px`,
                 '--frame-rail': `${rail}px`,
+                '--frame-rail-x': `${railX}px`,
                 '--frame-mat': `${mat}px`,
+                '--frame-mat-x': `${matX}px`,
                 opacity
             });
             animations = cards.flatMap((card, index) => {
@@ -568,6 +577,8 @@ async function toggleGalleryView() {
         }
     } finally {
         window.removeEventListener('resize', stopAnimation);
+        // Settle the real cards while hidden, before releasing the animated copies.
+        fitAllArtworkFrames();
         layer.remove();
         stopAnimation();
         main.classList.remove('is-rearranging');
@@ -587,8 +598,9 @@ function calculateRadius() {
 }
 
 function updateRingSpacing() {
+    if (isGalleryTransitioning) return;
     fitAllArtworkFrames();
-    if (isGridView || isGalleryTransitioning) return;
+    if (isGridView) return;
     updateHighlight();
 }
 
